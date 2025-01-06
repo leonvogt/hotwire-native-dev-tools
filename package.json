@@ -1,0 +1,23 @@
+{
+  "name": "hotwire-native-dev-tools",
+  "version": "0.1.0",
+  "description": "Dev Tools for Hotwire Native",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leonvogt/hotwire-native-dev-tools.git"
+  },
+  "keywords": [
+    "Hotwire",
+    "Native"
+  ],
+  "author": "Leon Vogt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leonvogt/hotwire-native-dev-tools/issues"
+  },
+  "homepage": "https://github.com/leonvogt/hotwire-native-dev-tools#readme"
+}
