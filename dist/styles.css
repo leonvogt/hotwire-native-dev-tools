@@ -1,0 +1,14 @@
+#debug-bubble {
+  width: 5rem;
+  height: 5rem;
+  background-color: rgb(92, 92, 92);
+  border: 0.5rem solid rgba(136, 136, 136, 0.5);
+  border-radius: 50%;
+  touch-action: none;
+  user-select: none;
+
+  /* Inital position */
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}

@@ -1,0 +1,80 @@
+export default class DebugBubble {
+  constructor() {
+    this.injectHTML()
+    this.addEventListeners()
+
+    this.currentlyDragging = false
+    this.currentX = 0
+    this.currentY = 0
+    this.initialX = 0
+    this.initialY = 0
+    this.xOffset = 0
+    this.yOffset = 0
+  }
+
+  injectHTML() {
+    this.dragItem = document.createElement("div")
+    this.dragItem.id = "debug-bubble"
+    document.body.appendChild(this.dragItem)
+  }
+
+  addEventListeners() {
+    this.boundDragStart = this.dragStart.bind(this)
+    this.boundDragEnd = this.dragEnd.bind(this)
+    this.boundDrag = this.drag.bind(this)
+    this.boundClick = this.click.bind(this)
+
+    this.dragItem.addEventListener("click", this.boundClick, false)
+    this.dragItem.addEventListener("touchstart", this.boundDragStart, false)
+    this.dragItem.addEventListener("touchend", this.boundDragEnd, false)
+    this.dragItem.addEventListener("touchmove", this.boundDrag, false)
+  }
+
+  click(event) {
+    event.preventDefault()
+
+    if (this.clickCallback) {
+      this.clickCallback(event)
+    }
+  }
+
+  onClick(callback) {
+    this.clickCallback = callback
+  }
+
+  dragStart(event) {
+    this.initialX = event.touches[0].clientX - this.xOffset
+    this.initialY = event.touches[0].clientY - this.yOffset
+
+    if (event.target === this.dragItem) {
+      this.currentlyDragging = true
+    }
+  }
+
+  dragEnd(event) {
+    this.initialX = this.currentX
+    this.initialY = this.currentY
+
+    this.currentlyDragging = false
+  }
+
+  drag(event) {
+    if (this.currentlyDragging) {
+      event.preventDefault()
+
+      this.currentX = event.touches[0].clientX - this.initialX
+      this.currentY = event.touches[0].clientY - this.initialY
+
+      // Offset tracks where touch started, relative to the item's position
+      // To avoid a unnatural "snapping behaviour" when continuing to drag
+      this.xOffset = this.currentX
+      this.yOffset = this.currentY
+
+      this.setTranslate(this.currentX, this.currentY, this.dragItem)
+    }
+  }
+
+  setTranslate(xPos, yPos, element) {
+    element.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)"
+  }
+}
