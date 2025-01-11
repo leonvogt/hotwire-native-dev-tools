@@ -1,3 +1,5 @@
+import * as Icons from "./utils/icons"
+
 export default class BottomSheet {
   constructor() {
     this.injectHTML()
@@ -13,17 +15,38 @@ export default class BottomSheet {
     this.bottomSheet.innerHTML = `
       <div class="sheet-overlay"></div>
       <div class="content">
+        <div class="tab-bridge-logs">
+        </div>
       </div>
     `
     document.body.appendChild(this.bottomSheet)
   }
 
-  content(html) {
-    this.sheetContent.innerHTML = html
+  addBridgeLog(direction, componentName, eventName, eventArgs) {
+    const time = new Date().toLocaleTimeString()
+    const html = `
+      <div class="log-entry d-flex gap-3 pt-2 pb-2">
+        <div class="log-entry-icon">
+          ${direction === "send" ? Icons.arrowDown : Icons.arrowUp}
+        </div>
+        <div class="log-entry__content w-100">
+          <div class="d-flex justify-between">
+            <strong>${componentName}#${eventName}</strong>
+            <small>${time}</small>
+          </div>
+          <div class="">
+            ${Object.entries(eventArgs)
+              .map(([key, value]) => {
+                return `<div>${key}: ${value}</div>`
+              })
+              .join("")}
+        </div>
+      </div>
+    `
+    this.sheetContent.querySelector(".tab-bridge-logs").insertAdjacentHTML("beforebegin", html)
   }
 
   addEventListener() {
-    // Listen for click on the overlay to close the bottom sheet
     this.sheetOverlay.addEventListener("click", () => this.hideBottomSheet())
   }
 

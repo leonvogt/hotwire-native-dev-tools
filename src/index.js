@@ -1,6 +1,18 @@
 import DebugBubble from "./DebugBubble"
 import BottomSheet from "./BottomSheet"
 
+const bubble = new DebugBubble()
+const bottomSheet = new BottomSheet()
+
+const interceptedBridgeMessage = (direction, args) => {
+  args.forEach((arg) => {
+    const componentName = arg.component
+    const eventName = arg.event
+    const { metadata, ...eventArgs } = arg.data // Remove metadata from the args
+    bottomSheet.addBridgeLog(direction, componentName, eventName, eventArgs)
+  })
+}
+
 const addBridgeProxy = () => {
   const originalBridge = window.Strada.web
 
@@ -12,7 +24,16 @@ const addBridgeProxy = () => {
       // We are only interested in the `send` and `receive` functions
       if (prop === "send" || prop === "receive") {
         return function (...args) {
-          console.log(`Intercepted call to ${prop}:`, args)
+          switch (prop) {
+            case "send":
+              interceptedBridgeMessage("send", args)
+              break
+            case "receive":
+              interceptedBridgeMessage("receive", args)
+              break
+            default:
+              break
+          }
 
           // Call the original function
           return originalValue.apply(target, args)
@@ -61,15 +82,8 @@ const addBridgeProxy = () => {
 const setupDevTools = () => {
   addBridgeProxy()
 
-  const bubble = new DebugBubble()
-  const bottomSheet = new BottomSheet()
-
   bubble.onClick((event) => {
     bottomSheet.showBottomSheet()
-    bottomSheet.content(`
-      <h1>Debug Bubble</h1>
-      <p>lorem ipsum</p>
-    `)
   })
 }
 
