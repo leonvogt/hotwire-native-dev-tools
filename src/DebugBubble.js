@@ -19,15 +19,10 @@ export default class DebugBubble {
   }
 
   addEventListeners() {
-    this.boundDragStart = this.dragStart.bind(this)
-    this.boundDragEnd = this.dragEnd.bind(this)
-    this.boundDrag = this.drag.bind(this)
-    this.boundClick = this.click.bind(this)
-
-    this.dragItem.addEventListener("click", this.boundClick, false)
-    this.dragItem.addEventListener("touchstart", this.boundDragStart, false)
-    this.dragItem.addEventListener("touchend", this.boundDragEnd, false)
-    this.dragItem.addEventListener("touchmove", this.boundDrag, false)
+    this.dragItem.addEventListener("click", this.click.bind(this), false)
+    this.dragItem.addEventListener("touchstart", this.dragStart.bind(this), false)
+    this.dragItem.addEventListener("touchend", this.dragEnd.bind(this), false)
+    this.dragItem.addEventListener("touchmove", this.drag.bind(this), false)
   }
 
   click(event) {

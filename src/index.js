@@ -1,4 +1,5 @@
 import DebugBubble from "./DebugBubble"
+import BottomSheet from "./BottomSheet"
 
 const addBridgeProxy = () => {
   const originalBridge = window.Strada.web
@@ -61,9 +62,12 @@ const setupDevTools = () => {
   addBridgeProxy()
 
   const bubble = new DebugBubble()
+  const bottomSheet = new BottomSheet()
 
   bubble.onClick((event) => {
     console.log("Bubble clicked!", event)
+    // bottomSheet.toggle()
+    bottomSheet.showBottomSheet()
   })
 }
 
