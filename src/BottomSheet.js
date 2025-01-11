@@ -2,9 +2,9 @@ export default class BottomSheet {
   constructor() {
     this.injectHTML()
 
-    this.bottomSheetTarget = document.querySelector(".bottom-sheet")
-    this.sheetContent = document.querySelector(".content")
-    this.sheetOverlay = document.querySelector(".sheet-overlay")
+    this.bottomSheet = document.querySelector(".bottom-sheet")
+    this.sheetContent = this.bottomSheet.querySelector(".content")
+    this.sheetOverlay = this.bottomSheet.querySelector(".sheet-overlay")
   }
 
   injectHTML() {
@@ -13,23 +13,24 @@ export default class BottomSheet {
     this.bottomSheet.innerHTML = `
       <div class="sheet-overlay"></div>
       <div class="content">
-        <div class="body">
-          <h2>Bottom Sheet Title</h2>
-          <p>Bottom Sheet Content</p>
-        </div>
       </div>
     `
     document.body.appendChild(this.bottomSheet)
   }
 
+  content(html) {
+    this.sheetContent.innerHTML = html
+  }
+
   addEventListener() {
+    // Listen for click on the overlay to close the bottom sheet
     this.sheetOverlay.addEventListener("click", () => this.hideBottomSheet())
   }
 
   showBottomSheet() {
     this.addEventListener()
 
-    this.bottomSheetTarget.classList.add("show")
+    this.bottomSheet.classList.add("show")
     document.body.style.overflowY = "hidden"
     this.updateSheetHeight(50)
   }
@@ -39,7 +40,7 @@ export default class BottomSheet {
   }
 
   hideBottomSheet() {
-    this.bottomSheetTarget.classList.remove("show")
+    this.bottomSheet.classList.remove("show")
     document.body.style.overflowY = "auto"
   }
 }

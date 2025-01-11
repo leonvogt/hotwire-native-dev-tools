@@ -65,9 +65,11 @@ const setupDevTools = () => {
   const bottomSheet = new BottomSheet()
 
   bubble.onClick((event) => {
-    console.log("Bubble clicked!", event)
-    // bottomSheet.toggle()
     bottomSheet.showBottomSheet()
+    bottomSheet.content(`
+      <h1>Debug Bubble</h1>
+      <p>lorem ipsum</p>
+    `)
   })
 }
 

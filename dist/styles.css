@@ -43,7 +43,8 @@
   .content {
     width: 100%;
     position: relative;
-    background: #fff;
+    background-color: hsl(0deg 0% 0% / 90%);
+    color: white;
     max-height: 100vh;
     height: 40vh;
     padding-top: 15px;
@@ -52,20 +53,14 @@
     border-radius: 12px 12px 0 0;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
     transition: 0.3s ease;
-  }
 
-  .body {
     height: 100%;
     overflow-y: auto;
     scrollbar-width: none;
   }
-  .body::-webkit-scrollbar {
-    width: 0;
-  }
 
-  .title {
-    padding-left: 20px;
-    font-weight: bold;
+  .content::-webkit-scrollbar {
+    width: 0;
   }
 }
 
