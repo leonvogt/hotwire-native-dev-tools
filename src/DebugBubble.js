@@ -1,15 +1,27 @@
+import { getSettings, saveSettings } from "./utils/settings"
+
 export default class DebugBubble {
   constructor() {
     this.injectHTML()
     this.addEventListeners()
 
+    let startX = 0
+    let startY = 0
+    const settings = getSettings("bubblePosition")
+    if (settings) {
+      startX = settings.x
+      startY = settings.y
+    }
     this.currentlyDragging = false
-    this.currentX = 0
-    this.currentY = 0
-    this.initialX = 0
-    this.initialY = 0
-    this.xOffset = 0
-    this.yOffset = 0
+
+    this.currentX = startX
+    this.currentY = startY
+    this.initialX = startX
+    this.initialY = startY
+    this.xOffset = startX
+    this.yOffset = startY
+
+    this.setTranslate(this.initialX, this.initialY, this.dragItem)
   }
 
   injectHTML() {
@@ -49,6 +61,11 @@ export default class DebugBubble {
   dragEnd(event) {
     this.initialX = this.currentX
     this.initialY = this.currentY
+
+    saveSettings("bubblePosition", {
+      x: this.currentX,
+      y: this.currentY,
+    })
 
     this.currentlyDragging = false
   }
