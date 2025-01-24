@@ -68,6 +68,7 @@ export default class DevTools {
         flex-direction: column;
         justify-content: flex-end;
         transition: 0.1s linear;
+        z-index: 10000001;
 
         .sheet-overlay {
           position: fixed;
