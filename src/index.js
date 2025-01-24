@@ -1,9 +1,12 @@
+import DevTools from "./DevTools"
 import DebugBubble from "./DebugBubble"
 import BottomSheet from "./BottomSheet"
 
-const bubble = new DebugBubble()
-const bottomSheet = new BottomSheet()
+const devTools = new DevTools()
+const bubble = new DebugBubble(devTools)
+const bottomSheet = new BottomSheet(devTools)
 
+// bottomSheet.addBridgeLog("send", "Test Component", "noAction", { foo: "bar" })
 const interceptedBridgeMessage = (direction, args) => {
   args.forEach((arg) => {
     const componentName = arg.component

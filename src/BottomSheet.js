@@ -1,10 +1,11 @@
 import * as Icons from "./utils/icons"
 
 export default class BottomSheet {
-  constructor() {
+  constructor(devTools) {
+    this.devTools = devTools
+
     this.injectHTML()
 
-    this.bottomSheet = document.querySelector(".bottom-sheet")
     this.sheetContent = this.bottomSheet.querySelector(".content")
     this.sheetOverlay = this.bottomSheet.querySelector(".sheet-overlay")
   }
@@ -15,11 +16,10 @@ export default class BottomSheet {
     this.bottomSheet.innerHTML = `
       <div class="sheet-overlay"></div>
       <div class="content">
-        <div class="tab-bridge-logs">
-        </div>
+        <div class="tab-bridge-logs"></div>
       </div>
     `
-    document.body.appendChild(this.bottomSheet)
+    this.devTools.shadowRoot.appendChild(this.bottomSheet)
   }
 
   addBridgeLog(direction, componentName, eventName, eventArgs) {

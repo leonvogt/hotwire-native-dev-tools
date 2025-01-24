@@ -1,3 +1,13 @@
+:host {
+  all: initial;
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  font-size: 16px !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 /* Debug bubble */
 #debug-bubble {
   width: 5rem;
