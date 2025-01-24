@@ -1,7 +1,83 @@
+import DebugBubble from "./DebugBubble"
+import BottomSheet from "./BottomSheet"
+
 export default class DevTools {
   constructor() {
+    this.setupShadowRoot()
+    this.bubble = new DebugBubble(this)
+    this.bottomSheet = new BottomSheet(this)
+  }
+
+  setup() {
+    this.setupShadowRoot()
+    this.bubble = new DebugBubble(this)
+    this.bottomSheet = new BottomSheet(this)
+
+    if (window.Strada) {
+      this.addBridgeProxy()
+    } else {
+      document.addEventListener("web-bridge:ready", () => {
+        this.addBridgeProxy()
+      })
+    }
+
+    this.bubble.onClick((event) => {
+      this.bottomSheet.showBottomSheet()
+    })
+  }
+
+  setupShadowRoot() {
+    if (this.shadowContainer.shadowRoot) {
+      this.shadowRoot = this.shadowContainer.shadowRoot
+      this.injectCSSToShadowRoot()
+      return
+    }
     this.shadowRoot = this.shadowContainer.attachShadow({ mode: "open" })
     this.injectCSSToShadowRoot()
+  }
+
+  addBridgeProxy() {
+    const originalBridge = window.Strada.web
+
+    // Wrap the bridge with a Proxy
+    window.Strada.web = new Proxy(originalBridge, {
+      get(target, prop, receiver) {
+        const originalValue = Reflect.get(target, prop, receiver)
+
+        // We are only interested in the `send` and `receive` functions
+        if (prop === "send" || prop === "receive") {
+          return function (...args) {
+            switch (prop) {
+              case "send":
+                this.interceptedBridgeMessage("send", args)
+                break
+              case "receive":
+                this.interceptedBridgeMessage("receive", args)
+                break
+              default:
+                break
+            }
+
+            // Call the original function
+            return originalValue.apply(target, args)
+          }
+        }
+
+        // For all other functions, call the original function
+        return function (...args) {
+          return originalValue.apply(target, args)
+        }
+      },
+    })
+  }
+
+  interceptedBridgeMessage(direction, args) {
+    args.forEach((arg) => {
+      const componentName = arg.component
+      const eventName = arg.event
+      const { metadata, ...eventArgs } = arg.data // Remove metadata from the args
+      bottomSheet.addBridgeLog(direction, componentName, eventName, eventArgs)
+    })
   }
 
   injectCSSToShadowRoot = async () => {
