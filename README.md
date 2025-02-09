@@ -15,6 +15,18 @@ yarn add hotwire-native-dev-tools
 ## Usage
 
 ```js
-import { mockBridge } from 'hotwire-native-dev-tools';
-mockBridge();
+import { setupDevTools } from 'hotwire-native-dev-tools';
+setupDevTools();
+```
+
+## Development
+
+In the root of the project run:
+```bash
+yarn link
+```
+
+In the project you want to use the package run:
+```bash
+yarn link hotwire-native-dev-tools
 ```
