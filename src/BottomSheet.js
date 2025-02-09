@@ -4,13 +4,18 @@ export default class BottomSheet {
   constructor(devTools) {
     this.devTools = devTools
 
-    this.injectHTML()
-
+    this.createBottomSheet()
     this.sheetContent = this.bottomSheet.querySelector(".content")
     this.sheetOverlay = this.bottomSheet.querySelector(".sheet-overlay")
   }
 
-  injectHTML() {
+  createBottomSheet() {
+    const existingBottomSheet = this.devTools.shadowRoot?.querySelector(".bottom-sheet")
+    if (existingBottomSheet) {
+      this.bottomSheet = existingBottomSheet
+      return
+    }
+
     this.bottomSheet = document.createElement("div")
     this.bottomSheet.classList.add("bottom-sheet")
     this.bottomSheet.innerHTML = `

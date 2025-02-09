@@ -2,12 +2,6 @@ import DebugBubble from "./DebugBubble"
 import BottomSheet from "./BottomSheet"
 
 export default class DevTools {
-  constructor() {
-    this.setupShadowRoot()
-    this.bubble = new DebugBubble(this)
-    this.bottomSheet = new BottomSheet(this)
-  }
-
   setup() {
     this.setupShadowRoot()
     this.bubble = new DebugBubble(this)

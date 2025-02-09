@@ -4,7 +4,7 @@ export default class DebugBubble {
   constructor(devTools) {
     this.devTools = devTools
 
-    this.injectHTML()
+    this.createDragItem()
     this.addEventListeners()
 
     let startX = 0
@@ -26,7 +26,13 @@ export default class DebugBubble {
     this.setTranslate(this.initialX, this.initialY, this.dragItem)
   }
 
-  injectHTML() {
+  createDragItem() {
+    const existingBubble = this.devTools.shadowRoot?.getElementById("debug-bubble")
+    if (existingBubble) {
+      this.dragItem = existingBubble
+      return
+    }
+
     this.dragItem = document.createElement("div")
     this.dragItem.id = "debug-bubble"
     this.devTools.shadowRoot.appendChild(this.dragItem)
