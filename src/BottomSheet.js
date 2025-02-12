@@ -21,10 +21,45 @@ export default class BottomSheet {
     this.bottomSheet.innerHTML = `
       <div class="sheet-overlay"></div>
       <div class="content">
-        <div class="tab-bridge-logs"></div>
+        <div class="tablist">
+          <button class="tablink active" data-tab-id="bridge-logs">Bridge</button>
+          <button class="tablink" data-tab-id="console-logs">Console</button>
+          <button class="tablink" data-tab-id="settings">Settings</button>
+        </div>
+
+        <div id="bridge-logs" class="tab-content active">
+          <h3>Bridge Logs</h3>
+          <div class="tab-bridge-logs"></div>
+        </div>
+
+        <div id="console-logs" class="tab-content">
+          <h3>Console Logs</h3>
+        </div>
+
+        <div id="settings" class="tab-content">
+          <h3>Settings</h3>
+        </div>
       </div>
     `
     this.devTools.shadowRoot.appendChild(this.bottomSheet)
+    this.listenForTabNavigation()
+  }
+
+  listenForTabNavigation() {
+    const tablist = this.devTools.shadowRoot.querySelector(".tablist")
+    tablist.addEventListener("click", this.handleClickTab)
+  }
+
+  handleClickTab = (event) => {
+    this.devTools.shadowRoot.querySelectorAll(".tablink, .tab-content").forEach((tab) => {
+      tab.classList.remove("active")
+    })
+
+    const clickedTab = event.target.closest(".tablink")
+    const desiredTabContent = this.devTools.shadowRoot.getElementById(clickedTab.dataset.tabId)
+
+    clickedTab.classList.add("active")
+    desiredTabContent.classList.add("active")
   }
 
   addBridgeLog(direction, componentName, eventName, eventArgs) {

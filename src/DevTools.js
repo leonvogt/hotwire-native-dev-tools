@@ -149,7 +149,6 @@ export default class DevTools {
           color: white;
           max-height: 100vh;
           height: 40vh;
-          padding: 1rem;
           transform: translateY(100%);
           border-radius: 12px 12px 0 0;
           box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
@@ -261,6 +260,36 @@ export default class DevTools {
         width: 100%;
       }
 
+
+      /* Tabs */
+      .tablist {
+        display: flex;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+      }
+
+      .tablist button {
+        background-color: inherit;
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 14px 16px;
+        user-select: none;
+      }
+
+      .tablist button:active, .tablist button.active {
+        background-color: #ccc;
+      }
+
+      .tab-content {
+        display: none;
+        border-top: none;
+        padding: 1rem;
+      }
+      .tab-content.active {
+        display: block;
+      }
     `
   }
 }
