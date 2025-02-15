@@ -42,21 +42,20 @@ export default class DevTools {
   }
 
   addBridgeProxy() {
-    const devToolsInstance = this
     window.Strada.web = new Proxy(this.originalBridge, {
-      get(target, prop, receiver) {
+      get: (target, prop, receiver) => {
         const originalValue = Reflect.get(target, prop, receiver)
 
         // We are only interested in the `send` and `receive` functions
         if (typeof originalValue === "function" && (prop === "send" || prop === "receive")) {
-          return function (...args) {
-            devToolsInstance.interceptedBridgeMessage(prop, args)
+          return (...args) => {
+            this.interceptedBridgeMessage(prop, args)
             return originalValue.apply(target, args)
           }
         }
 
         // Forward all the other calls to the original bridge
-        return function (...args) {
+        return (...args) => {
           return originalValue.apply(target, args)
         }
       },
@@ -66,10 +65,10 @@ export default class DevTools {
   addConsoleProxy() {
     window.console = new Proxy(this.originalConsole, {
       get: (target, prop, receiver) => {
-        const originalMethod = Reflect.get(target, prop, receiver)
+        const originalValue = Reflect.get(target, prop, receiver)
         return (...args) => {
           this.interceptedConsoleMessage(prop, args)
-          return originalMethod.apply(target, args)
+          return originalValue.apply(target, args)
         }
       },
     })
