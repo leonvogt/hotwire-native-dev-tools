@@ -7,6 +7,13 @@ export default class DevTools {
     this.bubble = new DebugBubble(this)
     this.bottomSheet = new BottomSheet(this)
 
+    // Console Proxy
+    if (!this.originalConsole) {
+      this.originalConsole = window.console
+      this.addConsoleProxy()
+    }
+
+    // Bridge Component Proxy
     if (!this.originalBridge && window.Strada) {
       this.originalBridge = window.Strada.web
       this.addBridgeProxy()
@@ -56,6 +63,18 @@ export default class DevTools {
     })
   }
 
+  addConsoleProxy() {
+    window.console = new Proxy(this.originalConsole, {
+      get: (target, prop, receiver) => {
+        const originalMethod = Reflect.get(target, prop, receiver)
+        return (...args) => {
+          this.interceptedConsoleMessage(prop, args)
+          return originalMethod.apply(target, args)
+        }
+      },
+    })
+  }
+
   interceptedBridgeMessage(direction, args) {
     args.forEach((arg) => {
       const componentName = arg.component
@@ -63,6 +82,22 @@ export default class DevTools {
       const { metadata, ...eventArgs } = arg.data // Remove metadata from the args
       this.bottomSheet.addBridgeLog(direction, componentName, eventName, eventArgs)
     })
+  }
+
+  interceptedConsoleMessage(type, args) {
+    const message = args
+      .map((arg) => {
+        if (typeof arg === "object") {
+          try {
+            return `<pre>${JSON.stringify(arg, null, 2)}</pre>`
+          } catch {
+            return `<pre>${arg}</pre>`
+          }
+        }
+        return arg.toString()
+      })
+      .join(" ")
+    this.bottomSheet.addConsoleLog(type, message)
   }
 
   injectCSSToShadowRoot = async () => {
@@ -197,6 +232,10 @@ export default class DevTools {
 
       .justify-between {
         justify-content: space-between;
+      }
+
+      .justify-end {
+        justify-content: flex-end;
       }
 
       .no-wrap {

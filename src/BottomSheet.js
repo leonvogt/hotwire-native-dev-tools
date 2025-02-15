@@ -34,6 +34,7 @@ export default class BottomSheet {
 
         <div id="console-logs" class="tab-content">
           <h3>Console Logs</h3>
+          <div class="tab-console-logs"></div>
         </div>
 
         <div id="settings" class="tab-content">
@@ -84,6 +85,23 @@ export default class BottomSheet {
       </div>
     `
     this.sheetContent.querySelector(".tab-bridge-logs").insertAdjacentHTML("beforebegin", html)
+  }
+
+  addConsoleLog(type, message) {
+    const time = new Date().toLocaleTimeString()
+    const html = `
+      <div class="log-entry pt-2 pb-2 ${type}">
+        <div class="log-entry__content w-100">
+          <div class="d-flex justify-end">
+            <small>${time}</small>
+          </div>
+          <div>
+            ${message}
+          </div>
+        </div>
+      </div>
+    `
+    this.sheetContent.querySelector(".tab-console-logs").insertAdjacentHTML("beforebegin", html)
   }
 
   addEventListener() {
