@@ -7,11 +7,15 @@ export default class DevTools {
     this.bubble = new DebugBubble(this)
     this.bottomSheet = new BottomSheet(this)
 
-    if (window.Strada) {
+    if (!this.originalBridge && window.Strada) {
+      this.originalBridge = window.Strada.web
       this.addBridgeProxy()
-    } else {
+    } else if (!this.originalBridge) {
       document.addEventListener("web-bridge:ready", () => {
-        this.addBridgeProxy()
+        if (!this.originalBridge) {
+          this.originalBridge = window.Strada.web
+          this.addBridgeProxy()
+        }
       })
     }
 
@@ -31,33 +35,20 @@ export default class DevTools {
   }
 
   addBridgeProxy() {
-    const originalBridge = window.Strada.web
-
-    // Wrap the bridge with a Proxy
-    window.Strada.web = new Proxy(originalBridge, {
+    const devToolsInstance = this
+    window.Strada.web = new Proxy(this.originalBridge, {
       get(target, prop, receiver) {
         const originalValue = Reflect.get(target, prop, receiver)
 
         // We are only interested in the `send` and `receive` functions
-        if (prop === "send" || prop === "receive") {
+        if (typeof originalValue === "function" && (prop === "send" || prop === "receive")) {
           return function (...args) {
-            switch (prop) {
-              case "send":
-                this.interceptedBridgeMessage("send", args)
-                break
-              case "receive":
-                this.interceptedBridgeMessage("receive", args)
-                break
-              default:
-                break
-            }
-
-            // Call the original function
+            devToolsInstance.interceptedBridgeMessage(prop, args)
             return originalValue.apply(target, args)
           }
         }
 
-        // For all other functions, call the original function
+        // Forward all the other calls to the original bridge
         return function (...args) {
           return originalValue.apply(target, args)
         }
@@ -70,7 +61,7 @@ export default class DevTools {
       const componentName = arg.component
       const eventName = arg.event
       const { metadata, ...eventArgs } = arg.data // Remove metadata from the args
-      bottomSheet.addBridgeLog(direction, componentName, eventName, eventArgs)
+      this.bottomSheet.addBridgeLog(direction, componentName, eventName, eventArgs)
     })
   }
 
