@@ -134,10 +134,11 @@ export default class DevTools {
 
       /* Debug bubble */
       #debug-bubble {
-        width: 5rem;
-        height: 5rem;
-        background-color: rgb(92, 92, 92);
-        border: 0.5rem solid rgba(136, 136, 136, 0.5);
+        display: flex;
+        width: 4.75rem;
+        height: 4.75rem;
+        background-color: hsl(0deg 0% 0% / 60%);
+        border: 0.3rem solid rgba(136, 136, 136, 0.5);
         border-radius: 50%;
         touch-action: none;
         user-select: none;
@@ -147,6 +148,11 @@ export default class DevTools {
         position: absolute;
         bottom: 10px;
         right: 10px;
+      }
+
+      #debug-bubble svg {
+        transform: scale(2.5);
+        fill: #b1b1b1;
       }
 
       /* Bottom Sheet */

@@ -1,3 +1,11 @@
+export const hotwireIcon = `
+  <svg viewBox="0 0 1280 640" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,2.84314,0.582946)">
+        <path d="M783.777,159.685L683.006,262.542L765.948,268.939L622.459,394.208L690.389,396.4L490.537,479.149L569.424,402.053L511.312,400.203L639.22,296.093L533.548,287.812L783.777,159.685Z"/>
+    </g>
+  </svg>
+`
+
 export const arrowUp = `
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->

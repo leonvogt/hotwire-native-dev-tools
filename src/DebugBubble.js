@@ -1,4 +1,5 @@
 import { getSettings, saveSettings } from "./utils/settings"
+import { hotwireIcon } from "./utils/icons"
 
 export default class DebugBubble {
   constructor(devTools) {
@@ -35,6 +36,7 @@ export default class DebugBubble {
 
     this.dragItem = document.createElement("div")
     this.dragItem.id = "debug-bubble"
+    this.dragItem.innerHTML = hotwireIcon
     this.devTools.shadowRoot.appendChild(this.dragItem)
   }
 
@@ -61,7 +63,7 @@ export default class DebugBubble {
     this.initialX = event.touches[0].clientX - this.xOffset
     this.initialY = event.touches[0].clientY - this.yOffset
 
-    if (event.target === this.dragItem) {
+    if (event.target.closest("#debug-bubble")) {
       this.currentlyDragging = true
     }
   }
