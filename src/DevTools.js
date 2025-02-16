@@ -164,47 +164,47 @@ export default class DevTools {
         justify-content: flex-end;
         transition: 0.1s linear;
         z-index: 10000001;
+      }
 
-        .sheet-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          z-index: -1;
-          width: 100%;
-          height: 100%;
-          opacity: 0.2;
-          background: #000;
-        }
+      .bottom-sheet .sheet-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        opacity: 0.2;
+        background: #000;
+      }
 
-        .content {
-          width: 100%;
-          position: relative;
-          background-color: hsl(0deg 0% 0% / 60%);
-          color: white;
-          max-height: 100vh;
-          height: 40vh;
-          transform: translateY(100%);
-          border-radius: 12px 12px 0 0;
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
-          transition: 0.3s ease;
+      .bottom-sheet .content {
+        width: 100%;
+        position: relative;
+        background-color: hsl(0deg 0% 0% / 60%);
+        color: white;
+        max-height: 100vh;
+        height: 40vh;
+        transform: translateY(100%);
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+        transition: 0.3s ease;
 
-          height: 100%;
-          overflow-y: auto;
-          scrollbar-width: none;
-        }
+        height: 100%;
+        overflow-y: auto;
+        scrollbar-width: none;
+      }
 
-        .content::-webkit-scrollbar {
-          width: 0;
-        }
+      .bottom-sheet .content::-webkit-scrollbar {
+        width: 0;
+      }
 
-        .log-entry {
-          border-bottom: 1px solid #6c6c6c;
-        }
+      .bottom-sheet .log-entry {
+        border-bottom: 1px solid #6c6c6c;
+      }
 
-        .log-entry-icon svg {
-          width: 1rem;
-          fill: white;
-        }
+      .bottom-sheet .log-entry-icon svg {
+        width: 1rem;
+        fill: white;
       }
 
       .bottom-sheet.show {
