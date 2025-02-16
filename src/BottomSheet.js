@@ -112,7 +112,7 @@ export default class BottomSheet {
     this.addEventListener()
 
     this.bottomSheet.classList.add("show")
-    document.body.style.overflowY = "hidden"
+    document.body.style.overflow = "hidden"
     this.updateSheetHeight(50)
   }
 
@@ -122,6 +122,6 @@ export default class BottomSheet {
 
   hideBottomSheet() {
     this.bottomSheet.classList.remove("show")
-    document.body.style.overflowY = "auto"
+    document.body.style.overflow = "auto"
   }
 }
