@@ -186,7 +186,7 @@ export default class DevTools {
       .bottom-sheet .content {
         width: 100%;
         position: relative;
-        background-color: hsl(0deg 0% 0% / 60%);
+        background-color: hsl(0deg 0% 0% / 80%);
         color: white;
         max-height: 100vh;
         height: 40vh;
@@ -220,6 +220,14 @@ export default class DevTools {
 
       .bottom-sheet.show .content {
         transform: translateY(0%);
+      }
+
+      .bottom-sheet .log-entry.warn {
+        color: #f39c12;
+      }
+
+      .bottom-sheet .log-entry.error {
+        color: #ED4E4C;
       }
 
       /* Utility classes */
