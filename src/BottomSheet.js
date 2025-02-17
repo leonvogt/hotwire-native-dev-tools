@@ -1,8 +1,10 @@
 import * as Icons from "./utils/icons"
+import { getSettings, saveSettings } from "./utils/settings"
 
 export default class BottomSheet {
   constructor(devTools) {
     this.devTools = devTools
+    this.activeTab = getSettings("activeTab") || "bridge-logs"
 
     this.createBottomSheet()
     this.sheetContent = this.bottomSheet.querySelector(".content")
@@ -22,23 +24,18 @@ export default class BottomSheet {
       <div class="sheet-overlay"></div>
       <div class="content">
         <div class="tablist">
-          <button class="tablink active" data-tab-id="bridge-logs">Bridge</button>
-          <button class="tablink" data-tab-id="console-logs">Console</button>
-          <button class="tablink" data-tab-id="settings">Settings</button>
+          <button class="tablink ${this.activeTab === "bridge-logs" ? "active" : ""}" data-tab-id="bridge-logs">Bridge</button>
+          <button class="tablink ${this.activeTab === "console-logs" ? "active" : ""}" data-tab-id="console-logs">Console</button>
         </div>
 
-        <div id="bridge-logs" class="tab-content active">
+        <div id="bridge-logs" class="tab-content ${this.activeTab === "bridge-logs" ? "active" : ""}">
           <h3>Bridge Logs</h3>
           <div class="tab-bridge-logs"></div>
         </div>
 
-        <div id="console-logs" class="tab-content">
+        <div id="console-logs" class="tab-content ${this.activeTab === "console-logs" ? "active" : ""}">
           <h3>Console Logs</h3>
           <div class="tab-console-logs"></div>
-        </div>
-
-        <div id="settings" class="tab-content">
-          <h3>Settings</h3>
         </div>
       </div>
     `
@@ -61,6 +58,8 @@ export default class BottomSheet {
 
     clickedTab.classList.add("active")
     desiredTabContent.classList.add("active")
+
+    saveSettings("activeTab", clickedTab.dataset.tabId)
   }
 
   addBridgeLog(direction, componentName, eventName, eventArgs) {
