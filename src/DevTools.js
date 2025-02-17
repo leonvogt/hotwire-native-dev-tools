@@ -151,7 +151,7 @@ export default class DevTools {
       }
 
       #debug-bubble svg {
-        transform: scale(2.5);
+        transform: scale(0.6);
         fill: #b1b1b1;
       }
 
