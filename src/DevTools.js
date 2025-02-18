@@ -145,7 +145,7 @@ export default class DevTools {
         z-index: 10000000;
 
         /* Inital position */
-        position: sticky;
+        position: fixed;
         bottom: 10px;
         right: 10px;
       }
