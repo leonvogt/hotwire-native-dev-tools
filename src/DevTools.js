@@ -222,12 +222,52 @@ export default class DevTools {
         transform: translateY(0%);
       }
 
-      .bottom-sheet .log-entry.warn {
+      .bottom-sheet .log-entry-message.warn {
         color: #f39c12;
       }
 
-      .bottom-sheet .log-entry.error {
+      .bottom-sheet .log-entry-message.error {
         color: #ED4E4C;
+      }
+
+      /* Tabs */
+      .tablist {
+        display: flex;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #ccc;
+        position: sticky;
+        top: 0;
+      }
+
+      .tablist button {
+        background-color: inherit;
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 14px 16px;
+        user-select: none;
+      }
+
+      .tablist button:active, .tablist button.active {
+        background-color: #f1f1f1;
+      }
+
+      .tab-content {
+        display: none;
+        border-top: none;
+        padding: 1rem;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      .tab-empty-content {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding: 1em;
       }
 
       /* Utility classes */
@@ -310,37 +350,6 @@ export default class DevTools {
 
       .w-100 {
         width: 100%;
-      }
-
-
-      /* Tabs */
-      .tablist {
-        display: flex;
-        overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
-      }
-
-      .tablist button {
-        background-color: inherit;
-        width: 100%;
-        border: none;
-        outline: none;
-        padding: 14px 16px;
-        user-select: none;
-      }
-
-      .tablist button:active, .tablist button.active {
-        background-color: #ccc;
-      }
-
-      .tab-content {
-        display: none;
-        border-top: none;
-        padding: 1rem;
-      }
-      .tab-content.active {
-        display: block;
       }
     `
   }

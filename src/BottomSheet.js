@@ -4,7 +4,7 @@ import { getSettings, saveSettings } from "./utils/settings"
 export default class BottomSheet {
   constructor(devTools) {
     this.devTools = devTools
-    this.activeTab = getSettings("activeTab") || "bridge-logs"
+    this.activeTab = getSettings("activeTab") || "tab-bridge-logs"
 
     this.createBottomSheet()
     this.sheetContent = this.bottomSheet.querySelector(".content")
@@ -24,18 +24,24 @@ export default class BottomSheet {
       <div class="sheet-overlay"></div>
       <div class="content">
         <div class="tablist">
-          <button class="tablink ${this.activeTab === "bridge-logs" ? "active" : ""}" data-tab-id="bridge-logs">Bridge</button>
-          <button class="tablink ${this.activeTab === "console-logs" ? "active" : ""}" data-tab-id="console-logs">Console</button>
+          <button class="tablink ${this.activeTab === "tab-bridge-logs" ? "active" : ""}" data-tab-id="tab-bridge-logs">Bridge</button>
+          <button class="tablink ${this.activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
         </div>
 
-        <div id="bridge-logs" class="tab-content ${this.activeTab === "bridge-logs" ? "active" : ""}">
-          <h3>Bridge Logs</h3>
-          <div class="tab-bridge-logs"></div>
+        <div id="tab-bridge-logs" class="tab-content ${this.activeTab === "tab-bridge-logs" ? "active" : ""}">
+          <div class="tab-content-bridge-logs">
+            <div class="tab-empty-content">
+              <span>No bridge communication yet</span>
+            </div>
+          </div>
         </div>
 
-        <div id="console-logs" class="tab-content ${this.activeTab === "console-logs" ? "active" : ""}">
-          <h3>Console Logs</h3>
-          <div class="tab-console-logs"></div>
+        <div id="tab-console-logs" class="tab-content ${this.activeTab === "tab-console-logs" ? "active" : ""}">
+          <div class="tab-content-console-logs">
+            <div class="tab-empty-content">
+              <span>No console logs yet</span>
+            </div>
+          </div>
         </div>
       </div>
     `
@@ -69,7 +75,7 @@ export default class BottomSheet {
         <div class="log-entry-icon">
           ${direction === "send" ? Icons.arrowDown : Icons.arrowUp}
         </div>
-        <div class="log-entry__content w-100">
+        <div class="w-100">
           <div class="d-flex justify-between">
             <strong>${componentName}#${eventName}</strong>
             <small>${time}</small>
@@ -83,24 +89,34 @@ export default class BottomSheet {
         </div>
       </div>
     `
-    this.sheetContent.querySelector(".tab-bridge-logs").insertAdjacentHTML("beforebegin", html)
+    const bridgeLogs = this.sheetContent.querySelector(".tab-content-bridge-logs")
+    const noEntryContent = bridgeLogs.querySelector(".tab-empty-content")
+    if (noEntryContent) {
+      noEntryContent.remove()
+    }
+    bridgeLogs.insertAdjacentHTML("beforeend", html)
   }
 
   addConsoleLog(type, message) {
     const time = new Date().toLocaleTimeString()
     const html = `
-      <div class="log-entry pt-2 pb-2 ${type}">
-        <div class="log-entry__content w-100">
+      <div class="log-entry pt-2 pb-2">
+        <div class="w-100">
           <div class="d-flex justify-end">
             <small>${time}</small>
           </div>
-          <div>
+          <div class="log-entry-message ${type}">
             ${message}
           </div>
         </div>
       </div>
     `
-    this.sheetContent.querySelector(".tab-console-logs").insertAdjacentHTML("beforebegin", html)
+    const consoleLogs = this.sheetContent.querySelector(".tab-content-console-logs")
+    const noEntryContent = consoleLogs.querySelector(".tab-empty-content")
+    if (noEntryContent) {
+      noEntryContent.remove()
+    }
+    consoleLogs.insertAdjacentHTML("beforeend", html)
   }
 
   addEventListener() {
