@@ -26,6 +26,7 @@ export default class BottomSheet {
         <div class="tablist">
           <button class="tablink ${this.activeTab === "tab-bridge-logs" ? "active" : ""}" data-tab-id="tab-bridge-logs">Bridge</button>
           <button class="tablink ${this.activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
+          <button class="tablink ${this.activeTab === "tab-events" ? "active" : ""}" data-tab-id="tab-events">Events</button>
         </div>
 
         <div id="tab-bridge-logs" class="tab-content ${this.activeTab === "tab-bridge-logs" ? "active" : ""}">
@@ -40,6 +41,14 @@ export default class BottomSheet {
           <div class="tab-content-console-logs">
             <div class="tab-empty-content">
               <span>No console logs yet</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-events" class="tab-content ${this.activeTab === "tab-events" ? "active" : ""}">
+          <div class="tab-content-events">
+            <div class="tab-empty-content">
+              <span>No events captured yet</span>
             </div>
           </div>
         </div>
@@ -68,8 +77,7 @@ export default class BottomSheet {
     saveSettings("activeTab", clickedTab.dataset.tabId)
   }
 
-  addBridgeLog(direction, componentName, eventName, eventArgs) {
-    const time = new Date().toLocaleTimeString()
+  addBridgeLog(direction, componentName, eventName, eventArgs, time) {
     const html = `
       <div class="log-entry d-flex gap-3 pt-2 pb-2">
         <div class="log-entry-icon">
@@ -97,8 +105,7 @@ export default class BottomSheet {
     bridgeLogs.insertAdjacentHTML("beforeend", html)
   }
 
-  addConsoleLog(type, message) {
-    const time = new Date().toLocaleTimeString()
+  addConsoleLog(type, message, time) {
     const html = `
       <div class="log-entry pt-2 pb-2">
         <div class="w-100">
@@ -117,6 +124,27 @@ export default class BottomSheet {
       noEntryContent.remove()
     }
     consoleLogs.insertAdjacentHTML("beforeend", html)
+  }
+
+  addEventMessage(message, time) {
+    const html = `
+      <div class="log-entry pt-2 pb-2">
+        <div class="w-100">
+          <div class="d-flex justify-end">
+            <small>${time}</small>
+          </div>
+          <div class="log-entry-message">
+            ${message}
+          </div>
+        </div>
+      </div>
+    `
+    const eventsContent = this.sheetContent.querySelector(".tab-content-events")
+    const noEntryContent = eventsContent.querySelector(".tab-empty-content")
+    if (noEntryContent) {
+      noEntryContent.remove()
+    }
+    eventsContent.insertAdjacentHTML("beforeend", html)
   }
 
   addEventListener() {

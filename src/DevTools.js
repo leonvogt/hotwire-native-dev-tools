@@ -6,6 +6,7 @@ export default class DevTools {
     this.state = {
       consoleLogs: [],
       bridgeLogs: [],
+      events: [],
     }
   }
 
@@ -14,12 +15,18 @@ export default class DevTools {
     this.bubble = new DebugBubble(this)
     this.bottomSheet = new BottomSheet(this)
 
+    // Start listening for events
+    this.listenForEvents()
+
     // Fill logs from previous sessions
     this.state.consoleLogs.forEach((log) => {
-      this.bottomSheet.addConsoleLog(log.type, log.message)
+      this.bottomSheet.addConsoleLog(log.type, log.message, log.time)
     })
     this.state.bridgeLogs.forEach((log) => {
-      this.bottomSheet.addBridgeLog(log.direction, log.componentName, log.eventName, log.eventArgs)
+      this.bottomSheet.addBridgeLog(log.direction, log.componentName, log.eventName, log.eventArgs, log.time)
+    })
+    this.state.events.forEach((event) => {
+      this.bottomSheet.addEventMessage(event.eventName, event.time)
     })
 
     // Console Proxy
@@ -94,8 +101,10 @@ export default class DevTools {
       const componentName = arg.component
       const eventName = arg.event
       const { metadata, ...eventArgs } = arg.data // Remove metadata from the args
-      this.bottomSheet.addBridgeLog(direction, componentName, eventName, eventArgs)
-      this.state.bridgeLogs.push({ direction, componentName, eventName, eventArgs })
+
+      const time = this.currentTime
+      this.bottomSheet.addBridgeLog(direction, componentName, eventName, eventArgs, time)
+      this.state.bridgeLogs.push({ direction, componentName, eventName, eventArgs, time })
     })
   }
 
@@ -112,8 +121,10 @@ export default class DevTools {
         return arg.toString()
       })
       .join(" ")
-    this.bottomSheet.addConsoleLog(type, message)
-    this.state.consoleLogs.push({ type, message })
+
+    const time = this.currentTime
+    this.bottomSheet.addConsoleLog(type, message, time)
+    this.state.consoleLogs.push({ type, message, time })
   }
 
   injectCSSToShadowRoot = async () => {
@@ -122,6 +133,49 @@ export default class DevTools {
     const style = document.createElement("style")
     style.textContent = this.cssContent
     this.shadowRoot.appendChild(style)
+  }
+
+  listenForEvents() {
+    if (this.eventsRegistered) return
+
+    const turboEvents = [
+      "turbo:click",
+      "turbo:before-visit",
+      "turbo:visit",
+      "turbo:before-cache",
+      "turbo:before-render",
+      "turbo:render",
+      "turbo:load",
+      "turbo:morph",
+      "turbo:before-morph-element",
+      "turbo:before-morph-attribute",
+      "turbo:morph-element",
+      "turbo:submit-start",
+      "turbo:submit-end",
+      "turbo:before-frame-render",
+      "turbo:frame-render",
+      "turbo:frame-load",
+      "turbo:frame-missing",
+      "turbo:before-stream-render",
+      "turbo:before-fetch-request",
+      "turbo:before-fetch-response",
+      "turbo:before-prefetch",
+      "turbo:fetch-request-error",
+    ]
+
+    turboEvents.forEach((eventName) => {
+      window.addEventListener(
+        eventName,
+        (event) => {
+          const time = this.currentTime
+          this.bottomSheet.addEventMessage(eventName, time)
+          this.state.events.push({ eventName, time })
+        },
+        { passive: true }
+      )
+    })
+
+    this.eventsRegistered = true
   }
 
   get shadowContainer() {
@@ -133,6 +187,10 @@ export default class DevTools {
     shadowContainer.id = "hotwire-native-dev-tools-shadow-container"
     document.body.appendChild(shadowContainer)
     return shadowContainer
+  }
+
+  get currentTime() {
+    return new Date().toLocaleTimeString()
   }
 
   // Not ideal, but I didn't found a way to load the CSS from a file, without dependencies
