@@ -4,8 +4,6 @@ import BottomSheet from "./BottomSheet"
 
 export default class DevTools {
   constructor() {
-    this.setupShadowRoot()
-
     this.state = new DevToolsState()
     this.bubble = new DebugBubble(this)
     this.bottomSheet = new BottomSheet(this)
