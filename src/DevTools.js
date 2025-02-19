@@ -305,6 +305,27 @@ export default class DevTools {
         color: #ED4E4C;
       }
 
+      .bottom-sheet .tab-action-bar {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #6c6c6c;
+      }
+
+      .bottom-sheet .tab-action-bar button {
+        background-color: transparent;
+        border: none;
+        color: white;
+      }
+
+      .bottom-sheet .btn-clear-tab {
+        width: 1.6rem;
+        height: 1.6rem;
+        margin-left: auto;
+      }
+      .bottom-sheet .btn-clear-tab svg {
+        fill: white;
+      }
+
       /* Tabs */
       .tablist {
         display: flex;

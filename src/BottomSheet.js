@@ -29,26 +29,37 @@ export default class BottomSheet {
           <button class="tablink ${this.activeTab === "tab-events" ? "active" : ""}" data-tab-id="tab-events">Events</button>
         </div>
 
-        <div id="tab-bridge-logs" class="tab-content ${this.activeTab === "tab-bridge-logs" ? "active" : ""}">
-          <div class="tab-content-bridge-logs">
-            <div class="tab-empty-content">
-              <span>No bridge communication yet</span>
+        <div class="tab-contents">
+          <div id="tab-bridge-logs" class="tab-content ${this.activeTab === "tab-bridge-logs" ? "active" : ""}">
+            <div class="tab-action-bar">
+              <button class="btn-clear-tab btn-clear-bridge-logs">${Icons.trash}</button>
+            </div>
+            <div class="tab-content-bridge-logs">
+              <div class="tab-empty-content">
+                <span>No bridge communication yet</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div id="tab-console-logs" class="tab-content ${this.activeTab === "tab-console-logs" ? "active" : ""}">
-          <div class="tab-content-console-logs">
-            <div class="tab-empty-content">
-              <span>No console logs yet</span>
+          <div id="tab-console-logs" class="tab-content ${this.activeTab === "tab-console-logs" ? "active" : ""}">
+            <div class="tab-action-bar">
+              <button class="btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
+            </div>
+            <div class="tab-content-console-logs">
+              <div class="tab-empty-content">
+                <span>No console logs yet</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div id="tab-events" class="tab-content ${this.activeTab === "tab-events" ? "active" : ""}">
-          <div class="tab-content-events">
-            <div class="tab-empty-content">
-              <span>No events captured yet</span>
+          <div id="tab-events" class="tab-content ${this.activeTab === "tab-events" ? "active" : ""}">
+            <div class="tab-action-bar">
+              <button class="btn-clear-tab btn-clear-events">${Icons.trash}</button>
+            </div>
+            <div class="tab-content-events">
+              <div class="tab-empty-content">
+                <span>No events captured yet</span>
+              </div>
             </div>
           </div>
         </div>
@@ -56,6 +67,7 @@ export default class BottomSheet {
     `
     this.devTools.shadowRoot.appendChild(this.bottomSheet)
     this.listenForTabNavigation()
+    this.listenForActionBar()
   }
 
   listenForTabNavigation() {
@@ -75,6 +87,36 @@ export default class BottomSheet {
     desiredTabContent.classList.add("active")
 
     saveSettings("activeTab", clickedTab.dataset.tabId)
+  }
+
+  listenForActionBar() {
+    this.devTools.shadowRoot.querySelector(".btn-clear-bridge-logs").addEventListener("click", this.clearBridgeLogs)
+    this.devTools.shadowRoot.querySelector(".btn-clear-console-logs").addEventListener("click", this.clearConsoleLogs)
+    this.devTools.shadowRoot.querySelector(".btn-clear-events").addEventListener("click", this.clearEvents)
+  }
+
+  clearBridgeLogs = () => {
+    this.sheetContent.querySelector(".tab-content-bridge-logs").innerHTML = `
+      <div class="tab-empty-content">
+        <span>No bridge communication yet</span>
+      </div>
+    `
+  }
+
+  clearConsoleLogs = () => {
+    this.sheetContent.querySelector(".tab-content-console-logs").innerHTML = `
+      <div class="tab-empty-content">
+        <span>No console logs yet</span>
+      </div>
+    `
+  }
+
+  clearEvents = () => {
+    this.sheetContent.querySelector(".tab-content-events").innerHTML = `
+      <div class="tab-empty-content">
+        <span>No events captured yet</span>
+      </div>
+    `
   }
 
   addBridgeLog(direction, componentName, eventName, eventArgs, time) {
