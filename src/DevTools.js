@@ -1,41 +1,32 @@
+import DevToolsState from "./DevToolsState"
 import DebugBubble from "./DebugBubble"
 import BottomSheet from "./BottomSheet"
 
 export default class DevTools {
   constructor() {
-    this.state = {
-      consoleLogs: [],
-      bridgeLogs: [],
-      events: [],
-    }
+    this.setupShadowRoot()
+
+    this.state = new DevToolsState()
+    this.bubble = new DebugBubble(this)
+    this.bottomSheet = new BottomSheet(this)
+    this.state.subscribe(this.render.bind(this))
   }
 
   setup() {
     this.setupShadowRoot()
-    this.bubble = new DebugBubble(this)
-    this.bottomSheet = new BottomSheet(this)
+    this.bottomSheet.render()
+    this.bubble.render()
 
     // Start listening for events
     this.listenForEvents()
 
-    // Fill logs from previous sessions
-    this.state.consoleLogs.forEach((log) => {
-      this.bottomSheet.addConsoleLog(log.type, log.message, log.time)
-    })
-    this.state.bridgeLogs.forEach((log) => {
-      this.bottomSheet.addBridgeLog(log.direction, log.componentName, log.eventName, log.eventArgs, log.time)
-    })
-    this.state.events.forEach((event) => {
-      this.bottomSheet.addEventMessage(event.eventName, event.time)
-    })
-
-    // Console Proxy
+    // Add Console Proxy
     if (!this.originalConsole) {
       this.originalConsole = window.console
       this.addConsoleProxy()
     }
 
-    // Bridge Component Proxy
+    // Add Bridge Component Proxy
     if (!this.originalBridge && window.Strada) {
       this.originalBridge = window.Strada.web
       this.addBridgeProxy()
@@ -51,6 +42,10 @@ export default class DevTools {
     this.bubble.onClick((event) => {
       this.bottomSheet.showBottomSheet()
     })
+  }
+
+  render(updatedState) {
+    this.bottomSheet.rerender(updatedState)
   }
 
   setupShadowRoot() {
@@ -102,9 +97,7 @@ export default class DevTools {
       const eventName = arg.event
       const { metadata, ...eventArgs } = arg.data // Remove metadata from the args
 
-      const time = this.currentTime
-      this.bottomSheet.addBridgeLog(direction, componentName, eventName, eventArgs, time)
-      this.state.bridgeLogs.push({ direction, componentName, eventName, eventArgs, time })
+      this.state.addBridgeLog(direction, componentName, eventName, eventArgs)
     })
   }
 
@@ -122,9 +115,7 @@ export default class DevTools {
       })
       .join(" ")
 
-    const time = this.currentTime
-    this.bottomSheet.addConsoleLog(type, message, time)
-    this.state.consoleLogs.push({ type, message, time })
+    this.state.addConsoleLog(type, message)
   }
 
   injectCSSToShadowRoot = async () => {
@@ -167,9 +158,7 @@ export default class DevTools {
       window.addEventListener(
         eventName,
         (event) => {
-          const time = this.currentTime
-          this.bottomSheet.addEventMessage(eventName, time)
-          this.state.events.push({ eventName, time })
+          this.state.addEvent(eventName)
         },
         { passive: true }
       )

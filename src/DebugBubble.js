@@ -5,9 +5,6 @@ export default class DebugBubble {
   constructor(devTools) {
     this.devTools = devTools
 
-    this.createDragItem()
-    this.addEventListeners()
-
     let startX = 0
     let startY = 0
     const settings = getSettings("bubblePosition")
@@ -23,8 +20,12 @@ export default class DebugBubble {
     this.initialY = startY
     this.xOffset = startX
     this.yOffset = startY
+  }
 
+  render() {
+    this.createDragItem()
     this.setTranslate(this.initialX, this.initialY, this.dragItem)
+    this.addEventListeners()
   }
 
   createDragItem() {
