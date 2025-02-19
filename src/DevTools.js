@@ -2,10 +2,25 @@ import DebugBubble from "./DebugBubble"
 import BottomSheet from "./BottomSheet"
 
 export default class DevTools {
+  constructor() {
+    this.state = {
+      consoleLogs: [],
+      bridgeLogs: [],
+    }
+  }
+
   setup() {
     this.setupShadowRoot()
     this.bubble = new DebugBubble(this)
     this.bottomSheet = new BottomSheet(this)
+
+    // Fill logs from previous sessions
+    this.state.consoleLogs.forEach((log) => {
+      this.bottomSheet.addConsoleLog(log.type, log.message)
+    })
+    this.state.bridgeLogs.forEach((log) => {
+      this.bottomSheet.addBridgeLog(log.direction, log.componentName, log.eventName, log.eventArgs)
+    })
 
     // Console Proxy
     if (!this.originalConsole) {
@@ -80,6 +95,7 @@ export default class DevTools {
       const eventName = arg.event
       const { metadata, ...eventArgs } = arg.data // Remove metadata from the args
       this.bottomSheet.addBridgeLog(direction, componentName, eventName, eventArgs)
+      this.state.bridgeLogs.push({ direction, componentName, eventName, eventArgs })
     })
   }
 
@@ -97,6 +113,7 @@ export default class DevTools {
       })
       .join(" ")
     this.bottomSheet.addConsoleLog(type, message)
+    this.state.consoleLogs.push({ type, message })
   }
 
   injectCSSToShadowRoot = async () => {
