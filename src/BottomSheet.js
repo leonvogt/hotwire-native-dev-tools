@@ -36,7 +36,7 @@ export default class BottomSheet {
         <div class="tablist">
           <button class="tablink ${activeTab === "tab-bridge-logs" ? "active" : ""}" data-tab-id="tab-bridge-logs">Bridge</button>
           <button class="tablink ${activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
-          <button class="tablink ${activeTab === "tab-events" ? "active" : ""}" data-tab-id="tab-events">Events</button>
+          <button class="tablink ${activeTab === "tab-event-logs" ? "active" : ""}" data-tab-id="tab-event-logs">Events</button>
         </div>
 
         <div class="tab-contents">
@@ -56,11 +56,11 @@ export default class BottomSheet {
             </div>
           </div>
 
-          <div id="tab-events" class="tab-content ${activeTab === "tab-events" ? "active" : ""}">
+          <div id="tab-event-logs" class="tab-content ${activeTab === "tab-event-logs" ? "active" : ""}">
             <div class="tab-action-bar">
               <button class="btn-clear-tab btn-clear-events">${Icons.trash}</button>
             </div>
-            <div class="tab-content-events">
+            <div class="tab-content-event-logs">
             </div>
           </div>
         </div>
@@ -84,9 +84,9 @@ export default class BottomSheet {
   }
 
   renderEvents() {
-    const container = this.bottomSheet.querySelector(".tab-content-events")
-    container.innerHTML = this.state.events.length
-      ? this.state.events.map((event) => this.eventMessageHTML(event.eventName, event.time)).join("")
+    const container = this.bottomSheet.querySelector(".tab-content-event-logs")
+    container.innerHTML = this.state.eventLogs.length
+      ? this.state.eventLogs.map((event) => this.eventMessageHTML(event.eventName, event.time)).join("")
       : `<div class="tab-empty-content"><span>No events captured yet</span></div>`
   }
 
@@ -168,7 +168,7 @@ export default class BottomSheet {
 
     this.bottomSheet.querySelector(".btn-clear-console-logs").addEventListener("click", () => this.devTools.state.clearConsoleLogs())
     this.bottomSheet.querySelector(".btn-clear-bridge-logs").addEventListener("click", () => this.devTools.state.clearBridgeLogs())
-    this.bottomSheet.querySelector(".btn-clear-events").addEventListener("click", () => this.devTools.state.clearEvents())
+    this.bottomSheet.querySelector(".btn-clear-events").addEventListener("click", () => this.devTools.state.clearEventLogs())
     this.bottomSheet.querySelector(".tablist").addEventListener("click", (event) => this.handleTabClick(event))
   }
 

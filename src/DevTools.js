@@ -158,7 +158,7 @@ export default class DevTools {
       window.addEventListener(
         eventName,
         (event) => {
-          this.state.addEvent(eventName)
+          this.state.addEventLog(eventName)
         },
         { passive: true }
       )

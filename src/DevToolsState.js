@@ -5,7 +5,7 @@ export default class DevToolsState {
     this.state = {
       consoleLogs: [],
       bridgeLogs: [],
-      events: [],
+      eventLogs: [],
       activeTab: getSettings("activeTab") || "tab-bridge-logs",
     }
     this.listeners = []
@@ -31,9 +31,9 @@ export default class DevToolsState {
     this.notify()
   }
 
-  addEvent(eventName) {
+  addEventLog(eventName) {
     const event = { eventName, time: this.currentTime }
-    this.state.events.push(event)
+    this.state.eventLogs.push(event)
     this.notify()
   }
 
@@ -47,8 +47,8 @@ export default class DevToolsState {
     this.notify()
   }
 
-  clearEvents() {
-    this.state.events = []
+  clearEventLogs() {
+    this.state.eventLogs = []
     this.notify()
   }
 
