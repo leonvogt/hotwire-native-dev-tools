@@ -7,9 +7,10 @@ export default class DevTools {
     this.state = new DevToolsState()
     this.bubble = new DebugBubble(this)
     this.bottomSheet = new BottomSheet(this)
-    this.state.subscribe(this.render.bind(this))
+    this.state.subscribe(this.update.bind(this))
   }
 
+  // Setup gets called initially and on every turbo:load event, eg. when navigating to a new page
   setup() {
     this.setupShadowRoot()
     this.bottomSheet.render()
@@ -42,8 +43,8 @@ export default class DevTools {
     })
   }
 
-  render(updatedState) {
-    this.bottomSheet.rerender(updatedState)
+  update(newState) {
+    this.bottomSheet.update(newState)
   }
 
   setupShadowRoot() {

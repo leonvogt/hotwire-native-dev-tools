@@ -13,7 +13,7 @@ export default class BottomSheet {
     this.addEventListener()
   }
 
-  rerender(newState) {
+  update(newState) {
     this.state = newState
     this.renderConsoleLogs()
     this.renderBridgeLogs()
