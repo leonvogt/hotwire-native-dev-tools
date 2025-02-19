@@ -42,10 +42,12 @@ export default class DebugBubble {
   }
 
   addEventListeners() {
+    if (this.dragItem.hasEventListeners) return
     this.dragItem.addEventListener("click", this.click.bind(this), false)
     this.dragItem.addEventListener("touchstart", this.dragStart.bind(this), false)
     this.dragItem.addEventListener("touchend", this.dragEnd.bind(this), false)
     this.dragItem.addEventListener("touchmove", this.drag.bind(this), false)
+    this.dragItem.hasEventListeners = true
   }
 
   click(event) {

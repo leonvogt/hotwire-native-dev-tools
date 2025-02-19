@@ -8,6 +8,7 @@ export default class DevTools {
     this.bubble = new DebugBubble(this)
     this.bottomSheet = new BottomSheet(this)
     this.state.subscribe(this.update.bind(this))
+    this.listenForTurboEvents()
   }
 
   // Setup gets called initially and on every turbo:load event, eg. when navigating to a new page
@@ -15,9 +16,6 @@ export default class DevTools {
     this.setupShadowRoot()
     this.bottomSheet.render()
     this.bubble.render()
-
-    // Start listening for events
-    this.listenForEvents()
 
     // Add Console Proxy
     if (!this.originalConsole) {
@@ -125,7 +123,7 @@ export default class DevTools {
     this.shadowRoot.appendChild(style)
   }
 
-  listenForEvents() {
+  listenForTurboEvents() {
     if (this.eventsRegistered) return
 
     const turboEvents = [

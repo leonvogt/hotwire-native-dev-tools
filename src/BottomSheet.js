@@ -164,12 +164,15 @@ export default class BottomSheet {
   }
 
   addEventListener() {
+    if (this.bottomSheet.hasEventListeners) return
+
     this.sheetOverlay.addEventListener("click", () => this.hideBottomSheet())
 
     this.bottomSheet.querySelector(".btn-clear-console-logs").addEventListener("click", () => this.devTools.state.clearConsoleLogs())
     this.bottomSheet.querySelector(".btn-clear-bridge-logs").addEventListener("click", () => this.devTools.state.clearBridgeLogs())
     this.bottomSheet.querySelector(".btn-clear-events").addEventListener("click", () => this.devTools.state.clearEventLogs())
     this.bottomSheet.querySelector(".tablist").addEventListener("click", (event) => this.handleTabClick(event))
+    this.bottomSheet.hasEventListeners = true
   }
 
   showBottomSheet() {
