@@ -40,27 +40,27 @@ export default class BottomSheet {
         </div>
 
         <div class="tab-contents">
-          <div id="tab-bridge-logs" class="tab-content ${activeTab === "tab-bridge-logs" ? "active" : ""}">
+          <div id="tab-bridge-logs" class="outer-tab-content ${activeTab === "tab-bridge-logs" ? "active" : ""}">
             <div class="tab-action-bar">
               <button class="btn-clear-tab btn-clear-bridge-logs">${Icons.trash}</button>
             </div>
-            <div class="tab-content-bridge-logs">
+            <div class="inner-tab-content tab-content-bridge-logs">
             </div>
           </div>
 
-          <div id="tab-console-logs" class="tab-content ${activeTab === "tab-console-logs" ? "active" : ""}">
+          <div id="tab-console-logs" class="outer-tab-content ${activeTab === "tab-console-logs" ? "active" : ""}">
             <div class="tab-action-bar">
               <button class="btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
             </div>
-            <div class="tab-content-console-logs">
+            <div class="inner-tab-content tab-content-console-logs">
             </div>
           </div>
 
-          <div id="tab-event-logs" class="tab-content ${activeTab === "tab-event-logs" ? "active" : ""}">
+          <div id="tab-event-logs" class="outer-tab-content ${activeTab === "tab-event-logs" ? "active" : ""}">
             <div class="tab-action-bar">
               <button class="btn-clear-tab btn-clear-events">${Icons.trash}</button>
             </div>
-            <div class="tab-content-event-logs">
+            <div class="inner-tab-content tab-content-event-logs">
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default class BottomSheet {
 
   updateTabView(tabId) {
     // Hide all Tabs
-    this.devTools.shadowRoot.querySelectorAll(".tablink, .tab-content").forEach((tab) => {
+    this.devTools.shadowRoot.querySelectorAll(".tablink, .outer-tab-content").forEach((tab) => {
       tab.classList.remove("active")
     })
 

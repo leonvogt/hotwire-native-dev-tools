@@ -203,6 +203,7 @@ export default class DevTools {
         border-radius: 50%;
         touch-action: none;
         user-select: none;
+        -webkit-user-select: none;
         z-index: 10000000;
 
         /* Inital position */
@@ -247,7 +248,6 @@ export default class DevTools {
       .bottom-sheet .content {
         width: 100%;
         position: relative;
-        background-color: hsl(0deg 0% 0% / 80%);
         color: white;
         max-height: 100vh;
         height: 40vh;
@@ -295,20 +295,24 @@ export default class DevTools {
         display: flex;
         justify-content: space-between;
         border-bottom: 1px solid #6c6c6c;
+        padding: 0.5rem;
       }
 
       .bottom-sheet .tab-action-bar button {
         background-color: transparent;
         border: none;
         color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .bottom-sheet .btn-clear-tab {
-        width: 1.6rem;
-        height: 1.6rem;
         margin-left: auto;
       }
       .bottom-sheet .btn-clear-tab svg {
+        width: 1rem;
+        height: 1rem;
         fill: white;
       }
 
@@ -323,25 +327,35 @@ export default class DevTools {
       }
 
       .tablist button {
+        color: black;
         background-color: inherit;
         width: 100%;
         border: none;
         outline: none;
         padding: 14px 16px;
         user-select: none;
+        -webkit-user-select: none;
       }
 
       .tablist button:active, .tablist button.active {
         background-color: #f1f1f1;
       }
 
-      .tab-content {
+      .tab-contents {
+        height: 100%;
+      }
+
+      .outer-tab-content {
+        min-height: 100%;
+        background-color: hsl(0deg 0% 0% / 80%);
         display: none;
         border-top: none;
-        padding: 1rem;
       }
-      .tab-content.active {
+      .outer-tab-content.active {
         display: block;
+      }
+      .inner-tab-content {
+        padding: 1rem;
       }
 
       .tab-empty-content {
