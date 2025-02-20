@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Dev Tools for Hotwire Native",
   "main": "src/index.js",
+  "type": "module",
   "files": [
     "src",
     "dist"
