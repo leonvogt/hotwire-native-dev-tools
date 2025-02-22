@@ -356,6 +356,8 @@ export default class DevTools {
       }
       .inner-tab-content {
         padding: 1rem;
+        overflow-x: auto;
+        white-space: nowrap;
       }
 
       .tab-empty-content {
