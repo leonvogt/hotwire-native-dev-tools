@@ -182,6 +182,7 @@ export default class DevTools {
     }
     const shadowContainer = document.createElement("div")
     shadowContainer.id = "hotwire-native-dev-tools-shadow-container"
+    shadowContainer.setAttribute("data-native-prevent-pull-to-refresh", "")
     document.body.appendChild(shadowContainer)
     return shadowContainer
   }
