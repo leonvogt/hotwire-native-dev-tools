@@ -329,6 +329,65 @@ export default class DevTools {
         fill: white;
       }
 
+      /* Bottom Sheet Stack Visualization */
+      .bottom-sheet .controller-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        margin: 10px 0;
+        background: white;
+        color: black;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+      }
+
+      .bottom-sheet .navigation-controller {
+        border-color: #4e6080;
+        background: #31363F;
+      }
+
+      .bottom-sheet .visitable-controller {
+        border-color: #54b0b5;
+        background: #76ABAE;
+      }
+
+      .bottom-sheet .child-container {
+        margin-left: 30px;
+        position: relative;
+      }
+
+      .bottom-sheet .child-container::before {
+        content: "";
+        position: absolute;
+        left: -15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #ddd;
+      }
+
+      .bottom-sheet .controller-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+
+        font-weight: bold;
+        color: white;
+        margin-bottom: 5px;
+      }
+
+      .bottom-sheet .controller-title-details {
+        color: #ccc;
+        font-size: 0.6em;
+      }
+
+      .bottom-sheet .controller-url {
+        color: #000000;
+        font-size: 0.9em;
+        margin-top: 5px;
+        word-break: break-all;
+      }
+
       /* Tabs */
       .tablist {
         display: flex;

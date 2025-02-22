@@ -18,6 +18,7 @@ export default class BottomSheet {
     this.renderConsoleLogs()
     this.renderBridgeLogs()
     this.renderEvents()
+    this.renderNativeStack()
   }
 
   createBottomSheet() {
@@ -99,6 +100,11 @@ export default class BottomSheet {
       : `<div class="tab-empty-content"><span>No events captured yet</span></div>`
   }
 
+  renderNativeStack() {
+    const container = this.bottomSheet.querySelector(".tab-content-native-stack")
+    container.innerHTML = this.state.nativeStack.length ? this.state.nativeStack.map((stack) => this.nativeStackHTML(stack)).join("") : `<div class="tab-empty-content"><span>No native stack captured yet</span></div>`
+  }
+
   handleTabClick = (event) => {
     const clickedTab = event.target.closest(".tablink")
     if (!clickedTab) return
@@ -168,6 +174,45 @@ export default class BottomSheet {
             ${message}
           </div>
         </div>
+      </div>
+    `
+  }
+
+  nativeStackHTML(stack) {
+    return this.renderViewControllers(stack)
+  }
+
+  renderViewControllers(controller) {
+    const wrapperClass = `controller-card${controller.type === "UINavigationController" ? " navigation-controller" : controller.type === "VisitableViewController" ? " visitable-controller" : ""}`
+
+    const urlPath = controller.visitableURL
+      ? `<div class="controller-url">
+          ${(() => {
+            try {
+              return new URL(controller.visitableURL).pathname
+            } catch (error) {
+              return controller.visitableURL
+            }
+          })()}
+         </div>`
+      : ""
+
+    const childrenHTML = controller.children?.length
+      ? `<div class="child-container">
+          ${controller.children.map((child) => this.renderViewControllers(child)).join("")}
+         </div>`
+      : ""
+
+    return `
+      <div>
+        <div class="${wrapperClass}">
+          <div class="controller-title">
+            ${controller.title}
+            <div class="controller-title-details">${controller.type}</div>
+          </div>
+          ${urlPath}
+        </div>
+        ${childrenHTML}
       </div>
     `
   }
