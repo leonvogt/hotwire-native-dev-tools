@@ -13,7 +13,7 @@ export default class CustomBridge {
   }
 
   // Send a message to the native side
-  send(component, event, data = {}, callback = null) {
+  send(event, data = {}, callback = null) {
     const messageData = {
       ...data,
       metadata: {
@@ -22,7 +22,7 @@ export default class CustomBridge {
     }
 
     return this.bridge.send({
-      component,
+      component: "dev-tools",
       event,
       data: messageData,
       callback,

@@ -1,12 +1,14 @@
 import DevToolsState from "./DevToolsState"
 import DebugBubble from "./DebugBubble"
 import BottomSheet from "./BottomSheet"
+import CustomBridge from "./bridge/CustomBridge"
 
 export default class DevTools {
   constructor() {
     this.state = new DevToolsState()
     this.bubble = new DebugBubble(this)
     this.bottomSheet = new BottomSheet(this)
+    this.customBridge = new CustomBridge(this)
     this.state.subscribe(this.update.bind(this))
     this.listenForTurboEvents()
   }
@@ -39,6 +41,8 @@ export default class DevTools {
     this.bubble.onClick((event) => {
       this.bottomSheet.showBottomSheet()
     })
+
+    this.bottomSheet.showBottomSheet()
   }
 
   update(newState) {
@@ -113,6 +117,13 @@ export default class DevTools {
       .join(" ")
 
     this.state.addConsoleLog(type, message)
+  }
+
+  fetchNativeStack() {
+    this.customBridge.send("currentStackInfo", {}, (message) => {
+      const stack = JSON.parse(message.data.stack)
+      this.state.setNativeStack(stack)
+    })
   }
 
   injectCSSToShadowRoot = async () => {
@@ -307,10 +318,12 @@ export default class DevTools {
         justify-content: center;
       }
 
-      .bottom-sheet .btn-clear-tab {
+      .bottom-sheet .btn-clear-tab,
+      .bottom-sheet .btn-reload-tab {
         margin-left: auto;
       }
-      .bottom-sheet .btn-clear-tab svg {
+      .bottom-sheet .btn-clear-tab svg,
+      .bottom-sheet .btn-reload-tab svg {
         width: 1rem;
         height: 1rem;
         fill: white;

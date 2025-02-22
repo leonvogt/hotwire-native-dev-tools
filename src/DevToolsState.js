@@ -6,6 +6,7 @@ export default class DevToolsState {
       consoleLogs: [],
       bridgeLogs: [],
       eventLogs: [],
+      nativeStack: [],
       activeTab: getSettings("activeTab") || "tab-bridge-logs",
     }
     this.listeners = []
@@ -34,6 +35,11 @@ export default class DevToolsState {
   addEventLog(eventName) {
     const event = { eventName, time: this.currentTime }
     this.state.eventLogs.push(event)
+    this.notify()
+  }
+
+  setNativeStack(stack) {
+    this.state.nativeStack = stack
     this.notify()
   }
 

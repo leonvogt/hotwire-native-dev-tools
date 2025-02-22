@@ -37,6 +37,7 @@ export default class BottomSheet {
           <button class="tablink ${activeTab === "tab-bridge-logs" ? "active" : ""}" data-tab-id="tab-bridge-logs">Bridge</button>
           <button class="tablink ${activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
           <button class="tablink ${activeTab === "tab-event-logs" ? "active" : ""}" data-tab-id="tab-event-logs">Events</button>
+          <button class="tablink ${activeTab === "tab-native-stack" ? "active" : ""}" data-tab-id="tab-native-stack">Stack</button>
         </div>
 
         <div class="tab-contents">
@@ -61,6 +62,14 @@ export default class BottomSheet {
               <button class="btn-clear-tab btn-clear-events">${Icons.trash}</button>
             </div>
             <div class="inner-tab-content tab-content-event-logs">
+            </div>
+          </div>
+
+          <div id="tab-native-stack" class="outer-tab-content ${activeTab === "tab-native-stack" ? "active" : ""}">
+            <div class="tab-action-bar">
+              <button class="btn-reload-tab btn-reload-stack">${Icons.rotate}</button>
+            </div>
+            <div class="inner-tab-content tab-content-native-stack">
             </div>
           </div>
         </div>
@@ -171,6 +180,7 @@ export default class BottomSheet {
     this.bottomSheet.querySelector(".btn-clear-console-logs").addEventListener("click", () => this.devTools.state.clearConsoleLogs())
     this.bottomSheet.querySelector(".btn-clear-bridge-logs").addEventListener("click", () => this.devTools.state.clearBridgeLogs())
     this.bottomSheet.querySelector(".btn-clear-events").addEventListener("click", () => this.devTools.state.clearEventLogs())
+    this.bottomSheet.querySelector(".btn-reload-stack").addEventListener("click", () => this.devTools.fetchNativeStack())
     this.bottomSheet.querySelector(".tablist").addEventListener("click", (event) => this.handleTabClick(event))
     this.bottomSheet.hasEventListeners = true
   }
