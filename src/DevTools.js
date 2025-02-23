@@ -119,8 +119,7 @@ export default class DevTools {
 
   fetchNativeStack() {
     this.customBridge.send("currentStackInfo", {}, (message) => {
-      const stack = JSON.parse(message.data.stack)
-      this.state.setNativeStack(stack)
+      this.state.setNativeStack(message.data.stack)
     })
   }
 
@@ -307,6 +306,8 @@ export default class DevTools {
         border-bottom: 1px solid #6c6c6c;
         background-color: #ccc;
         padding: 0.5rem;
+        padding-right: 1rem;
+        padding-left: 1rem;
       }
 
       .bottom-sheet .tab-action-bar.active {
@@ -320,6 +321,12 @@ export default class DevTools {
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 0.5em;
+        height: 100%;
+      }
+
+      .bottom-sheet .tab-action-bar button:active svg {
+        fill: #6c6c6c;
       }
 
       .bottom-sheet .btn-clear-tab,
@@ -410,7 +417,6 @@ export default class DevTools {
         user-select: none;
         -webkit-user-select: none;
         -webkit-tap-highlight-color: transparent;
-
       }
 
       .tablist button.active {
