@@ -317,8 +317,7 @@ export default class DevTools {
       .bottom-sheet .tab-action-bar {
         display: none;
         justify-content: space-between;
-        border-bottom: 1px solid #6c6c6c;
-        background-color: #ccc;
+        background-color: rgb(49, 54, 63);
         padding: 0.5rem;
         padding-right: 1rem;
         padding-left: 1rem;
@@ -354,71 +353,11 @@ export default class DevTools {
         fill: white;
       }
 
-      /* Bottom Sheet Stack Visualization */
-      .bottom-sheet .viewstack-card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 10px;
-        margin: 10px 0;
-        background: white;
-        color: black;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease;
-      }
-
-      .bottom-sheet .main-view {
-        border-color: #4e6080;
-        background: #31363F;
-      }
-
-      .bottom-sheet .hotwire-view {
-        border-color: #54b0b5;
-        background: #76ABAE;
-      }
-
-      .bottom-sheet .child-container {
-        margin-left: 30px;
-        position: relative;
-      }
-
-      .bottom-sheet .child-container::before {
-        content: "";
-        position: absolute;
-        left: -15px;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: #ddd;
-      }
-
-      .bottom-sheet .view-title {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
-
-        font-weight: bold;
-        color: white;
-        margin-bottom: 5px;
-      }
-
-      .bottom-sheet .view-title-details {
-        color: #ccc;
-        font-size: 0.6em;
-      }
-
-      .bottom-sheet .view-url {
-        color: #000000;
-        font-size: 0.9em;
-        margin-top: 5px;
-        word-break: break-all;
-      }
-
-      /* Tabs */
+      /* Bottom Sheet Tabs */
       .tablist {
         display: flex;
         overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #ccc;
+        background-color: #EEEEEE;
       }
 
       .tablist .tablink {
@@ -433,8 +372,9 @@ export default class DevTools {
         -webkit-tap-highlight-color: transparent;
       }
 
-      .tablist button.active {
-        background-color: #f1f1f1;
+      .tablist .tablink.active {
+        background-color: #31363f;
+        color: white;
       }
 
       .tab-contents {
@@ -464,6 +404,65 @@ export default class DevTools {
         flex-direction: column;
         align-items: center;
         padding: 1em;
+      }
+
+      /* Bottom Sheet Stack Visualization */
+      .bottom-sheet .viewstack-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        margin: 10px 0;
+        background: white;
+        color: black;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+      }
+
+      .bottom-sheet .main-view {
+        border-color: #4e6080;
+        background: #31363F;
+      }
+
+      .bottom-sheet .hotwire-view {
+        border-color: #6db1b5;
+        background: #76ABAE;
+      }
+
+      .bottom-sheet .child-container {
+        margin-left: 30px;
+        position: relative;
+      }
+
+      .bottom-sheet .child-container::before {
+        content: "";
+        position: absolute;
+        left: -15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #ddd;
+      }
+
+      .bottom-sheet .view-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+
+        font-weight: bold;
+        color: white;
+        margin-bottom: 5px;
+      }
+
+      .bottom-sheet .view-title-details {
+        color: #efefef;
+        font-size: 0.6em;
+      }
+
+      .bottom-sheet .view-url {
+        color: #000000;
+        font-size: 0.9em;
+        margin-top: 5px;
+        word-break: break-all;
       }
 
       /* Utility classes */
