@@ -257,22 +257,14 @@ export default class DevTools {
 
       .bottom-sheet .content {
         width: 100%;
+        height: 40vh;
         position: relative;
         color: white;
-        max-height: 100vh;
-        height: 40vh;
         transform: translateY(100%);
         border-radius: 12px 12px 0 0;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
         transition: 0.3s ease;
-
-        height: 100%;
-        overflow-y: auto;
-        scrollbar-width: none;
-      }
-
-      .bottom-sheet .content::-webkit-scrollbar {
-        width: 0;
+        overflow-y: hidden;
       }
 
       .bottom-sheet .log-entry {
@@ -310,10 +302,15 @@ export default class DevTools {
       }
 
       .bottom-sheet .tab-action-bar {
-        display: flex;
+        display: none;
         justify-content: space-between;
         border-bottom: 1px solid #6c6c6c;
+        background-color: #ccc;
         padding: 0.5rem;
+      }
+
+      .bottom-sheet .tab-action-bar.active {
+        display: flex;
       }
 
       .bottom-sheet .tab-action-bar button {
@@ -401,11 +398,9 @@ export default class DevTools {
         overflow: hidden;
         border: 1px solid #ccc;
         background-color: #ccc;
-        position: sticky;
-        top: 0;
       }
 
-      .tablist button {
+      .tablist .tablink {
         color: black;
         background-color: inherit;
         width: 100%;
@@ -414,21 +409,25 @@ export default class DevTools {
         padding: 14px 16px;
         user-select: none;
         -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+
       }
 
-      .tablist button:active, .tablist button.active {
+      .tablist button.active {
         background-color: #f1f1f1;
       }
 
       .tab-contents {
         height: 100%;
+        overflow: scroll;
       }
 
       .outer-tab-content {
-        min-height: 100%;
-        background-color: hsl(0deg 0% 0% / 80%);
         display: none;
         border-top: none;
+        height: 100%;
+        overflow: scroll;
+        background-color: hsl(0deg 0% 0% / 80%);
       }
       .outer-tab-content.active {
         display: block;

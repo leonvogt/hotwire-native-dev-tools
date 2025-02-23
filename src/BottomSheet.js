@@ -34,42 +34,47 @@ export default class BottomSheet {
     this.bottomSheet.innerHTML = `
       <div class="sheet-overlay"></div>
       <div class="content">
-        <div class="tablist">
-          <button class="tablink ${activeTab === "tab-bridge-logs" ? "active" : ""}" data-tab-id="tab-bridge-logs">Bridge</button>
-          <button class="tablink ${activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
-          <button class="tablink ${activeTab === "tab-event-logs" ? "active" : ""}" data-tab-id="tab-event-logs">Events</button>
-          <button class="tablink ${activeTab === "tab-native-stack" ? "active" : ""}" data-tab-id="tab-native-stack">Stack</button>
+        <div class="top-part">
+          <div class="tablist">
+            <button class="tablink ${activeTab === "tab-bridge-logs" ? "active" : ""}" data-tab-id="tab-bridge-logs">Bridge</button>
+            <button class="tablink ${activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
+            <button class="tablink ${activeTab === "tab-event-logs" ? "active" : ""}" data-tab-id="tab-event-logs">Events</button>
+            <button class="tablink ${activeTab === "tab-native-stack" ? "active" : ""}" data-tab-id="tab-native-stack">Stack</button>
+          </div>
+
+          <div class="tab-action-bars">
+            <div class="tab-action-bar tab-bridge-logs ${activeTab === "tab-bridge-logs" ? "active" : ""}">
+              <button class="btn-clear-tab btn-clear-bridge-logs">${Icons.trash}</button>
+            </div>
+            <div class="tab-action-bar tab-console-logs ${activeTab === "tab-console-logs" ? "active" : ""}">
+              <button class="btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
+            </div>
+            <div class="tab-action-bar tab-event-logs ${activeTab === "tab-event-logs" ? "active" : ""}">
+              <button class="btn-clear-tab btn-clear-events">${Icons.trash}</button>
+            </div>
+            <div class="tab-action-bar tab-native-stack ${activeTab === "tab-native-stack" ? "active" : ""}">
+              <button class="btn-reload-tab btn-reload-stack">${Icons.rotate}</button>
+            </div>
+          </div>
         </div>
 
         <div class="tab-contents">
           <div id="tab-bridge-logs" class="outer-tab-content ${activeTab === "tab-bridge-logs" ? "active" : ""}">
-            <div class="tab-action-bar">
-              <button class="btn-clear-tab btn-clear-bridge-logs">${Icons.trash}</button>
-            </div>
             <div class="inner-tab-content tab-content-bridge-logs">
             </div>
           </div>
 
           <div id="tab-console-logs" class="outer-tab-content ${activeTab === "tab-console-logs" ? "active" : ""}">
-            <div class="tab-action-bar">
-              <button class="btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
-            </div>
             <div class="inner-tab-content tab-content-console-logs">
             </div>
           </div>
 
           <div id="tab-event-logs" class="outer-tab-content ${activeTab === "tab-event-logs" ? "active" : ""}">
-            <div class="tab-action-bar">
-              <button class="btn-clear-tab btn-clear-events">${Icons.trash}</button>
-            </div>
             <div class="inner-tab-content tab-content-event-logs">
             </div>
           </div>
 
           <div id="tab-native-stack" class="outer-tab-content ${activeTab === "tab-native-stack" ? "active" : ""}">
-            <div class="tab-action-bar">
-              <button class="btn-reload-tab btn-reload-stack">${Icons.rotate}</button>
-            </div>
             <div class="inner-tab-content tab-content-native-stack">
             </div>
           </div>
@@ -103,26 +108,6 @@ export default class BottomSheet {
   renderNativeStack() {
     const container = this.bottomSheet.querySelector(".tab-content-native-stack")
     container.innerHTML = this.state.nativeStack.length ? this.state.nativeStack.map((stack) => this.nativeStackHTML(stack)).join("") : `<div class="tab-empty-content"><span>No native stack captured yet</span></div>`
-  }
-
-  handleTabClick = (event) => {
-    const clickedTab = event.target.closest(".tablink")
-    if (!clickedTab) return
-
-    const tabId = clickedTab.dataset.tabId
-    this.devTools.state.setActiveTab(tabId)
-    this.updateTabView(tabId)
-  }
-
-  updateTabView(tabId) {
-    // Hide all Tabs
-    this.devTools.shadowRoot.querySelectorAll(".tablink, .outer-tab-content").forEach((tab) => {
-      tab.classList.remove("active")
-    })
-
-    // Show the clicked tab
-    this.devTools.shadowRoot.querySelector(`[data-tab-id="${tabId}"]`).classList.add("active")
-    this.devTools.shadowRoot.getElementById(tabId).classList.add("active")
   }
 
   bridgeLogHTML(direction, componentName, eventName, eventArgs, time) {
@@ -232,11 +217,39 @@ export default class BottomSheet {
     this.bottomSheet.querySelector(".btn-reload-stack").addEventListener("click", () => this.devTools.fetchNativeStack())
 
     // Dragging
+    this.bottomSheet.querySelector(".top-part").addEventListener("touchstart", this.dragStart.bind(this))
     this.bottomSheet.addEventListener("touchmove", this.dragging.bind(this))
     this.bottomSheet.addEventListener("touchend", this.dragStop.bind(this))
-    this.bottomSheet.querySelector(".tablist").addEventListener("touchstart", this.dragStart.bind(this))
 
     this.bottomSheet.hasEventListeners = true
+  }
+
+  handleTabClick = (event) => {
+    const clickedTab = event.target.closest(".tablink")
+    if (!clickedTab) return
+
+    const tabId = clickedTab.dataset.tabId
+    this.devTools.state.setActiveTab(tabId)
+    this.updateTabView(tabId)
+  }
+
+  updateTabView(tabId) {
+    // Hide all Tabs
+    this.devTools.shadowRoot.querySelectorAll(".tablink, .outer-tab-content").forEach((tab) => {
+      tab.classList.remove("active")
+    })
+
+    // Hide all Action Bars
+    this.devTools.shadowRoot.querySelectorAll(".tab-action-bar").forEach((tab) => {
+      tab.classList.remove("active")
+    })
+
+    // Show the clicked tab
+    this.devTools.shadowRoot.querySelector(`[data-tab-id="${tabId}"]`).classList.add("active")
+    this.devTools.shadowRoot.getElementById(tabId).classList.add("active")
+
+    // Show the action bar for the clicked tab
+    this.devTools.shadowRoot.querySelector(`.tab-action-bar.${tabId}`).classList.add("active")
   }
 
   showBottomSheet() {
