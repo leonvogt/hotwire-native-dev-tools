@@ -106,7 +106,10 @@ export default class DevTools {
       const eventName = arg.event
       const { metadata, ...eventArgs } = arg.data // Remove metadata from the args
 
-      this.state.addBridgeLog(direction, componentName, eventName, eventArgs)
+      if (componentName !== "dev-tools") {
+        // We don't want to log our own messages
+        this.state.addBridgeLog(direction, componentName, eventName, eventArgs)
+      }
     })
   }
 
