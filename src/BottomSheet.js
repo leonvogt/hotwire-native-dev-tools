@@ -191,7 +191,7 @@ export default class BottomSheet {
       <div>
         <div class="${wrapperClass}">
           <div class="view-title">
-            ${view.title}
+            ${view.title == "null" ? "" : view.title}
             <div class="view-title-details">${view.type}</div>
           </div>
           ${urlPath}
