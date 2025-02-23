@@ -42,7 +42,15 @@ export default class DevTools {
       this.bottomSheet.showBottomSheet()
     })
 
-    this.fetchNativeStack()
+    this.connectNativeBridge()
+  }
+
+  connectNativeBridge() {
+    this.customBridge.send("connect", {}, (message) => {
+      // If this callback gets executed, it means the native counterpart
+      // of the dev tools are installed and running.
+      this.fetchNativeStack()
+    })
   }
 
   update(newState) {
@@ -121,6 +129,7 @@ export default class DevTools {
 
   fetchNativeStack() {
     this.customBridge.send("currentStackInfo", {}, (message) => {
+      this.state.setSupportsNativeStack(true)
       this.state.setNativeStack(message.data.stack)
     })
   }
@@ -455,6 +464,10 @@ export default class DevTools {
       }
 
       /* Utility classes */
+      .d-none {
+        display: none;
+      }
+
       .d-flex {
         display: flex;
       }

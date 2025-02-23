@@ -7,6 +7,7 @@ export default class DevToolsState {
       bridgeLogs: [],
       eventLogs: [],
       nativeStack: [],
+      supportsNativeStackView: false,
       activeTab: getSettings("activeTab") || "tab-bridge-logs",
     }
     this.listeners = []
@@ -40,6 +41,11 @@ export default class DevToolsState {
 
   setNativeStack(stack) {
     this.state.nativeStack = stack
+    this.notify()
+  }
+
+  setSupportsNativeStack(supports) {
+    this.state.supportsNativeStackView = supports
     this.notify()
   }
 

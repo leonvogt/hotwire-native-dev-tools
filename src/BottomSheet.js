@@ -15,6 +15,7 @@ export default class BottomSheet {
 
   update(newState) {
     this.state = newState
+    this.checkNativeFeatures()
     this.renderConsoleLogs()
     this.renderBridgeLogs()
     this.renderEvents()
@@ -39,7 +40,7 @@ export default class BottomSheet {
             <button class="tablink ${activeTab === "tab-bridge-logs" ? "active" : ""}" data-tab-id="tab-bridge-logs">Bridge</button>
             <button class="tablink ${activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
             <button class="tablink ${activeTab === "tab-event-logs" ? "active" : ""}" data-tab-id="tab-event-logs">Events</button>
-            <button class="tablink ${activeTab === "tab-native-stack" ? "active" : ""}" data-tab-id="tab-native-stack">Stack</button>
+            <button class="tablink ${activeTab === "tab-native-stack" ? "active" : ""} d-none" data-tab-id="tab-native-stack">Stack</button>
           </div>
 
           <div class="tab-action-bars">
@@ -198,6 +199,12 @@ export default class BottomSheet {
         ${childrenHTML}
       </div>
     `
+  }
+
+  checkNativeFeatures() {
+    if (this.state.supportsNativeStackView) {
+      this.bottomSheet.querySelector(".tablink[data-tab-id='tab-native-stack']").classList.remove("d-none")
+    }
   }
 
   addEventListener() {
