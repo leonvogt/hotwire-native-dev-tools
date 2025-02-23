@@ -107,7 +107,7 @@ export default class BottomSheet {
 
   renderNativeStack() {
     const container = this.bottomSheet.querySelector(".tab-content-native-stack")
-    container.innerHTML = this.state.nativeStack.length ? this.state.nativeStack.map((stack) => this.nativeStackHTML(stack)).join("") : `<div class="tab-empty-content"><span>No native stack captured yet</span></div>`
+    container.innerHTML = this.state.nativeStack.length ? this.state.nativeStack.map((view) => this.nativeViewStackHTML(view)).join("") : `<div class="tab-empty-content"><span>No native stack captured yet</span></div>`
   }
 
   bridgeLogHTML(direction, componentName, eventName, eventArgs, time) {
@@ -163,37 +163,35 @@ export default class BottomSheet {
     `
   }
 
-  nativeStackHTML(stack) {
-    return this.renderViewControllers(stack)
-  }
+  nativeViewStackHTML(view) {
+    const isMainView = view.type === "UINavigationController" || view.type === "NavigatorHost"
+    const isHotwireView = view.type === "VisitableViewController" || view.type === "HotwireWebFragment"
+    const wrapperClass = `viewstack-card ${isMainView ? "main-view" : isHotwireView ? "hotwire-view" : ""}`
 
-  renderViewControllers(controller) {
-    const wrapperClass = `controller-card${controller.type === "UINavigationController" ? " navigation-controller" : controller.type === "VisitableViewController" ? " visitable-controller" : ""}`
-
-    const urlPath = controller.visitableURL
-      ? `<div class="controller-url">
+    const urlPath = view.url
+      ? `<div class="view-url">
           ${(() => {
             try {
-              return new URL(controller.visitableURL).pathname
+              return new URL(view.url).pathname
             } catch (error) {
-              return controller.visitableURL
+              return view.url
             }
           })()}
          </div>`
       : ""
 
-    const childrenHTML = controller.children?.length
+    const childrenHTML = view.children?.length
       ? `<div class="child-container">
-          ${controller.children.map((child) => this.renderViewControllers(child)).join("")}
+          ${view.children.map((child) => this.nativeViewStackHTML(child)).join("")}
          </div>`
       : ""
 
     return `
       <div>
         <div class="${wrapperClass}">
-          <div class="controller-title">
-            ${controller.title}
-            <div class="controller-title-details">${controller.type}</div>
+          <div class="view-title">
+            ${view.title}
+            <div class="view-title-details">${view.type}</div>
           </div>
           ${urlPath}
         </div>

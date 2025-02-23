@@ -341,7 +341,7 @@ export default class DevTools {
       }
 
       /* Bottom Sheet Stack Visualization */
-      .bottom-sheet .controller-card {
+      .bottom-sheet .viewstack-card {
         border: 1px solid #ddd;
         border-radius: 8px;
         padding: 10px;
@@ -352,12 +352,12 @@ export default class DevTools {
         transition: all 0.2s ease;
       }
 
-      .bottom-sheet .navigation-controller {
+      .bottom-sheet .main-view {
         border-color: #4e6080;
         background: #31363F;
       }
 
-      .bottom-sheet .visitable-controller {
+      .bottom-sheet .hotwire-view {
         border-color: #54b0b5;
         background: #76ABAE;
       }
@@ -377,7 +377,7 @@ export default class DevTools {
         background: #ddd;
       }
 
-      .bottom-sheet .controller-title {
+      .bottom-sheet .view-title {
         display: flex;
         align-items: center;
         gap: 0.5em;
@@ -387,12 +387,12 @@ export default class DevTools {
         margin-bottom: 5px;
       }
 
-      .bottom-sheet .controller-title-details {
+      .bottom-sheet .view-title-details {
         color: #ccc;
         font-size: 0.6em;
       }
 
-      .bottom-sheet .controller-url {
+      .bottom-sheet .view-url {
         color: #000000;
         font-size: 0.9em;
         margin-top: 5px;
