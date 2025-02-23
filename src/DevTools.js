@@ -388,6 +388,7 @@ export default class DevTools {
         height: 100%;
         overflow: scroll;
         background-color: hsl(0deg 0% 0% / 80%);
+        padding-bottom: 7em;
       }
       .outer-tab-content.active {
         display: block;
