@@ -41,6 +41,8 @@ export default class DevTools {
     this.bubble.onClick((event) => {
       this.bottomSheet.showBottomSheet()
     })
+
+    this.fetchNativeStack()
   }
 
   update(newState) {
