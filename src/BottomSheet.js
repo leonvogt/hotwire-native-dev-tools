@@ -295,6 +295,6 @@ export default class BottomSheet {
     this.isDragging = false
     this.bottomSheet.classList.remove("dragging")
     const sheetHeight = parseInt(this.sheetContent.style.height)
-    sheetHeight < 40 ? this.hideBottomSheet() : sheetHeight > 75 ? this.updateSheetHeight(100) : this.updateSheetHeight(50)
+    sheetHeight < 40 ? this.hideBottomSheet() : sheetHeight > 60 ? this.updateSheetHeight(100) : this.updateSheetHeight(50)
   }
 }
