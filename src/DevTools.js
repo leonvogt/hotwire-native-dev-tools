@@ -41,8 +41,6 @@ export default class DevTools {
     this.bubble.onClick((event) => {
       this.bottomSheet.showBottomSheet()
     })
-
-    this.bottomSheet.showBottomSheet()
   }
 
   update(newState) {
@@ -293,6 +291,14 @@ export default class DevTools {
 
       .bottom-sheet.show .content {
         transform: translateY(0%);
+      }
+
+      .bottom-sheet.dragging .content {
+        transition: none;
+      }
+      .bottom-sheet.fullscreen .content {
+        border-radius: 0;
+        overflow-y: hidden;
       }
 
       .bottom-sheet .log-entry-message.warn {

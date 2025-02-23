@@ -222,11 +222,20 @@ export default class BottomSheet {
 
     this.sheetOverlay.addEventListener("click", () => this.hideBottomSheet())
 
+    // Tab Click
+    this.bottomSheet.querySelector(".tablist").addEventListener("click", (event) => this.handleTabClick(event))
+
+    // Action Buttons
     this.bottomSheet.querySelector(".btn-clear-console-logs").addEventListener("click", () => this.devTools.state.clearConsoleLogs())
     this.bottomSheet.querySelector(".btn-clear-bridge-logs").addEventListener("click", () => this.devTools.state.clearBridgeLogs())
     this.bottomSheet.querySelector(".btn-clear-events").addEventListener("click", () => this.devTools.state.clearEventLogs())
     this.bottomSheet.querySelector(".btn-reload-stack").addEventListener("click", () => this.devTools.fetchNativeStack())
-    this.bottomSheet.querySelector(".tablist").addEventListener("click", (event) => this.handleTabClick(event))
+
+    // Dragging
+    this.bottomSheet.addEventListener("touchmove", this.dragging.bind(this))
+    this.bottomSheet.addEventListener("touchend", this.dragStop.bind(this))
+    this.bottomSheet.querySelector(".tablist").addEventListener("touchstart", this.dragStart.bind(this))
+
     this.bottomSheet.hasEventListeners = true
   }
 
@@ -243,5 +252,31 @@ export default class BottomSheet {
   hideBottomSheet() {
     this.bottomSheet.classList.remove("show")
     document.body.style.overflow = "auto"
+  }
+
+  updateSheetHeight(height) {
+    this.sheetContent.style.height = `${height}vh`
+    this.bottomSheet.classList.toggle("fullscreen", height === 100)
+  }
+
+  dragStart(e) {
+    this.isDragging = true
+    this.startY = e.pageY || e.touches?.[0].pageY
+    this.startHeight = parseInt(this.sheetContent.style.height)
+    this.bottomSheet.classList.add("dragging")
+  }
+
+  dragging(e) {
+    if (!this.isDragging) return
+    const delta = this.startY - (e.pageY || e.touches?.[0].pageY)
+    const newHeight = this.startHeight + (delta / window.innerHeight) * 100
+    this.updateSheetHeight(newHeight)
+  }
+
+  dragStop() {
+    this.isDragging = false
+    this.bottomSheet.classList.remove("dragging")
+    const sheetHeight = parseInt(this.sheetContent.style.height)
+    sheetHeight < 40 ? this.hideBottomSheet() : sheetHeight > 75 ? this.updateSheetHeight(100) : this.updateSheetHeight(50)
   }
 }
