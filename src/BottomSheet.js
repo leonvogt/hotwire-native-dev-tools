@@ -166,8 +166,9 @@ export default class BottomSheet {
 
   nativeViewStackHTML(view) {
     const isMainView = ["UINavigationController", "NavigatorHost"].includes(view.type)
+    const isTabBar = view.type === "UITabBarController"
     const isHotwireView = ["VisitableViewController", "HotwireWebFragment", "BackStackEntry"].includes(view.type)
-    const wrapperClass = `viewstack-card ${isMainView ? "main-view" : isHotwireView ? "hotwire-view" : ""}`
+    const wrapperClass = `viewstack-card ${isMainView ? "main-view" : isHotwireView ? "hotwire-view" : isTabBar ? "tab-container" : ""}`
 
     const urlPath = view.url
       ? `<div class="view-url">

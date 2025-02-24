@@ -416,7 +416,11 @@ export default class DevTools {
         background: white;
         color: black;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease;
+        overflow: auto;
+      }
+
+      .bottom-sheet .tab-container {
+        background: #EEEEEE;
       }
 
       .bottom-sheet .main-view {
@@ -457,6 +461,10 @@ export default class DevTools {
       .bottom-sheet .view-title-details {
         color: #efefef;
         font-size: 0.6em;
+      }
+
+      .bottom-sheet .tab-container .view-title-details {
+        color: #6c6c6c;
       }
 
       .bottom-sheet .view-url {
