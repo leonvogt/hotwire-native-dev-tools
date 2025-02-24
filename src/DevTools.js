@@ -46,11 +46,13 @@ export default class DevTools {
   }
 
   connectNativeBridge() {
-    this.customBridge.send("connect", {}, (message) => {
-      // If this callback gets executed, it means the native counterpart
-      // of the dev tools are installed and running.
-      this.fetchNativeStack()
-    })
+    if (this.customBridge.bridgeIsConnected()) {
+      this.customBridge.send("connect", {}, (message) => {
+        // If this callback gets executed, it means the native counterpart
+        // of the dev tools are installed and running.
+        this.fetchNativeStack()
+      })
+    }
   }
 
   update(newState) {

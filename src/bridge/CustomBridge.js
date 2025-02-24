@@ -8,12 +8,16 @@ Originally from: 37signals LLC
 https://github.com/hotwired/hotwire-native-bridge
 */
 export default class CustomBridge {
-  isBridgeConnected() {
+  bridgeIsConnected() {
     return !!window.Strada?.web
   }
 
   // Send a message to the native side
   send(event, data = {}, callback = null) {
+    if (!this.bridgeIsConnected()) {
+      return Promise.reject("Bridge is not connected")
+    }
+
     const messageData = {
       ...data,
       metadata: {
@@ -30,6 +34,9 @@ export default class CustomBridge {
   }
 
   isComponentSupported(component) {
+    if (!this.bridgeIsConnected()) {
+      return false
+    }
     return this.bridge.supportsComponent(component)
   }
 
@@ -42,6 +49,6 @@ export default class CustomBridge {
   }
 
   get bridge() {
-    return window.Strada.web
+    return window.Strada?.web
   }
 }
