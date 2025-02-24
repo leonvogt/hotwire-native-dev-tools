@@ -29,11 +29,13 @@ export default class DevTools {
     if (!this.originalBridge && window.Strada) {
       this.originalBridge = window.Strada.web
       this.addBridgeProxy()
+      this.nativeBridgeGotConnected()
     } else if (!this.originalBridge) {
       document.addEventListener("web-bridge:ready", () => {
         if (!this.originalBridge) {
           this.originalBridge = window.Strada.web
           this.addBridgeProxy()
+          this.nativeBridgeGotConnected()
         }
       })
     }
@@ -41,11 +43,14 @@ export default class DevTools {
     this.bubble.onClick((event) => {
       this.bottomSheet.showBottomSheet()
     })
-
-    this.connectNativeBridge()
   }
 
-  connectNativeBridge() {
+  nativeBridgeGotConnected() {
+    this.state.setBridgeIsConnected(true)
+    this.callNativeBridgeComponent()
+  }
+
+  callNativeBridgeComponent() {
     if (this.customBridge.bridgeIsConnected()) {
       this.customBridge.send("connect", {}, (message) => {
         // If this callback gets executed, it means the native counterpart
@@ -481,8 +486,16 @@ export default class DevTools {
         display: none;
       }
 
+      .text-center {
+        text-align: center;
+      }
+
       .d-flex {
         display: flex;
+      }
+
+      .flex-column {
+        flex-direction: column;
       }
 
       .align-center {

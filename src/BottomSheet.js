@@ -96,7 +96,9 @@ export default class BottomSheet {
     const container = this.bottomSheet.querySelector(".tab-content-bridge-logs")
     container.innerHTML = this.state.bridgeLogs.length
       ? this.state.bridgeLogs.map((log) => this.bridgeLogHTML(log.direction, log.componentName, log.eventName, log.eventArgs, log.time)).join("")
-      : `<div class="tab-empty-content"><span>No bridge communication yet</span></div>`
+      : `<div class="tab-empty-content d-flex flex-column text-center"><span>${
+          this.state.bridgeIsConnected ? "No bridge communication yet" : "Bridge is not connected <br><small>(window.Strada.web is undefined)</small>"
+        }</span></div>`
   }
 
   renderEvents() {
