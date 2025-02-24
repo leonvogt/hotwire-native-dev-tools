@@ -170,7 +170,8 @@ export default class BottomSheet {
     const isMainView = ["UINavigationController", "NavigatorHost"].includes(view.type)
     const isTabBar = view.type === "UITabBarController"
     const isHotwireView = ["VisitableViewController", "HotwireWebFragment", "BackStackEntry"].includes(view.type)
-    const wrapperClass = `viewstack-card ${isMainView ? "main-view" : isHotwireView ? "hotwire-view" : isTabBar ? "tab-container" : ""}`
+    const activeClass = view.url === this.currentUrl ? "active" : ""
+    const wrapperClass = `viewstack-card ${activeClass} ${isMainView ? "main-view" : isHotwireView ? "hotwire-view" : isTabBar ? "tab-container" : ""}`
 
     const urlPath = view.url
       ? `<div class="view-url">
@@ -299,5 +300,9 @@ export default class BottomSheet {
     this.bottomSheet.classList.remove("dragging")
     const sheetHeight = parseInt(this.sheetContent.style.height)
     sheetHeight < 40 ? this.hideBottomSheet() : sheetHeight > 60 ? this.updateSheetHeight(100) : this.updateSheetHeight(50)
+  }
+
+  get currentUrl() {
+    return window.location.href
   }
 }

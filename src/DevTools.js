@@ -428,6 +428,10 @@ export default class DevTools {
         overflow: auto;
       }
 
+      .bottom-sheet .viewstack-card.active {
+        border: 2px solid #f1f208;
+      }
+
       .bottom-sheet .tab-container {
         background: #EEEEEE;
       }
