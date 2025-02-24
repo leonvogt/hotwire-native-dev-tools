@@ -38,6 +38,8 @@ export default class DevTools {
           this.nativeBridgeGotConnected()
         }
       })
+    } else {
+      this.callNativeBridgeComponent()
     }
 
     this.bubble.onClick((event) => {
