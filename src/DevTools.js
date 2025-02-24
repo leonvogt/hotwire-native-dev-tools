@@ -291,6 +291,7 @@ export default class DevTools {
 
       .bottom-sheet .log-entry {
         border-bottom: 1px solid #6c6c6c;
+        white-space: collapse;
       }
 
       .bottom-sheet .log-entry-icon svg {
@@ -496,6 +497,12 @@ export default class DevTools {
         text-align: center;
       }
 
+      .text-ellipsis {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
       .d-flex {
         display: flex;
       }
@@ -523,6 +530,10 @@ export default class DevTools {
       .no-wrap {
         overflow: hidden;
         white-space: nowrap;
+      }
+
+      .white-space-collapse {
+        white-space: collapse;
       }
 
       .gap-1 {
@@ -579,6 +590,10 @@ export default class DevTools {
 
       .w-100 {
         width: 100%;
+      }
+
+      .w-80 {
+        width: 80%;
       }
     `
   }

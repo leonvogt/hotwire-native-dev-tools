@@ -121,13 +121,14 @@ export default class BottomSheet {
         </div>
         <div class="w-100">
           <div class="d-flex justify-between">
-            <strong>${componentName}#${eventName}</strong>
+            <strong class="w-80 text-ellipsis">${componentName}#${eventName}</strong>
             <small>${time}</small>
           </div>
           <div>
             ${Object.entries(eventArgs)
               .map(([key, value]) => {
-                return `<div>${key}: ${value}</div>`
+                const formattedValue = typeof value === "object" && value !== null ? JSON.stringify(value) : value
+                return `<div class="white-space-collapse">${key}: ${formattedValue}</div>`
               })
               .join("")}
           </div>
