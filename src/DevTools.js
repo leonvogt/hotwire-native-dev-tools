@@ -25,21 +25,18 @@ export default class DevTools {
       this.addConsoleProxy()
     }
 
-    // Add Bridge Component Proxy
-    if (!this.originalBridge && window.Strada) {
-      this.originalBridge = window.Strada.web
-      this.addBridgeProxy()
-      this.nativeBridgeGotConnected()
-    } else if (!this.originalBridge) {
-      document.addEventListener("web-bridge:ready", () => {
-        if (!this.originalBridge) {
-          this.originalBridge = window.Strada.web
-          this.addBridgeProxy()
-          this.nativeBridgeGotConnected()
-        }
-      })
-    } else {
+    // Add Bridge Proxy and call the native DevTools bridge component
+    if (this.originalBridge) {
+      // Bridge Proxy is already added
       this.callNativeBridgeComponent()
+    } else if (window.Strada) {
+      // Bridge exists -> Add Bridge Proxy
+      this.nativeBridgeGotConnected()
+    } else {
+      // Bridge does not exist yet -> Listen for the event
+      document.addEventListener("web-bridge:ready", () => {
+        this.nativeBridgeGotConnected()
+      })
     }
 
     this.bubble.onClick((event) => {
@@ -48,6 +45,10 @@ export default class DevTools {
   }
 
   nativeBridgeGotConnected() {
+    if (this.originalBridge) return
+
+    this.originalBridge = window.Strada.web
+    this.addBridgeProxy()
     this.state.setBridgeIsConnected(true)
     this.callNativeBridgeComponent()
   }
