@@ -120,7 +120,7 @@ export default class BottomSheet {
           ${direction === "send" ? Icons.arrowDown : Icons.arrowUp}
         </div>
         <div class="w-100">
-          <div class="d-flex justify-between">
+          <div class="d-flex justify-content-between">
             <strong class="w-80 text-ellipsis">${componentName}#${eventName}</strong>
             <small>${time}</small>
           </div>
@@ -141,7 +141,7 @@ export default class BottomSheet {
     return `
       <div class="log-entry pt-2 pb-2">
         <div class="w-100">
-          <div class="d-flex justify-end">
+          <div class="d-flex justify-content-end">
             <small>${time}</small>
           </div>
           <div class="log-entry-message ${type}">
@@ -156,7 +156,7 @@ export default class BottomSheet {
     return `
       <div class="log-entry pt-2 pb-2">
         <div class="w-100">
-          <div class="d-flex justify-end">
+          <div class="d-flex justify-content-end">
             <small>${time}</small>
           </div>
           <div class="log-entry-message">

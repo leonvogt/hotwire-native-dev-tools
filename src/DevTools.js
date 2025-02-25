@@ -212,7 +212,6 @@ export default class DevTools {
   }
 
   // Not ideal, but I didn't found a way to load the CSS from a file, without dependencies
-  // Content is copied from dist/styles.css
   get cssContent() {
     return `
       :host {
@@ -511,19 +510,11 @@ export default class DevTools {
         flex-direction: column;
       }
 
-      .align-center {
-        align-items: center;
-      }
-
-      .justify-center {
-        justify-content: center;
-      }
-
-      .justify-between {
+      .justify-content-between {
         justify-content: space-between;
       }
 
-      .justify-end {
+      .justify-content-end {
         justify-content: flex-end;
       }
 
@@ -536,56 +527,16 @@ export default class DevTools {
         white-space: collapse;
       }
 
-      .gap-1 {
-        gap: 0.25rem;
-      }
-
-      .gap-2 {
-        gap: 0.5rem;
-      }
-
       .gap-3 {
         gap: 1rem;
-      }
-
-      .gap-4 {
-        gap: 1.5rem;
-      }
-
-      .mb-1 {
-        margin-bottom: 0.25rem;
-      }
-
-      .mb-2 {
-        margin-bottom: 0.5rem;
-      }
-
-      .mb-3 {
-        margin-bottom: 1rem;
-      }
-
-      .pb-1 {
-        padding-bottom: 0.25rem;
       }
 
       .pb-2 {
         padding-bottom: 0.5rem;
       }
 
-      .pb-3 {
-        padding-bottom: 1rem;
-      }
-
-      .pt-1 {
-        padding-top: 0.25rem;
-      }
-
       .pt-2 {
         padding-top: 0.5rem;
-      }
-
-      .pt-3 {
-        padding-top: 1rem;
       }
 
       .w-100 {
