@@ -2,6 +2,7 @@ import DevToolsState from "./DevToolsState"
 import DebugBubble from "./DebugBubble"
 import BottomSheet from "./BottomSheet"
 import CustomBridge from "./bridge/CustomBridge"
+import { debounce } from "./utils/utils"
 
 export default class DevTools {
   constructor() {
@@ -14,7 +15,7 @@ export default class DevTools {
   }
 
   // Setup gets called initially and on every turbo:load event, eg. when navigating to a new page
-  setup() {
+  setup = debounce(() => {
     this.setupShadowRoot()
     this.bottomSheet.render()
     this.bubble.render()
@@ -42,7 +43,7 @@ export default class DevTools {
     this.bubble.onClick((event) => {
       this.bottomSheet.showBottomSheet()
     })
-  }
+  }, 200)
 
   nativeBridgeGotConnected() {
     if (this.originalBridge) return
@@ -63,9 +64,9 @@ export default class DevTools {
     }
   }
 
-  update(newState) {
+  update = debounce((newState) => {
     this.bottomSheet.update(newState)
-  }
+  }, 200)
 
   setupShadowRoot() {
     if (this.shadowContainer.shadowRoot) {
@@ -140,12 +141,12 @@ export default class DevTools {
     this.state.addConsoleLog(type, message)
   }
 
-  fetchNativeStack() {
+  fetchNativeStack = debounce(() => {
     this.customBridge.send("currentStackInfo", {}, (message) => {
       this.state.setSupportsNativeStack(true)
       this.state.setNativeStack(message.data.stack)
     })
-  }
+  }, 200)
 
   injectCSSToShadowRoot = async () => {
     if (this.shadowRoot.querySelector("style")) return
