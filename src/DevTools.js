@@ -141,12 +141,16 @@ export default class DevTools {
     this.state.addConsoleLog(type, message)
   }
 
+  // Fetch the current stack from the native side
+  // The debounce on this function is intentionally high,
+  // to ensure the native side has enough time to set the ViewController / Fragment titles.
+  // Previously, with a lower debounce, the title would often be empty.
   fetchNativeStack = debounce(() => {
     this.customBridge.send("currentStackInfo", {}, (message) => {
       this.state.setSupportsNativeStack(true)
       this.state.setNativeStack(message.data.stack)
     })
-  }, 200)
+  }, 1000)
 
   injectCSSToShadowRoot = async () => {
     if (this.shadowRoot.querySelector("style")) return
