@@ -96,7 +96,12 @@ export default class DebugBubble {
     this.xOffset = this.currentX
     this.yOffset = this.currentY
 
-    this.setTranslate(this.currentX, this.currentY, this.dragItem)
+    if (!this.animationFrame) {
+      this.animationFrame = requestAnimationFrame(() => {
+        this.setTranslate(this.currentX, this.currentY, this.dragItem)
+        this.animationFrame = null
+      })
+    }
   }
 
   setTranslate(xPos, yPos, element) {
