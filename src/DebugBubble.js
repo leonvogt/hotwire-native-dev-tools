@@ -5,8 +5,8 @@ export default class DebugBubble {
   constructor(devTools) {
     this.devTools = devTools
 
-    let startX = 0
-    let startY = 0
+    let startX = window.innerWidth - 100
+    let startY = window.innerHeight - 100
     const settings = getSettings("bubblePosition")
     if (settings) {
       startX = settings.x
@@ -20,6 +20,9 @@ export default class DebugBubble {
     this.initialY = startY
     this.xOffset = startX
     this.yOffset = startY
+
+    this.bubbleSize = 4.75 * 16 + 0.3 * 16
+    this.minVisible = this.bubbleSize * 0.5 // Keep 50% of the bubble visible at all times
   }
 
   render() {
@@ -84,19 +87,21 @@ export default class DebugBubble {
   }
 
   drag(event) {
-    if (this.currentlyDragging) {
-      event.preventDefault()
+    if (!this.currentlyDragging) return
+    event.preventDefault()
 
-      this.currentX = event.touches[0].clientX - this.initialX
-      this.currentY = event.touches[0].clientY - this.initialY
+    const touch = event.touches[0]
+    const deltaX = touch.clientX - this.initialX
+    const deltaY = touch.clientY - this.initialY
 
-      // Offset tracks where touch started, relative to the item's position
-      // To avoid a unnatural "snapping behaviour" when continuing to drag
-      this.xOffset = this.currentX
-      this.yOffset = this.currentY
+    // Constrain movement within screen bounds
+    this.currentX = Math.max(-this.bubbleSize + this.minVisible, Math.min(deltaX, window.innerWidth - this.minVisible))
+    this.currentY = Math.max(-this.bubbleSize + this.minVisible, Math.min(deltaY, window.innerHeight - this.minVisible))
 
-      this.setTranslate(this.currentX, this.currentY, this.dragItem)
-    }
+    this.xOffset = this.currentX
+    this.yOffset = this.currentY
+
+    this.setTranslate(this.currentX, this.currentY, this.dragItem)
   }
 
   setTranslate(xPos, yPos, element) {

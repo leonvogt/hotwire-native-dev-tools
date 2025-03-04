@@ -233,20 +233,20 @@ export default class DevTools {
       /* Debug bubble */
       #debug-bubble {
         display: flex;
-        width: 4.75rem;
-        height: 4.75rem;
         background-color: hsl(0deg 0% 0% / 60%);
-        border: 0.3rem solid rgba(136, 136, 136, 0.5);
         border-radius: 50%;
         touch-action: none;
         user-select: none;
         -webkit-user-select: none;
         z-index: 10000000;
-
-        /* Inital position */
         position: fixed;
-        bottom: 10px;
-        right: 10px;
+        top: 10px;
+        left: 10px;
+
+        /* Keep width, height, and border in sync with bubbleSize in DebugBubble.js */
+        width: 4.75rem;
+        height: 4.75rem;
+        border: 0.3rem solid rgba(136, 136, 136, 0.5);
       }
 
       #debug-bubble svg {
