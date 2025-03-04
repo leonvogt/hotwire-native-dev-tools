@@ -66,24 +66,19 @@ export default class DebugBubble {
   }
 
   dragStart(event) {
+    if (!event.target.closest("#debug-bubble")) return
+    this.currentlyDragging = true
+
     this.initialX = event.touches[0].clientX - this.xOffset
     this.initialY = event.touches[0].clientY - this.yOffset
-
-    if (event.target.closest("#debug-bubble")) {
-      this.currentlyDragging = true
-    }
   }
 
   dragEnd(event) {
     this.initialX = this.currentX
     this.initialY = this.currentY
-
-    saveSettings("bubblePosition", {
-      x: this.currentX,
-      y: this.currentY,
-    })
-
     this.currentlyDragging = false
+
+    saveSettings("bubblePosition", { x: this.currentX, y: this.currentY })
   }
 
   drag(event) {
@@ -105,6 +100,6 @@ export default class DebugBubble {
   }
 
   setTranslate(xPos, yPos, element) {
-    element.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)"
+    element.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`
   }
 }
