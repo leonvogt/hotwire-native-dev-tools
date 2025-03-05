@@ -1,34 +1,31 @@
 import { getSettings, saveSettings } from "./utils/settings"
+import { debounce } from "./utils/utils"
 import { hotwireIcon } from "./utils/icons"
 
 export default class DebugBubble {
   constructor(devTools) {
     this.devTools = devTools
-
-    let startX = window.innerWidth - 100
-    let startY = window.innerHeight - 100
-    const settings = getSettings("bubblePosition")
-    if (settings) {
-      startX = settings.x
-      startY = settings.y
-    }
-    this.currentlyDragging = false
-
-    this.currentX = startX
-    this.currentY = startY
-    this.initialX = startX
-    this.initialY = startY
-    this.xOffset = startX
-    this.yOffset = startY
-
-    this.bubbleSize = 4.75 * 16 + 0.3 * 16
+    this.bubbleSize = 4.75 * 16 + 0.3 * 16 // 4.75rem + 0.3rem border
     this.minVisible = this.bubbleSize * 0.5 // Keep 50% of the bubble visible at all times
+    this.currentlyDragging = false
   }
 
-  render() {
+  render = debounce(() => {
+    this.setPosition()
     this.createDragItem()
     this.setTranslate(this.initialX, this.initialY, this.dragItem)
     this.addEventListeners()
+  }, 50)
+
+  setPosition() {
+    this.settingKey = window.innerWidth < window.innerHeight ? "bubblePosPortrait" : "bubblePosLandscape"
+
+    // Get stored position or use default (bottom right corner)
+    const defaultPos = { x: window.innerWidth - 100, y: window.innerHeight - 100 }
+    const { x: startX, y: startY } = getSettings(this.settingKey) || defaultPos
+
+    this.currentX = this.initialX = this.xOffset = startX
+    this.currentY = this.initialY = this.yOffset = startY
   }
 
   createDragItem() {
@@ -78,7 +75,7 @@ export default class DebugBubble {
     this.initialY = this.currentY
     this.currentlyDragging = false
 
-    saveSettings("bubblePosition", { x: this.currentX, y: this.currentY })
+    saveSettings(this.settingKey, { x: this.currentX, y: this.currentY })
   }
 
   drag(event) {
