@@ -40,7 +40,16 @@ export default class DevTools {
       })
     }
 
-    this.bubble.onClick((event) => {
+    // Observe screen size or orientation changes to reposition the bubble
+    window.addEventListener(
+      "resize",
+      () => {
+        this.bubble.render()
+      },
+      { passive: true }
+    )
+
+    this.bubble.onClick(() => {
       this.bottomSheet.showBottomSheet()
     })
   }, 200)
