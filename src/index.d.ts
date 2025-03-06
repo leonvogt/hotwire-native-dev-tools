@@ -1,1 +1,3 @@
-export * from "./index"
+declare function setupDevTools(): void
+
+export { setupDevTools }
