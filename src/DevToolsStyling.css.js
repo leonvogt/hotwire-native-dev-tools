@@ -276,6 +276,16 @@ export const cssContent = () => {
       word-break: break-all;
     }
 
+    .bottom-sheet .bridge-components-collapse-btn {
+      background: none;
+      border: none;
+      color: white;
+      width: 100%;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5em;
+    }
+
     /* Collapsibles */
     .collapse:after {
       content: '\\25BC';
@@ -327,6 +337,14 @@ export const cssContent = () => {
 
     .white-space-collapse {
       white-space: collapse;
+    }
+
+    .mt-1 {
+      margin-top: 0.25rem;
+    }
+
+    .gap-1 {
+      gap: 0.25rem;
     }
 
     .gap-3 {

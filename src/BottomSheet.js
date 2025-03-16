@@ -17,6 +17,7 @@ export default class BottomSheet {
     this.state = newState
     this.checkNativeFeatures()
     this.renderConsoleLogs()
+    this.renderBridgeComponents()
     this.renderBridgeLogs()
     this.renderEvents()
     this.renderNativeStack()
@@ -61,6 +62,14 @@ export default class BottomSheet {
 
         <div class="tab-contents">
           <div id="tab-bridge-logs" class="outer-tab-content ${activeTab === "tab-bridge-logs" ? "active" : ""}">
+            <div class="inner-tab-content">
+              <button class="collapse bridge-components-collapse-btn" type="button" data-collapse-target="bridge-components-collapse">
+                Bridge Components: <span class="bridge-components-amount">${this.state.supportedBridgeComponents.length}</span>
+              </button>
+              <div id="bridge-components-collapse">
+                <div class="tab-content-bridge-components d-flex flex-column gap-1 mt-1"></div>
+              </div>
+            </div>
             <div class="inner-tab-content tab-content-bridge-logs">
             </div>
           </div>
@@ -90,6 +99,16 @@ export default class BottomSheet {
     container.innerHTML = this.state.consoleLogs.length
       ? this.state.consoleLogs.map((log) => this.consoleLogHTML(log.type, log.message, log.time)).join("")
       : `<div class="tab-empty-content"><span>No console logs yet</span></div>`
+  }
+
+  renderBridgeComponents() {
+    const bridgeComponentsAmount = this.state.supportedBridgeComponents.length
+    this.bottomSheet.querySelector(".bridge-components-amount").textContent = bridgeComponentsAmount
+
+    const container = this.bottomSheet.querySelector(".tab-content-bridge-components")
+    container.innerHTML = bridgeComponentsAmount
+      ? this.state.supportedBridgeComponents.map((component) => `<div>${component}</div>`).join("")
+      : `<div class="tab-empty-content d-flex flex-column text-center"><span>${"No bridge components found"}</span></div>`
   }
 
   renderBridgeLogs() {
