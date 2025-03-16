@@ -10,7 +10,7 @@ export default class BottomSheet {
     this.createBottomSheet()
     this.sheetContent = this.bottomSheet.querySelector(".content")
     this.sheetOverlay = this.bottomSheet.querySelector(".sheet-overlay")
-    this.addEventListener()
+    this.addEventListeners()
   }
 
   update(newState) {
@@ -212,7 +212,7 @@ export default class BottomSheet {
     }
   }
 
-  addEventListener() {
+  addEventListeners() {
     if (this.bottomSheet.hasEventListeners) return
 
     this.sheetOverlay.addEventListener("click", () => this.hideBottomSheet())
