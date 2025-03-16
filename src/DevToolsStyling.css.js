@@ -276,6 +276,19 @@ export const cssContent = () => {
       word-break: break-all;
     }
 
+    /* Collapsibles */
+    .collapse:after {
+      content: '\\25BC';
+      font-size: 13px;
+      color: #777;
+      float: right;
+      margin-left: 5px;
+    }
+
+    .collapse.active:after {
+      content: "\\25B2";
+    }
+
     /* Utility classes */
     .d-none {
       display: none;
