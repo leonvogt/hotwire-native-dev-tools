@@ -62,7 +62,7 @@ export default class DevTools {
     this.addBridgeProxy()
     this.state.setBridgeIsConnected(true)
     this.callNativeBridgeComponent()
-    this.state.setSupportedBridgeComponents(this.customBridge.getSupportedComponents())
+    this.state.setSupportedBridgeComponents(this.customBridge.getSupportedComponents().sort())
   }
 
   callNativeBridgeComponent() {
