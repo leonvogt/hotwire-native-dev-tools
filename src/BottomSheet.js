@@ -231,6 +231,22 @@ export default class BottomSheet {
     this.bottomSheet.addEventListener("touchmove", this.dragging.bind(this))
     this.bottomSheet.addEventListener("touchend", this.dragStop.bind(this))
 
+    // Collapsibles
+    const collapsibles = this.bottomSheet.querySelectorAll(".collapse")
+    collapsibles.forEach((collapsible) => {
+      const targetId = collapsible.getAttribute("data-collapse-target")
+      const targetElement = this.bottomSheet.querySelector(`#${targetId}`)
+
+      if (!targetElement) return
+
+      targetElement.style.display = "none"
+      collapsible.addEventListener("click", function (event) {
+        event.preventDefault()
+        this.classList.toggle("active")
+        targetElement.style.display = targetElement.style.display === "block" ? "none" : "block"
+      })
+    })
+
     this.bottomSheet.hasEventListeners = true
   }
 
