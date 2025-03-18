@@ -116,7 +116,7 @@ export default class DevTools {
         const originalValue = Reflect.get(target, prop, receiver)
         return (...args) => {
           this.interceptedConsoleMessage(prop, args)
-          return originalValue.apply(target, args)
+          return originalValue?.apply(target, args)
         }
       },
     })
@@ -150,6 +150,10 @@ export default class DevTools {
       .join(" ")
 
     this.state.addConsoleLog(type, message)
+
+    if (type === "error") {
+      this.bubble.animateErrorBorder()
+    }
   }
 
   // Fetch the current stack from the native side

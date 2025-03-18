@@ -37,6 +37,48 @@ export const cssContent = () => {
       fill: #b1b1b1;
     }
 
+    #debug-bubble .animation-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #debug-bubble .error-border {
+      position: absolute;
+      top: -30px;
+      left: -30px;
+      width: calc(100% + 60px);
+      height: calc(100% + 60px);
+      border-radius: 50%;
+    }
+
+    #debug-bubble .error-border circle {
+      transform-origin: center;
+      transform: rotate(-90deg);
+    }
+
+    #debug-bubble .error-border circle.animate {
+      animation: error-border-progress 0.8s ease-out forwards;
+    }
+
+    /*
+      The "stroke-dasharray" defines the start of the animation
+      The value is calculated by the formula: 2 * Math.PI * radius
+      In this case: 2 * Math.PI * 85 = 565
+    */
+    @keyframes error-border-progress {
+      from {
+        stroke-dashoffset: 565;
+      }
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
     /* Bottom Sheet */
     .bottom-sheet {
       position: fixed;
