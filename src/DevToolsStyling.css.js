@@ -276,6 +276,7 @@ export const cssContent = () => {
       word-break: break-all;
     }
 
+    /* Bottom Sheet Bridge Components */
     .bottom-sheet .bridge-components-collapse-btn {
       background: none;
       border: none;
@@ -284,6 +285,29 @@ export const cssContent = () => {
       text-align: left;
       border-bottom: 1px solid #eee;
       padding-bottom: 0.5em;
+    }
+
+    .tab-content-bridge-components {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      border-bottom: 1px solid #c5c1c1;
+      padding: 0.5em 0em;
+    }
+
+    .tab-content-bridge-components .bridge-component {
+      position: relative;
+      padding-left: 15px;
+    }
+
+    .tab-content-bridge-components .bridge-component::before {
+      content: "•";
+      color: #eee;
+      font-size: 1.2em;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     /* Collapsibles */

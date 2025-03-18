@@ -10,7 +10,7 @@ export default class DevToolsState {
       supportedBridgeComponents: [],
       bridgeIsConnected: false,
       supportsNativeStackView: false,
-      activeTab: getSettings("activeTab") || "tab-bridge-logs",
+      activeTab: getSettings("activeTab") || "tab-bridge-components",
     }
     this.listeners = []
   }

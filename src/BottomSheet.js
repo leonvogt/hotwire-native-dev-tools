@@ -38,14 +38,14 @@ export default class BottomSheet {
       <div class="content">
         <div class="top-part">
           <div class="tablist">
-            <button class="tablink ${activeTab === "tab-bridge-logs" ? "active" : ""}" data-tab-id="tab-bridge-logs">Bridge</button>
+            <button class="tablink ${activeTab === "tab-bridge-components" ? "active" : ""}" data-tab-id="tab-bridge-components">Bridge</button>
             <button class="tablink ${activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
             <button class="tablink ${activeTab === "tab-event-logs" ? "active" : ""}" data-tab-id="tab-event-logs">Events</button>
             <button class="tablink ${activeTab === "tab-native-stack" ? "active" : ""} d-none" data-tab-id="tab-native-stack">Stack</button>
           </div>
 
           <div class="tab-action-bars">
-            <div class="tab-action-bar tab-bridge-logs ${activeTab === "tab-bridge-logs" ? "active" : ""}">
+            <div class="tab-action-bar tab-bridge-components ${activeTab === "tab-bridge-components" ? "active" : ""}">
               <button class="btn-clear-tab btn-clear-bridge-logs">${Icons.trash}</button>
             </div>
             <div class="tab-action-bar tab-console-logs ${activeTab === "tab-console-logs" ? "active" : ""}">
@@ -61,16 +61,17 @@ export default class BottomSheet {
         </div>
 
         <div class="tab-contents">
-          <div id="tab-bridge-logs" class="outer-tab-content ${activeTab === "tab-bridge-logs" ? "active" : ""}">
+          <div id="tab-bridge-components" class="outer-tab-content ${activeTab === "tab-bridge-components" ? "active" : ""}">
             <div class="inner-tab-content">
               <button class="collapse bridge-components-collapse-btn" type="button" data-collapse-target="bridge-components-collapse">
                 Bridge Components: <span class="bridge-components-amount">${this.state.supportedBridgeComponents.length}</span>
               </button>
               <div id="bridge-components-collapse">
-                <div class="tab-content-bridge-components d-flex flex-column gap-1 mt-1"></div>
+                <div class="tab-content-bridge-components"></div>
               </div>
-            </div>
-            <div class="inner-tab-content tab-content-bridge-logs">
+
+              <div class="tab-content-bridge-logs">
+              </div>
             </div>
           </div>
 
@@ -107,7 +108,7 @@ export default class BottomSheet {
 
     const container = this.bottomSheet.querySelector(".tab-content-bridge-components")
     container.innerHTML = bridgeComponentsAmount
-      ? this.state.supportedBridgeComponents.map((component) => `<div>${component}</div>`).join("")
+      ? this.state.supportedBridgeComponents.map((component) => `<div class="bridge-component">${component}</div>`).join("")
       : `<div class="tab-empty-content d-flex flex-column text-center"><span>${"No bridge components found"}</span></div>`
   }
 
