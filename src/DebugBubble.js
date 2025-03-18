@@ -58,6 +58,41 @@ export default class DebugBubble {
     }
   }
 
+  animateErrorBorder() {
+    let errorBorder = this.dragItem.querySelector(".error-border")
+    let circleElement = this.dragItem.querySelector(".error-border circle")
+
+    if (errorBorder) {
+      errorBorder.remove()
+    }
+
+    const animationContainer = document.createElement("div")
+    animationContainer.className = "animation-container"
+    animationContainer.innerHTML = `
+      <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" class="error-border">
+        <defs>
+          <linearGradient id="errorGradient" gradientTransform="rotate(45)">
+            <stop offset="0%" stop-color="#e4241a" />
+            <stop offset="50%" stop-color="#dd1f15" />
+            <stop offset="100%" stop-color="#f6160a" />
+          </linearGradient>
+        </defs>
+        <circle cx="90" cy="90" r="90" fill="none" stroke="url(#errorGradient)" stroke-width="21"
+                stroke-dasharray="565" stroke-dashoffset="565" stroke-linecap="round" />
+      </svg>
+    `
+
+    this.dragItem.appendChild(animationContainer)
+    circleElement = this.dragItem.querySelector(".error-border circle")
+    circleElement.classList.add("animate")
+
+    setTimeout(() => {
+      if (animationContainer && animationContainer.parentNode) {
+        animationContainer.remove()
+      }
+    }, 900) // Slightly longer than animation duration to ensure it completes
+  }
+
   onClick(callback) {
     this.clickCallback = callback
   }
