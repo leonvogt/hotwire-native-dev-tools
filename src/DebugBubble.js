@@ -87,10 +87,14 @@ export default class DebugBubble {
     circleElement.classList.add("animate")
 
     setTimeout(() => {
+      animationContainer.classList.add("fade-out")
+    }, 1300) // Start fade-out after animation completes
+
+    setTimeout(() => {
       if (animationContainer && animationContainer.parentNode) {
         animationContainer.remove()
       }
-    }, 900) // Slightly longer than animation duration to ensure it completes
+    }, 1800) // Remove after fade-out completes
   }
 
   onClick(callback) {

@@ -65,10 +65,14 @@ export const cssContent = () => {
       animation: error-border-progress 0.8s ease-out forwards;
     }
 
+    #debug-bubble .animation-container.fade-out {
+      animation: fade-out 0.4s ease-out forwards;
+    }
+
     /*
       The "stroke-dasharray" defines the start of the animation
       The value is calculated by the formula: 2 * Math.PI * radius
-      In this case: 2 * Math.PI * 85 = 565
+      In this case: 2 * Math.PI * 90 = 565
     */
     @keyframes error-border-progress {
       from {
@@ -76,6 +80,15 @@ export const cssContent = () => {
       }
       to {
         stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes fade-out {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
       }
     }
 
