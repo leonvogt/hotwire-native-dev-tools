@@ -25,6 +25,7 @@ export default class DevTools {
     if (!this.originalConsole) {
       this.originalConsole = window.console
       this.addConsoleProxy()
+      this.captureUncaughtErrors()
     }
 
     // Add Bridge Proxy and call the native DevTools bridge component
@@ -119,6 +120,20 @@ export default class DevTools {
           return originalValue?.apply(target, args)
         }
       },
+    })
+  }
+
+  captureUncaughtErrors() {
+    window.addEventListener("error", (event) => {
+      const { message, filename, lineno, colno } = event
+      const formattedMessage = `${message} at ${filename}:${lineno}:${colno}`
+      this.interceptedConsoleMessage("error", [formattedMessage])
+      return false
+    })
+
+    window.addEventListener("unhandledrejection", (event) => {
+      this.interceptedConsoleMessage("warn", [event.reason])
+      return false
     })
   }
 
