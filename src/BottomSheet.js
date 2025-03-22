@@ -1,4 +1,5 @@
 import * as Icons from "./utils/icons"
+import { platform } from "./utils/utils"
 
 export default class BottomSheet {
   constructor(devTools) {
@@ -46,16 +47,16 @@ export default class BottomSheet {
 
           <div class="tab-action-bars">
             <div class="tab-action-bar tab-bridge-components ${activeTab === "tab-bridge-components" ? "active" : ""}">
-              <button class="btn-clear-tab btn-clear-bridge-logs">${Icons.trash}</button>
+              <button class="btn-icon btn-clear-tab btn-clear-bridge-logs">${Icons.trash}</button>
             </div>
             <div class="tab-action-bar tab-console-logs ${activeTab === "tab-console-logs" ? "active" : ""}">
-              <button class="btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
+              <button class="btn-icon btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
             </div>
             <div class="tab-action-bar tab-event-logs ${activeTab === "tab-event-logs" ? "active" : ""}">
-              <button class="btn-clear-tab btn-clear-events">${Icons.trash}</button>
+              <button class="btn-icon btn-clear-tab btn-clear-events">${Icons.trash}</button>
             </div>
             <div class="tab-action-bar tab-native-stack ${activeTab === "tab-native-stack" ? "active" : ""}">
-              <button class="btn-reload-tab btn-reload-stack">${Icons.rotate}</button>
+              <button class="btn-icon btn-reload-tab btn-reload-stack">${Icons.rotate}</button>
             </div>
           </div>
         </div>
@@ -67,7 +68,10 @@ export default class BottomSheet {
                 Supported Bridge Components: <span class="bridge-components-amount">${this.state.supportedBridgeComponents.length}</span>
               </button>
               <div id="bridge-components-collapse">
-                <div class="tab-content-bridge-components"></div>
+                <div class="d-flex justify-content-between">
+                  <div class="tab-content-bridge-components flex-grow-1"></div>
+                  <button class="btn-icon btn-help btn-bridge-component-help">${Icons.questionMark}</button>
+                </div>
               </div>
 
               <div class="tab-content-bridge-logs">
@@ -87,6 +91,20 @@ export default class BottomSheet {
 
           <div id="tab-native-stack" class="outer-tab-content ${activeTab === "tab-native-stack" ? "active" : ""}">
             <div class="inner-tab-content tab-content-native-stack">
+            </div>
+          </div>
+
+          <div id="single-tab-bridge-component-help" class="single-tab-content outer-tab-content">
+            <div class="inner-tab-content">
+              <div class="d-flex align-items-center mb-3">
+                <button class="btn-icon btn-close-single-mode">${Icons.arrowLeft}</button>
+                <h3 class="ms-1">Bridge Components</h3>
+              </div>
+              <h3>Why is my bridge component not on the list?</h3>
+              <p>Bridge components are automatically detected when they are registered in the native code. If your component is not on the list, make sure it is registered correctly.</p>
+              ${this.registerBridgeComponentExample()}
+              <p class"mt-1">For more information, check out the documentation:</p>
+              <a href="${this.registerBridgeComponentHelpURL()}">${this.registerBridgeComponentHelpURL()}</a>
             </div>
           </div>
         </div>
@@ -226,6 +244,60 @@ export default class BottomSheet {
     `
   }
 
+  switchToSingleTabSheet() {
+    // Hide the top part and all tabs
+    this.sheetContent.querySelector(".top-part").classList.add("d-none")
+    this.devTools.shadowRoot.querySelectorAll(".outer-tab-content").forEach((tab) => tab.classList.remove("active"))
+
+    // Show the single mode content
+    this.devTools.shadowRoot.getElementById("single-tab-bridge-component-help").classList.add("active")
+  }
+
+  switchToMultiTabSheet() {
+    this.sheetContent.querySelector(".top-part").classList.remove("d-none")
+    this.devTools.shadowRoot.getElementById("single-tab-bridge-component-help").classList.remove("active")
+
+    // Show the previous active tab
+    this.devTools.shadowRoot.querySelectorAll(".tablink, .outer-tab-content").forEach((tab) => {
+      if (tab.id == this.state.activeTab) {
+        tab.classList.add("active")
+      }
+    })
+  }
+
+  registerBridgeComponentExample() {
+    switch (platform()) {
+      case "android":
+        return `
+<pre>
+  Hotwire.registerBridgeComponents(
+    BridgeComponentFactory("my-component", ::MyComponent)
+  )
+</pre>
+`
+      case "ios":
+        return `
+<pre>
+  Hotwire.registerBridgeComponents([
+      MyComponent.self
+  ])
+</pre>`
+      default:
+        return ""
+    }
+  }
+
+  registerBridgeComponentHelpURL() {
+    switch (platform()) {
+      case "android":
+        return "https://native.hotwired.dev/android/bridge-components"
+      case "ios":
+        return "https://native.hotwired.dev/ios/bridge-components"
+      default:
+        return "https://native.hotwired.dev"
+    }
+  }
+
   checkNativeFeatures() {
     if (this.state.supportsNativeStackView) {
       this.bottomSheet.querySelector(".tablink[data-tab-id='tab-native-stack']").classList.remove("d-none")
@@ -235,7 +307,11 @@ export default class BottomSheet {
   addEventListeners() {
     if (this.bottomSheet.hasEventListeners) return
 
-    this.sheetOverlay.addEventListener("click", () => this.hideBottomSheet())
+    // Click outside to close
+    this.sheetOverlay.addEventListener("click", () => {
+      this.hideBottomSheet()
+      this.switchToMultiTabSheet()
+    })
 
     // Tab Click
     this.bottomSheet.querySelector(".tablist").addEventListener("click", (event) => this.handleTabClick(event))
@@ -253,7 +329,19 @@ export default class BottomSheet {
       this.devTools.state.clearEventLogs()
       this.renderEvents()
     })
-    this.bottomSheet.querySelector(".btn-reload-stack").addEventListener("click", () => this.devTools.fetchNativeStack())
+    this.bottomSheet.querySelector(".btn-reload-stack").addEventListener("click", () => {
+      this.devTools.fetchNativeStack()
+    })
+
+    // Help Buttons
+    this.bottomSheet.querySelector(".btn-bridge-component-help").addEventListener("click", () => {
+      this.switchToSingleTabSheet()
+    })
+
+    // Close Single Tab Buttons
+    this.bottomSheet.querySelector(".btn-close-single-mode").addEventListener("click", () => {
+      this.switchToMultiTabSheet()
+    })
 
     // Dragging
     this.bottomSheet.querySelector(".top-part").addEventListener("touchstart", this.dragStart.bind(this))
@@ -290,14 +378,10 @@ export default class BottomSheet {
 
   updateTabView(tabId) {
     // Hide all Tabs
-    this.devTools.shadowRoot.querySelectorAll(".tablink, .outer-tab-content").forEach((tab) => {
-      tab.classList.remove("active")
-    })
+    this.devTools.shadowRoot.querySelectorAll(".tablink, .outer-tab-content").forEach((tab) => tab.classList.remove("active"))
 
     // Hide all Action Bars
-    this.devTools.shadowRoot.querySelectorAll(".tab-action-bar").forEach((tab) => {
-      tab.classList.remove("active")
-    })
+    this.devTools.shadowRoot.querySelectorAll(".tab-action-bar").forEach((tab) => tab.classList.remove("active"))
 
     // Show the clicked tab
     this.devTools.shadowRoot.querySelector(`[data-tab-id="${tabId}"]`).classList.add("active")
