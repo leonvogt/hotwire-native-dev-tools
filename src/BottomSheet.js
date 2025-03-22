@@ -64,7 +64,7 @@ export default class BottomSheet {
           <div id="tab-bridge-components" class="outer-tab-content ${activeTab === "tab-bridge-components" ? "active" : ""}">
             <div class="inner-tab-content">
               <button class="collapse bridge-components-collapse-btn" type="button" data-collapse-target="bridge-components-collapse">
-                Bridge Components: <span class="bridge-components-amount">${this.state.supportedBridgeComponents.length}</span>
+                Supported Bridge Components: <span class="bridge-components-amount">${this.state.supportedBridgeComponents.length}</span>
               </button>
               <div id="bridge-components-collapse">
                 <div class="tab-content-bridge-components"></div>
@@ -241,9 +241,18 @@ export default class BottomSheet {
     this.bottomSheet.querySelector(".tablist").addEventListener("click", (event) => this.handleTabClick(event))
 
     // Action Buttons
-    this.bottomSheet.querySelector(".btn-clear-console-logs").addEventListener("click", () => this.devTools.state.clearConsoleLogs())
-    this.bottomSheet.querySelector(".btn-clear-bridge-logs").addEventListener("click", () => this.devTools.state.clearBridgeLogs())
-    this.bottomSheet.querySelector(".btn-clear-events").addEventListener("click", () => this.devTools.state.clearEventLogs())
+    this.bottomSheet.querySelector(".btn-clear-console-logs").addEventListener("click", () => {
+      this.devTools.state.clearConsoleLogs()
+      this.renderConsoleLogs()
+    })
+    this.bottomSheet.querySelector(".btn-clear-bridge-logs").addEventListener("click", () => {
+      this.devTools.state.clearBridgeLogs()
+      this.renderBridgeLogs()
+    })
+    this.bottomSheet.querySelector(".btn-clear-events").addEventListener("click", () => {
+      this.devTools.state.clearEventLogs()
+      this.renderEvents()
+    })
     this.bottomSheet.querySelector(".btn-reload-stack").addEventListener("click", () => this.devTools.fetchNativeStack())
 
     // Dragging
