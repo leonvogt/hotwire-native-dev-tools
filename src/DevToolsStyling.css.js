@@ -13,6 +13,31 @@ export const cssContent = () => {
       box-sizing: border-box;
     }
 
+    a {
+      color: white;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0;
+    }
+
+    .btn-icon {
+      background-color: transparent;
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5em;
+      height: 100%;
+    }
+
+    .btn-icon svg {
+      width: 1rem;
+      height: 1rem;
+      fill: white;
+    }
+
     /* Debug bubble */
     #debug-bubble {
       display: flex;
@@ -180,17 +205,6 @@ export const cssContent = () => {
       display: flex;
     }
 
-    .bottom-sheet .tab-action-bar button {
-      background-color: transparent;
-      border: none;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.5em;
-      height: 100%;
-    }
-
     .bottom-sheet .tab-action-bar button:active svg {
       fill: #6c6c6c;
     }
@@ -198,12 +212,6 @@ export const cssContent = () => {
     .bottom-sheet .btn-clear-tab,
     .bottom-sheet .btn-reload-tab {
       margin-left: auto;
-    }
-    .bottom-sheet .btn-clear-tab svg,
-    .bottom-sheet .btn-reload-tab svg {
-      width: 1rem;
-      height: 1rem;
-      fill: white;
     }
 
     /* Bottom Sheet Tabs */
@@ -250,6 +258,9 @@ export const cssContent = () => {
       padding: 1rem;
       overflow-x: auto;
       white-space: nowrap;
+    }
+    .single-tab-content .inner-tab-content {
+      white-space: normal;
     }
 
     .tab-empty-content {
@@ -409,6 +420,14 @@ export const cssContent = () => {
       justify-content: flex-end;
     }
 
+    .align-items-center {
+      align-items: center;
+    }
+
+    .flex-grow-1 {
+      flex-grow: 1;
+    }
+
     .no-wrap {
       overflow: hidden;
       white-space: nowrap;
@@ -420,6 +439,18 @@ export const cssContent = () => {
 
     .mt-1 {
       margin-top: 0.25rem;
+    }
+
+    .ms-1 {
+      margin-left: 0.25rem;
+    }
+
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem;
     }
 
     .gap-1 {

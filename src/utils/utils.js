@@ -7,3 +7,9 @@ export const debounce = (fn, delay) => {
     timeoutId = setTimeout(callback, delay)
   }
 }
+
+export const platform = () => {
+  const { bridgePlatform } = document.documentElement.dataset
+  const platform = bridgePlatform || "unknown"
+  return platform
+}
