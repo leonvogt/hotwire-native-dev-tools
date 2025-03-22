@@ -9,6 +9,14 @@ setupDevTools();
 
 ## Development
 
+- Fork the project locally
+- `npm install`
+- `npm run dev`
+
+**Setting Up the Package Locally**     
+One way to link the package locally is to use `yarn link`.    
+This allows you to develop the package and test it in another project.
+
 In the root of this project run:
 ```bash
 yarn link
