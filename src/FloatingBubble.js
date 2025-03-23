@@ -2,7 +2,7 @@ import { getSettings, saveSettings } from "./utils/settings"
 import { debounce } from "./utils/utils"
 import { hotwireIcon } from "./utils/icons"
 
-export default class DebugBubble {
+export default class FloatingBubble {
   constructor(devTools) {
     this.devTools = devTools
     this.bubbleSize = 4.75 * 16 + 0.3 * 16 // 4.75rem + 0.3rem border
@@ -29,14 +29,14 @@ export default class DebugBubble {
   }
 
   createDragItem() {
-    const existingBubble = this.devTools.shadowRoot?.getElementById("debug-bubble")
+    const existingBubble = this.devTools.shadowRoot?.getElementById("floating-bubble")
     if (existingBubble) {
       this.dragItem = existingBubble
       return
     }
 
     this.dragItem = document.createElement("div")
-    this.dragItem.id = "debug-bubble"
+    this.dragItem.id = "floating-bubble"
     this.dragItem.innerHTML = hotwireIcon
     this.devTools.shadowRoot.appendChild(this.dragItem)
   }
@@ -102,14 +102,14 @@ export default class DebugBubble {
   }
 
   dragStart(event) {
-    if (!event.target.closest("#debug-bubble")) return
+    if (!event.target.closest("#floating-bubble")) return
     this.currentlyDragging = true
 
     this.initialX = event.touches[0].clientX - this.xOffset
     this.initialY = event.touches[0].clientY - this.yOffset
   }
 
-  dragEnd(event) {
+  dragEnd() {
     this.initialX = this.currentX
     this.initialY = this.currentY
     this.currentlyDragging = false

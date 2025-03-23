@@ -1,5 +1,5 @@
 import DevToolsState from "./DevToolsState"
-import DebugBubble from "./DebugBubble"
+import FloatingBubble from "./FloatingBubble"
 import BottomSheet from "./BottomSheet"
 import DiagnosticsChecker from "./DiagnosticsChecker"
 import CustomBridge from "./bridge/CustomBridge"
@@ -9,7 +9,7 @@ import { cssContent } from "./DevToolsStyling.css"
 export default class DevTools {
   constructor() {
     this.state = new DevToolsState()
-    this.bubble = new DebugBubble(this)
+    this.bubble = new FloatingBubble(this)
     this.bottomSheet = new BottomSheet(this)
     this.customBridge = new CustomBridge(this)
     this.diagnosticsChecker = new DiagnosticsChecker()

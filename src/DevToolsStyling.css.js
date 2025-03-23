@@ -38,8 +38,8 @@ export const cssContent = () => {
       fill: white;
     }
 
-    /* Debug bubble */
-    #debug-bubble {
+    /* Floating bubble */
+    #floating-bubble {
       display: flex;
       background-color: hsl(0deg 0% 0% / 60%);
       border-radius: 50%;
@@ -54,18 +54,18 @@ export const cssContent = () => {
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
 
-      /* Keep width, height, and border in sync with bubbleSize in DebugBubble.js */
+      /* Keep width, height, and border in sync with bubbleSize in FloatingBubble.js */
       width: 4.75rem;
       height: 4.75rem;
       border: 0.3rem solid rgba(136, 136, 136, 0.5);
     }
 
-    #debug-bubble svg {
+    #floating-bubble svg {
       transform: scale(0.6);
       fill: #b1b1b1;
     }
 
-    #debug-bubble .animation-container {
+    #floating-bubble .animation-container {
       position: absolute;
       top: 0;
       left: 0;
@@ -75,7 +75,7 @@ export const cssContent = () => {
       z-index: 1;
     }
 
-    #debug-bubble .error-border {
+    #floating-bubble .error-border {
       position: absolute;
       top: -30px;
       left: -30px;
@@ -84,16 +84,16 @@ export const cssContent = () => {
       border-radius: 50%;
     }
 
-    #debug-bubble .error-border circle {
+    #floating-bubble .error-border circle {
       transform-origin: center;
       transform: rotate(-90deg);
     }
 
-    #debug-bubble .error-border circle.animate {
+    #floating-bubble .error-border circle.animate {
       animation: error-border-progress 0.8s ease-out forwards;
     }
 
-    #debug-bubble .animation-container.fade-out {
+    #floating-bubble .animation-container.fade-out {
       animation: fade-out 0.4s ease-out forwards;
     }
 
