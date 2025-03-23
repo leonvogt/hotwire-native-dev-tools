@@ -17,6 +17,7 @@ export default class BottomSheet {
     this.createBottomSheet()
     this.sheetContent = this.bottomSheet.querySelector(".content")
     this.sheetOverlay = this.bottomSheet.querySelector(".sheet-overlay")
+    this.sheetHeight = 50
     this.addEventListeners()
   }
 
@@ -425,7 +426,7 @@ export default class BottomSheet {
   showBottomSheet() {
     this.bottomSheet.classList.add("show")
     document.body.style.overflow = "hidden"
-    this.updateSheetHeight(50)
+    this.updateSheetHeight(this.sheetHeight)
   }
 
   updateSheetHeight(height) {
@@ -459,8 +460,19 @@ export default class BottomSheet {
   dragStop() {
     this.isDragging = false
     this.bottomSheet.classList.remove("dragging")
-    const sheetHeight = parseInt(this.sheetContent.style.height)
-    sheetHeight < 40 ? this.hideBottomSheet() : sheetHeight > 60 ? this.updateSheetHeight(100) : this.updateSheetHeight(50)
+    const draggingThreshold = 10 // Defines how much the user needs to drag to trigger the hide/show
+    const currentHeight = parseInt(this.sheetContent.style.height)
+
+    const minThreshold = Math.max(0, this.sheetHeight - draggingThreshold)
+    const maxThreshold = Math.min(100, this.sheetHeight + draggingThreshold)
+
+    if (currentHeight < minThreshold) {
+      this.hideBottomSheet()
+    } else if (currentHeight > maxThreshold) {
+      this.updateSheetHeight(100)
+    } else {
+      this.updateSheetHeight(this.sheetHeight)
+    }
   }
 
   get currentUrl() {
