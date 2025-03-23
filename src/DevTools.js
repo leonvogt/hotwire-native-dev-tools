@@ -1,6 +1,7 @@
 import DevToolsState from "./DevToolsState"
 import DebugBubble from "./DebugBubble"
 import BottomSheet from "./BottomSheet"
+import DiagnosticsChecker from "./DiagnosticsChecker"
 import CustomBridge from "./bridge/CustomBridge"
 import { debounce } from "./utils/utils"
 import { cssContent } from "./DevToolsStyling.css"
@@ -11,6 +12,7 @@ export default class DevTools {
     this.bubble = new DebugBubble(this)
     this.bottomSheet = new BottomSheet(this)
     this.customBridge = new CustomBridge(this)
+    this.diagnosticsChecker = new DiagnosticsChecker()
     this.state.subscribe(this.update.bind(this))
     this.listenForTurboEvents()
   }
@@ -50,6 +52,9 @@ export default class DevTools {
       },
       { passive: true }
     )
+
+    // Check for warnings
+    this.diagnosticsChecker.checkForWarnings()
 
     this.bubble.onClick(() => {
       this.bottomSheet.showBottomSheet()
