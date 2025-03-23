@@ -153,6 +153,13 @@ export default class DevTools {
   interceptedConsoleMessage(type, args) {
     const message = args
       .map((arg) => {
+        if (arg instanceof Element) {
+          const attrs = Array.from(arg.attributes)
+            .map((attr) => `${attr.name}="${attr.value}"`)
+            .join(" ")
+
+          return `&lt;${arg.tagName.toLowerCase()}${attrs ? " " + attrs : ""}&gt;&lt;/${arg.tagName.toLowerCase()}&gt;`
+        }
         if (typeof arg === "object") {
           try {
             return `<pre>${JSON.stringify(arg, null, 2)}</pre>`
