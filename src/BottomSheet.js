@@ -1,6 +1,11 @@
 import * as Icons from "./utils/icons"
 import { platform } from "./utils/utils"
 
+// WARNING: Be careful when console logging in this file, as it can cause an infinite loop
+// When you need to debug, log either by using the prefix "HotwireDevTools" like this:
+// console.log("HotwireDevTools: Rendering console logs")
+// or turn off the console proxy in DevTools.js
+
 export default class BottomSheet {
   constructor(devTools) {
     this.devTools = devTools

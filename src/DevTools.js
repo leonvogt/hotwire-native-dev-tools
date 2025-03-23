@@ -164,8 +164,11 @@ export default class DevTools {
       })
       .join(" ")
 
-    this.state.addConsoleLog(type, message)
+    // Ignore messages from the dev tools itself
+    // Otherwise we could end up in an infinite loop
+    if (message.includes("hotwire-native-dev-tools") || message.includes("HotwireDevTools")) return
 
+    this.state.addConsoleLog(type, message)
     if (type === "error") {
       this.bubble.animateErrorBorder()
     }
