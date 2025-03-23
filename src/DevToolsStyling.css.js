@@ -21,6 +21,12 @@ export const cssContent = () => {
       margin: 0;
     }
 
+    button {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     .btn-icon {
       background-color: transparent;
       border: none;
@@ -37,6 +43,46 @@ export const cssContent = () => {
       height: 1rem;
       fill: white;
     }
+
+    .btn-toggle {
+      position: relative;
+      cursor: pointer;
+      padding: 4px 8px;
+      border: 1px solid black;
+      border-radius: 4px;
+      color: #fff;
+      text-shadow: 1px 1px #000;
+      box-shadow:
+        inset 0px 4px 4px -3px #fff0,
+        inset 0px -3px 4px -3px #7e8590;
+        background: linear-gradient(to bottom,
+        #878b92 0%,
+        #80848d 30%,
+        #6e757f 65%,
+        #31363F 100%);
+      isolation: isolate;
+      transition: 0.05s all;
+      min-width: 3.5rem;
+    }
+
+    .btn-toggle:active,
+    .btn-toggle.active {
+      box-shadow:
+        inset 0px 4px 4px -3px #252629,
+        inset 0px -4px 4px -3px #2c2f35,
+        inset 0px 0px 24px -3px #292c33;
+      background-position: 1px 1px;
+    }
+
+    .btn-toggle div {
+      transition: 0.05s translate;
+    }
+
+    .btn-toggle:active div,
+    .btn-toggle.active div {
+      translate: 1px 1px;
+    }
+
 
     /* Floating bubble */
     #floating-bubble {
@@ -231,9 +277,6 @@ export const cssContent = () => {
       border: none;
       outline: none;
       padding: 14px 16px;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
     }
 
     .tablist .tablink.active {

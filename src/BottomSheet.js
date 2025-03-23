@@ -1,5 +1,6 @@
 import * as Icons from "./utils/icons"
 import { platform } from "./utils/utils"
+import { getConsoleToggles, saveConsoleToggle } from "./utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
 // When you need to debug, log either by using the prefix "HotwireDevTools" like this:
@@ -37,6 +38,7 @@ export default class BottomSheet {
     }
 
     const activeTab = this.state.activeTab
+    const consoleToggles = getConsoleToggles()
     this.bottomSheet = document.createElement("div")
     this.bottomSheet.classList.add("bottom-sheet")
     this.bottomSheet.innerHTML = `
@@ -55,6 +57,14 @@ export default class BottomSheet {
               <button class="btn-icon btn-clear-tab btn-clear-bridge-logs">${Icons.trash}</button>
             </div>
             <div class="tab-action-bar tab-console-logs ${activeTab === "tab-console-logs" ? "active" : ""}">
+              <div class="console-filter-toggles d-flex gap-1">
+                <button class="btn-toggle ${consoleToggles.warn ? "active" : ""}" data-console-filter="warn"><div>Warning</div></button>
+                <button class="btn-toggle ${consoleToggles.error ? "active" : ""}" data-console-filter="error"><div>Errors</div></button>
+                <button class="btn-toggle ${consoleToggles.debug ? "active" : ""}" data-console-filter="debug"><div>Debug</div></button>
+                <button class="btn-toggle ${consoleToggles.info ? "active" : ""}" data-console-filter="info"><div>Info</div></button>
+                <button class="btn-toggle ${consoleToggles.log ? "active" : ""}" data-console-filter="log"><div>Log</div></button>
+              </div>
+
               <button class="btn-icon btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
             </div>
             <div class="tab-action-bar tab-event-logs ${activeTab === "tab-event-logs" ? "active" : ""}">
@@ -120,8 +130,12 @@ export default class BottomSheet {
 
   renderConsoleLogs() {
     const container = this.bottomSheet.querySelector(".tab-content-console-logs")
+    const consoleToggles = getConsoleToggles()
     container.innerHTML = this.state.consoleLogs.length
-      ? this.state.consoleLogs.map((log) => this.consoleLogHTML(log.type, log.message, log.time)).join("")
+      ? this.state.consoleLogs
+          .filter((log) => consoleToggles[log.type])
+          .map((log) => this.consoleLogHTML(log.type, log.message, log.time))
+          .join("")
       : `<div class="tab-empty-content"><span>No console logs yet</span></div>`
   }
 
@@ -159,7 +173,7 @@ export default class BottomSheet {
   bridgeLogHTML(direction, componentName, eventName, eventArgs, time) {
     return `
       <div class="log-entry d-flex gap-3 pt-2 pb-2">
-        <div class="log-entry-icon">
+        <div class="log-entry-icon d-flex justify-content-center align-items-center">
           ${direction === "send" ? Icons.arrowDown : Icons.arrowUp}
         </div>
         <div class="w-100 overflow-auto">
@@ -352,6 +366,18 @@ export default class BottomSheet {
     this.bottomSheet.querySelector(".top-part").addEventListener("touchstart", this.dragStart.bind(this))
     this.bottomSheet.addEventListener("touchmove", this.dragging.bind(this))
     this.bottomSheet.addEventListener("touchend", this.dragStop.bind(this))
+
+    // Filter Toggles
+    this.bottomSheet.querySelector(".console-filter-toggles").addEventListener("click", ({ target }) => {
+      const button = target.closest(".btn-toggle")
+      if (!button) return
+
+      const filterType = button.dataset.consoleFilter
+      const isActive = button.classList.toggle("active")
+
+      saveConsoleToggle(filterType, isActive)
+      this.renderConsoleLogs()
+    })
 
     // Collapsibles
     const collapsibles = this.bottomSheet.querySelectorAll(".collapse")

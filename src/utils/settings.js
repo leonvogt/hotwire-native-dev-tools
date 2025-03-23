@@ -9,3 +9,22 @@ export const saveSettings = (key, value) => {
 
   localStorage.setItem("hotwire-native-dev-tools", JSON.stringify(settings))
 }
+
+export const getConsoleToggles = () => {
+  const consoleToggles = getSettings("consoleToggles") || {
+    warn: true,
+    error: true,
+    debug: true,
+    info: true,
+    log: true,
+  }
+
+  return consoleToggles
+}
+
+export const saveConsoleToggle = (key, value) => {
+  const consoleToggles = getConsoleToggles()
+  consoleToggles[key] = value
+  saveSettings("consoleToggles", consoleToggles)
+  return consoleToggles
+}
