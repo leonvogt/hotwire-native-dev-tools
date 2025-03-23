@@ -45,11 +45,14 @@ export const cssContent = () => {
       border-radius: 50%;
       touch-action: none;
       user-select: none;
-      -webkit-user-select: none;
       z-index: 10000000;
       position: fixed;
       top: 10px;
       left: 10px;
+
+      /* Remove tap highlight on iOS */
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
 
       /* Keep width, height, and border in sync with bubbleSize in DebugBubble.js */
       width: 4.75rem;
@@ -350,7 +353,7 @@ export const cssContent = () => {
       width: 100%;
       text-align: left;
       border-bottom: 1px solid #eee;
-      padding-bottom: 0.5em;
+      padding: 0.75em;
     }
 
     .tab-content-bridge-components {
@@ -435,6 +438,10 @@ export const cssContent = () => {
 
     .white-space-collapse {
       white-space: collapse;
+    }
+
+    .overflow-auto {
+      overflow: auto;
     }
 
     .mt-1 {

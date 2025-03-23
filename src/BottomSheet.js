@@ -70,7 +70,7 @@ export default class BottomSheet {
               <div id="bridge-components-collapse">
                 <div class="d-flex justify-content-between">
                   <div class="tab-content-bridge-components flex-grow-1"></div>
-                  <button class="btn-icon btn-help btn-bridge-component-help">${Icons.questionMark}</button>
+                  <button class="btn-icon btn-help btn-bridge-component-help mt-1">${Icons.questionMark}</button>
                 </div>
               </div>
 
@@ -157,7 +157,7 @@ export default class BottomSheet {
         <div class="log-entry-icon">
           ${direction === "send" ? Icons.arrowDown : Icons.arrowUp}
         </div>
-        <div class="w-100">
+        <div class="w-100 overflow-auto">
           <div class="d-flex justify-content-between">
             <strong class="w-80 text-ellipsis">${componentName}#${eventName}</strong>
             <small>${time}</small>
