@@ -2,7 +2,7 @@ import DevToolsState from "./DevToolsState"
 import FloatingBubble from "./FloatingBubble"
 import BottomSheet from "./BottomSheet"
 import DiagnosticsChecker from "./DiagnosticsChecker"
-import CustomBridge from "./bridge/CustomBridge"
+import NativeBridge from "./NativeBridge"
 import { debounce } from "./utils/utils"
 import { cssContent } from "./DevToolsStyling.css"
 
@@ -11,7 +11,7 @@ export default class DevTools {
     this.state = new DevToolsState()
     this.bubble = new FloatingBubble(this)
     this.bottomSheet = new BottomSheet(this)
-    this.customBridge = new CustomBridge(this)
+    this.nativeBridge = new NativeBridge(this)
     this.diagnosticsChecker = new DiagnosticsChecker()
     this.state.subscribe(this.update.bind(this))
     this.listenForTurboEvents()
@@ -58,7 +58,7 @@ export default class DevTools {
 
     this.bubble.onClick(() => {
       this.bottomSheet.showBottomSheet()
-      this.customBridge.send("vibrate")
+      this.nativeBridge.send("vibrate")
     })
   }, 200)
 
@@ -69,12 +69,12 @@ export default class DevTools {
     this.addBridgeProxy()
     this.state.setBridgeIsConnected(true)
     this.callNativeBridgeComponent()
-    this.state.setSupportedBridgeComponents(this.customBridge.getSupportedComponents().sort())
+    this.state.setSupportedBridgeComponents(this.nativeBridge.getSupportedComponents().sort())
   }
 
   callNativeBridgeComponent() {
-    if (this.customBridge.bridgeIsConnected()) {
-      this.customBridge.send("connect", {}, (message) => {
+    if (this.nativeBridge.bridgeIsConnected()) {
+      this.nativeBridge.send("connect", {}, (message) => {
         // If this callback gets executed, it means the native counterpart
         // of the dev tools are installed and running.
         this.fetchNativeStack()
@@ -192,14 +192,14 @@ export default class DevTools {
   // to ensure the native side has enough time to set the ViewController / Fragment titles.
   // Previously, with a lower debounce, the title would often be empty.
   fetchNativeStack = debounce(() => {
-    this.customBridge.send("currentStackInfo", {}, (message) => {
+    this.nativeBridge.send("currentStackInfo", {}, (message) => {
       this.state.setSupportsNativeStack(true)
       this.state.setNativeStack(message.data.stack)
     })
   }, 1000)
 
   refetchNativeStack() {
-    this.customBridge.send("currentStackInfo", {}, (message) => {
+    this.nativeBridge.send("currentStackInfo", {}, (message) => {
       this.state.setNativeStack(message.data.stack)
     })
   }

@@ -1,13 +1,11 @@
 /*
-Custom Hotwire Native Bridge
-It differs from the original Bridge, in that it does not use the Stimulus library.
-Motivation: This DevTools can be used without Stimulus or the Native Bridge.
-Therefore, we don't want to add Stimulus or the Native Bridge as a dependency, if possible.
+Similar to the `BridgeComponent` class from the Hotwire Native Bridge,
+but without requiring a bridge component HTML element or Stimulus controller.
 
 Originally from: 37signals LLC
 https://github.com/hotwired/hotwire-native-bridge
 */
-export default class CustomBridge {
+export default class NativeBridge {
   bridgeIsConnected() {
     return !!window.Strada?.web
   }
