@@ -4,15 +4,19 @@ import FloatingBubble from "./components/FloatingBubble"
 import BottomSheet from "./components/BottomSheet"
 import DevToolsState from "./lib/DevToolsState"
 import NativeBridge from "./lib/NativeBridge"
+import { resetSettings } from "./utils/settings"
 import { debounce } from "./utils/utils"
 
 export default class DevTools {
   constructor(options = {}) {
     this.options = {
       enabled: true,
+      reset: false,
       ...options,
     }
     if (!this.options.enabled) return
+    if (this.options.reset) resetSettings()
+
     this.state = new DevToolsState()
     this.bubble = new FloatingBubble(this)
     this.bottomSheet = new BottomSheet(this)

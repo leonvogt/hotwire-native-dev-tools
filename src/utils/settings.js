@@ -10,6 +10,10 @@ export const saveSettings = (key, value) => {
   localStorage.setItem("hotwire-native-dev-tools", JSON.stringify(settings))
 }
 
+export const resetSettings = () => {
+  localStorage.removeItem("hotwire-native-dev-tools")
+}
+
 export const getConsoleToggles = () => {
   const consoleToggles = getSettings("consoleToggles") || {
     warn: true,
