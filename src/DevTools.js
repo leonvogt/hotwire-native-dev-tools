@@ -7,7 +7,12 @@ import NativeBridge from "./lib/NativeBridge"
 import { debounce } from "./utils/utils"
 
 export default class DevTools {
-  constructor() {
+  constructor(options = {}) {
+    this.options = {
+      enabled: true,
+      ...options,
+    }
+    if (!this.options.enabled) return
     this.state = new DevToolsState()
     this.bubble = new FloatingBubble(this)
     this.bottomSheet = new BottomSheet(this)
@@ -19,6 +24,7 @@ export default class DevTools {
 
   // Setup gets called initially and on every turbo:load event, eg. when navigating to a new page
   setup = debounce(() => {
+    if (!this.options.enabled) return
     this.setupShadowRoot()
     this.bottomSheet.render()
     this.bubble.render()

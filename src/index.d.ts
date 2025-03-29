@@ -1,3 +1,7 @@
-declare function setupDevTools(): void
+interface DevToolsOptions {
+  enabled?: boolean
+}
+
+declare function setupDevTools(options?: DevToolsOptions): void
 
 export { setupDevTools }

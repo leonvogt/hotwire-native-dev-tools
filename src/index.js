@@ -1,7 +1,9 @@
 import DevTools from "./DevTools"
 
-const setupDevTools = () => {
-  const devTools = new DevTools()
+const setupDevTools = (options = {}) => {
+  const devTools = new DevTools(options)
+  if (!devTools.options.enabled) return
+
   devTools.setup()
 
   document.addEventListener(
