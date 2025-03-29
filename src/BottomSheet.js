@@ -3,8 +3,8 @@ import { platform } from "./utils/utils"
 import { getConsoleToggles, saveConsoleToggle } from "./utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
-// When you need to debug, log either by using the prefix "HotwireDevTools" like this:
-// console.log("HotwireDevTools: Rendering console logs")
+// When you need to debug, use the `log` helper function like this:
+// this.log("message")
 // or turn off the console proxy in DevTools.js
 
 export default class BottomSheet {
@@ -496,6 +496,12 @@ export default class BottomSheet {
     } else {
       this.updateSheetHeight(this.sheetHeight)
     }
+  }
+
+  // Helper function to log messages, without causing a rerender of the bottom sheet
+  // (Messages with a `HotwireDevTools` prefix will not be logged in the bottom sheet)
+  log(message) {
+    console.log(`HotwireDevTools: ${message}`)
   }
 
   get currentUrl() {
