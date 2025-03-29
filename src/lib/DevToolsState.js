@@ -1,4 +1,4 @@
-import { getSettings, saveSettings } from "./utils/settings"
+import { getSettings, saveSettings } from "../utils/settings"
 
 export default class DevToolsState {
   constructor() {

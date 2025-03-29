@@ -1,6 +1,6 @@
-import * as Icons from "./utils/icons"
-import { platform } from "./utils/utils"
-import { getConsoleToggles, saveConsoleToggle } from "./utils/settings"
+import * as Icons from "../assets/icons"
+import { platform } from "../utils/utils"
+import { getConsoleToggles, saveConsoleToggle } from "../utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
 // When you need to debug, use the `log` helper function like this:

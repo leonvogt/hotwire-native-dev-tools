@@ -1,10 +1,10 @@
-import DevToolsState from "./DevToolsState"
-import FloatingBubble from "./FloatingBubble"
-import BottomSheet from "./BottomSheet"
-import DiagnosticsChecker from "./DiagnosticsChecker"
-import NativeBridge from "./NativeBridge"
+import { cssContent } from "./assets/DevToolsStyling.css"
+import DiagnosticsChecker from "./lib/DiagnosticsChecker"
+import FloatingBubble from "./components/FloatingBubble"
+import BottomSheet from "./components/BottomSheet"
+import DevToolsState from "./lib/DevToolsState"
+import NativeBridge from "./lib/NativeBridge"
 import { debounce } from "./utils/utils"
-import { cssContent } from "./DevToolsStyling.css"
 
 export default class DevTools {
   constructor() {

@@ -1,6 +1,6 @@
-import { getSettings, saveSettings } from "./utils/settings"
-import { debounce } from "./utils/utils"
-import { hotwireIcon } from "./utils/icons"
+import { getSettings, saveSettings } from "../utils/settings"
+import { debounce } from "../utils/utils"
+import { hotwireIcon } from "../assets/icons"
 
 export default class FloatingBubble {
   constructor(devTools) {
