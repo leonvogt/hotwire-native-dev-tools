@@ -198,6 +198,12 @@ export default class DevTools {
     })
   }, 1000)
 
+  refetchNativeStack() {
+    this.customBridge.send("currentStackInfo", {}, (message) => {
+      this.state.setNativeStack(message.data.stack)
+    })
+  }
+
   injectCSSToShadowRoot = async () => {
     if (this.shadowRoot.querySelector("style")) return
 

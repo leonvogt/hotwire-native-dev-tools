@@ -180,7 +180,10 @@ export default class BottomSheet {
 
   renderNativeStack() {
     const container = this.bottomSheet.querySelector(".tab-content-native-stack")
-    container.innerHTML = this.state.nativeStack.length ? this.state.nativeStack.map((view) => this.nativeViewStackHTML(view)).join("") : `<div class="tab-empty-content"><span>No native stack captured yet</span></div>`
+    container.innerHTML =
+      `<div class="native-stack-wrapper">` +
+      (this.state.nativeStack.length ? this.state.nativeStack.map((view) => this.nativeViewStackHTML(view)).join("") : `<div class="tab-empty-content"><span>No native stack captured yet</span></div>`) +
+      `</div>`
   }
 
   bridgeLogHTML(direction, componentName, eventName, eventArgs, time) {
@@ -362,7 +365,8 @@ export default class BottomSheet {
       this.renderEvents()
     })
     this.bottomSheet.querySelector(".btn-reload-stack").addEventListener("click", () => {
-      this.devTools.fetchNativeStack()
+      this.bottomSheet.querySelector(".native-stack-wrapper").style.opacity = 0.5
+      this.devTools.refetchNativeStack()
     })
 
     // Help Buttons
