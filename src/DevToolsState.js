@@ -10,6 +10,7 @@ export default class DevToolsState {
       supportedBridgeComponents: [],
       bridgeIsConnected: false,
       supportsNativeStackView: false,
+      consoleSearch: "",
       activeTab: getSettings("activeTab") || "tab-bridge-components",
     }
     this.listeners = []
@@ -79,6 +80,10 @@ export default class DevToolsState {
   setActiveTab(tab) {
     this.state.activeTab = tab
     saveSettings("activeTab", tab)
+  }
+
+  setConsoleSearchValue(value) {
+    this.state.consoleSearch = value
   }
 
   get currentTime() {
