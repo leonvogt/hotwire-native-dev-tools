@@ -58,6 +58,7 @@ export default class DevTools {
 
     this.bubble.onClick(() => {
       this.bottomSheet.showBottomSheet()
+      this.customBridge.send("vibrate")
     })
   }, 200)
 
