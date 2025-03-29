@@ -40,6 +40,7 @@ export default class BottomSheet {
 
     const activeTab = this.state.activeTab
     const consoleToggles = getConsoleToggles()
+    const consoleSearch = this.state.consoleSearch
     this.bottomSheet = document.createElement("div")
     this.bottomSheet.classList.add("bottom-sheet")
     this.bottomSheet.innerHTML = `
@@ -57,16 +58,22 @@ export default class BottomSheet {
             <div class="tab-action-bar tab-bridge-components ${activeTab === "tab-bridge-components" ? "active" : ""}">
               <button class="btn-icon btn-clear-tab btn-clear-bridge-logs">${Icons.trash}</button>
             </div>
-            <div class="tab-action-bar tab-console-logs ${activeTab === "tab-console-logs" ? "active" : ""}">
-              <div class="console-filter-toggles d-flex gap-1">
-                <button class="btn-toggle ${consoleToggles.warn ? "active" : ""}" data-console-filter="warn"><div>Warning</div></button>
-                <button class="btn-toggle ${consoleToggles.error ? "active" : ""}" data-console-filter="error"><div>Errors</div></button>
-                <button class="btn-toggle ${consoleToggles.debug ? "active" : ""}" data-console-filter="debug"><div>Debug</div></button>
-                <button class="btn-toggle ${consoleToggles.info ? "active" : ""}" data-console-filter="info"><div>Info</div></button>
-                <button class="btn-toggle ${consoleToggles.log ? "active" : ""}" data-console-filter="log"><div>Log</div></button>
+            <div class="tab-action-bar d-flex flex-column tab-console-logs ${activeTab === "tab-console-logs" ? "active" : ""}">
+              <div class="d-flex">
+                <div class="console-filter-toggles d-flex gap-1">
+                  <button class="btn-toggle ${consoleToggles.warn ? "active" : ""}" data-console-filter="warn"><div>Warning</div></button>
+                  <button class="btn-toggle ${consoleToggles.error ? "active" : ""}" data-console-filter="error"><div>Errors</div></button>
+                  <button class="btn-toggle ${consoleToggles.debug ? "active" : ""}" data-console-filter="debug"><div>Debug</div></button>
+                  <button class="btn-toggle ${consoleToggles.info ? "active" : ""}" data-console-filter="info"><div>Info</div></button>
+                  <button class="btn-toggle ${consoleToggles.log ? "active" : ""}" data-console-filter="log"><div>Log</div></button>
+                </div>
+                <button class="btn-icon btn-search-console">${Icons.search}</button>
+                <button class="btn-icon btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
               </div>
 
-              <button class="btn-icon btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
+              <div class="console-search mt-2 ${consoleSearch ? "" : "d-none"}">
+                <input type="search" class="console-search-input" value="${consoleSearch}" placeholder="Search console logs" />
+              </div>
             </div>
             <div class="tab-action-bar tab-event-logs ${activeTab === "tab-event-logs" ? "active" : ""}">
               <button class="btn-icon btn-clear-tab btn-clear-events">${Icons.trash}</button>
@@ -132,9 +139,14 @@ export default class BottomSheet {
   renderConsoleLogs() {
     const container = this.bottomSheet.querySelector(".tab-content-console-logs")
     const consoleToggles = getConsoleToggles()
+    const consoleSearch = this.state.consoleSearch
     container.innerHTML = this.state.consoleLogs.length
       ? this.state.consoleLogs
           .filter((log) => consoleToggles[log.type])
+          .filter((log) => {
+            if (!consoleSearch) return true
+            return log.message.toLowerCase().includes(consoleSearch.toLowerCase())
+          })
           .map((log) => this.consoleLogHTML(log.type, log.message, log.time))
           .join("")
       : `<div class="tab-empty-content"><span>No console logs yet</span></div>`
@@ -368,7 +380,7 @@ export default class BottomSheet {
     this.bottomSheet.addEventListener("touchmove", this.dragging.bind(this))
     this.bottomSheet.addEventListener("touchend", this.dragStop.bind(this))
 
-    // Filter Toggles
+    // Filters
     this.bottomSheet.querySelector(".console-filter-toggles").addEventListener("click", ({ target }) => {
       const button = target.closest(".btn-toggle")
       if (!button) return
@@ -377,6 +389,17 @@ export default class BottomSheet {
       const isActive = button.classList.toggle("active")
 
       saveConsoleToggle(filterType, isActive)
+      this.renderConsoleLogs()
+    })
+
+    this.bottomSheet.querySelector(".btn-search-console").addEventListener("click", () => {
+      const searchInput = this.bottomSheet.querySelector(".console-search")
+      searchInput.classList.toggle("d-none")
+      searchInput.querySelector("input").focus()
+    })
+
+    this.bottomSheet.querySelector(".console-search-input").addEventListener("input", (event) => {
+      this.devTools.state.setConsoleSearchValue(event.target.value.toLowerCase())
       this.renderConsoleLogs()
     })
 

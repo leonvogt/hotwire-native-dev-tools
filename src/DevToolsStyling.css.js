@@ -27,6 +27,17 @@ export const cssContent = () => {
       -webkit-tap-highlight-color: transparent;
     }
 
+    input {
+      padding: 3px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input:focus {
+      outline: none;
+    }
+
     .btn-icon {
       background-color: transparent;
       border: none;
@@ -489,6 +500,10 @@ export const cssContent = () => {
 
     .mt-1 {
       margin-top: 0.25rem;
+    }
+
+    .mt-2 {
+      margin-top: 0.5rem;
     }
 
     .ms-1 {
