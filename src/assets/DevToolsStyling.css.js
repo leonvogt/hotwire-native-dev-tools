@@ -55,45 +55,45 @@ export const cssContent = () => {
       fill: white;
     }
 
-    .btn-toggle {
+    /* Dropdown */
+    .dropdown {
       position: relative;
-      cursor: pointer;
-      padding: 4px 8px;
-      border: 1px solid black;
-      border-radius: 4px;
-      color: #fff;
-      text-shadow: 1px 1px #000;
-      box-shadow:
-        inset 0px 4px 4px -3px #fff0,
-        inset 0px -3px 4px -3px #7e8590;
-        background: linear-gradient(to bottom,
-        #878b92 0%,
-        #80848d 30%,
-        #6e757f 65%,
-        #31363F 100%);
-      isolation: isolate;
-      transition: 0.05s all;
-      min-width: 3.5rem;
     }
 
-    .btn-toggle:active,
-    .btn-toggle.active {
-      box-shadow:
-        inset 0px 4px 4px -3px #252629,
-        inset 0px -4px 4px -3px #2c2f35,
-        inset 0px 0px 24px -3px #292c33;
-      background-position: 1px 1px;
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      z-index: 1000;
+      background: white;
+      border: 1px solid #ddd;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      min-width: 200px;
+      max-width: 300px;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
     }
 
-    .btn-toggle div {
-      transition: 0.05s translate;
+    .dropdown-content.dropdown-open {
+      display: block;
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
     }
 
-    .btn-toggle:active div,
-    .btn-toggle.active div {
-      translate: 1px 1px;
+    .dropdown-content > * {
+      padding: 12px;
     }
 
+    .dropdown-content button,
+    .dropdown-content label {
+      color: black;
+      width: 100%;
+      border: none;
+      display: flex;
+      align-items: center;
+    }
 
     /* Floating bubble */
     #floating-bubble {

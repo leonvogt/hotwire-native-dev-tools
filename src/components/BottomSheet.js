@@ -60,14 +60,17 @@ export default class BottomSheet {
             </div>
             <div class="tab-action-bar d-flex flex-column tab-console-logs ${activeTab === "tab-console-logs" ? "active" : ""}">
               <div class="d-flex">
-                <div class="console-filter-toggles d-flex gap-1">
-                  <button class="btn-toggle ${consoleToggles.warn ? "active" : ""}" data-console-filter="warn"><div>Warning</div></button>
-                  <button class="btn-toggle ${consoleToggles.error ? "active" : ""}" data-console-filter="error"><div>Errors</div></button>
-                  <button class="btn-toggle ${consoleToggles.debug ? "active" : ""}" data-console-filter="debug"><div>Debug</div></button>
-                  <button class="btn-toggle ${consoleToggles.info ? "active" : ""}" data-console-filter="info"><div>Info</div></button>
-                  <button class="btn-toggle ${consoleToggles.log ? "active" : ""}" data-console-filter="log"><div>Log</div></button>
-                </div>
                 <button class="btn-icon btn-search-console">${Icons.search}</button>
+                <div class="dropdown">
+                  <button class="dropdown-trigger btn-icon">${Icons.filter}</button>
+                  <div class="dropdown-content console-filter-toggles">
+                    <label><input type="checkbox" ${consoleToggles.warn ? "checked" : ""} data-console-filter="warn" /> Warnings</label>
+                    <label><input type="checkbox" ${consoleToggles.error ? "checked" : ""} data-console-filter="error" /> Errors</label>
+                    <label><input type="checkbox" ${consoleToggles.debug ? "checked" : ""} data-console-filter="debug" /> Debug</label>
+                    <label><input type="checkbox" ${consoleToggles.info ? "checked" : ""} data-console-filter="info" /> Info</label>
+                    <label><input type="checkbox" ${consoleToggles.log ? "checked" : ""} data-console-filter="log" /> Logs</label>
+                  </div>
+                </div>
                 <button class="btn-icon btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
               </div>
 
@@ -386,11 +389,11 @@ export default class BottomSheet {
 
     // Filters
     this.bottomSheet.querySelector(".console-filter-toggles").addEventListener("click", ({ target }) => {
-      const button = target.closest(".btn-toggle")
-      if (!button) return
+      const checkbox = target.closest("input[type='checkbox']")
+      if (!checkbox) return
 
-      const filterType = button.dataset.consoleFilter
-      const isActive = button.classList.toggle("active")
+      const filterType = checkbox.dataset.consoleFilter
+      const isActive = checkbox.checked
 
       saveConsoleToggle(filterType, isActive)
       this.renderConsoleLogs()
@@ -423,7 +426,38 @@ export default class BottomSheet {
       })
     })
 
+    // Close dropdown if click is outside
+    this.bottomSheet.addEventListener("click", (e) => {
+      const openDropdowns = this.bottomSheet.querySelectorAll(".dropdown-content.dropdown-open")
+      openDropdowns.forEach((dropdown) => {
+        const dropdownContainer = dropdown.closest(".dropdown")
+        if (!dropdownContainer.contains(e.target)) {
+          dropdown.classList.remove("dropdown-open")
+        }
+      })
+    })
+
+    // Open dropdown
+    this.bottomSheet.addEventListener("click", (e) => {
+      const trigger = e.target.closest(".dropdown-trigger")
+      if (trigger) {
+        e.preventDefault()
+        this.toggleDropdown(trigger)
+      }
+    })
+
     this.bottomSheet.hasEventListeners = true
+  }
+
+  toggleDropdown(triggerElement) {
+    const dropdownContent = triggerElement.nextElementSibling || triggerElement.closest(".dropdown").querySelector(".dropdown-content")
+    // Close other dropdowns first
+    this.bottomSheet.querySelectorAll(".dropdown-content.dropdown-open").forEach((el) => {
+      if (el !== dropdownContent) {
+        el.classList.remove("dropdown-open")
+      }
+    })
+    dropdownContent.classList.toggle("dropdown-open")
   }
 
   handleTabClick = (event) => {
