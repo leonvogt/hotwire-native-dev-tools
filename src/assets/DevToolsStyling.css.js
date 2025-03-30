@@ -401,6 +401,13 @@ export const cssContent = () => {
       word-break: break-all;
     }
 
+    .bottom-sheet .non-identified-view {
+      background: #EEEEEE;
+    }
+    .bottom-sheet .non-identified-view .view-title-details {
+      color: #6c6c6c;
+    }
+
     /* Bottom Sheet Bridge Components */
     .bottom-sheet .bridge-components-collapse-btn {
       background: none;

@@ -248,7 +248,7 @@ export default class BottomSheet {
     const isTabBar = view.type === "UITabBarController"
     const isHotwireView = ["VisitableViewController", "HotwireWebFragment", "BackStackEntry"].includes(view.type)
     const activeClass = view.url === this.currentUrl ? "active" : ""
-    const wrapperClass = `viewstack-card ${activeClass} ${isMainView ? "main-view" : isHotwireView ? "hotwire-view" : isTabBar ? "tab-container" : ""}`
+    const wrapperClass = `viewstack-card ${activeClass} ${isMainView ? "main-view" : isHotwireView ? "hotwire-view" : isTabBar ? "tab-container" : "non-identified-view"}`
 
     const urlPath = view.url
       ? `<div class="view-url">
