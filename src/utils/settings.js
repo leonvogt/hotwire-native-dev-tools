@@ -14,8 +14,8 @@ export const resetSettings = () => {
   localStorage.removeItem("hotwire-native-dev-tools")
 }
 
-export const getConsoleToggles = () => {
-  const consoleToggles = getSettings("consoleToggles") || {
+export const getConsoleFilterLevels = () => {
+  const consoleFilterLevels = getSettings("consoleFilterLevels") || {
     warn: true,
     error: true,
     debug: true,
@@ -23,12 +23,12 @@ export const getConsoleToggles = () => {
     log: true,
   }
 
-  return consoleToggles
+  return consoleFilterLevels
 }
 
-export const saveConsoleToggle = (key, value) => {
-  const consoleToggles = getConsoleToggles()
-  consoleToggles[key] = value
-  saveSettings("consoleToggles", consoleToggles)
-  return consoleToggles
+export const saveConsoleFilterLevels = (key, value) => {
+  const consoleFilterLevels = getConsoleFilterLevels()
+  consoleFilterLevels[key] = value
+  saveSettings("consoleFilterLevels", consoleFilterLevels)
+  return consoleFilterLevels
 }

@@ -1,6 +1,6 @@
 import * as Icons from "../assets/icons"
 import { platform } from "../utils/utils"
-import { getConsoleToggles, saveConsoleToggle } from "../utils/settings"
+import { getConsoleFilterLevels, saveConsoleFilterLevels } from "../utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
 // When you need to debug, use the `log` helper function like this:
@@ -39,7 +39,7 @@ export default class BottomSheet {
     }
 
     const activeTab = this.state.activeTab
-    const consoleToggles = getConsoleToggles()
+    const consoleFilterLevels = getConsoleFilterLevels()
     const consoleSearch = this.state.consoleSearch
     this.bottomSheet = document.createElement("div")
     this.bottomSheet.classList.add("bottom-sheet")
@@ -63,12 +63,12 @@ export default class BottomSheet {
                 <button class="btn-icon btn-search-console">${Icons.search}</button>
                 <div class="dropdown">
                   <button class="dropdown-trigger btn-icon">${Icons.filter}</button>
-                  <div class="dropdown-content console-filter-toggles">
-                    <label><input type="checkbox" ${consoleToggles.warn ? "checked" : ""} data-console-filter="warn" /> Warnings</label>
-                    <label><input type="checkbox" ${consoleToggles.error ? "checked" : ""} data-console-filter="error" /> Errors</label>
-                    <label><input type="checkbox" ${consoleToggles.debug ? "checked" : ""} data-console-filter="debug" /> Debug</label>
-                    <label><input type="checkbox" ${consoleToggles.info ? "checked" : ""} data-console-filter="info" /> Info</label>
-                    <label><input type="checkbox" ${consoleToggles.log ? "checked" : ""} data-console-filter="log" /> Logs</label>
+                  <div class="dropdown-content console-filter-levels">
+                    <label><input type="checkbox" ${consoleFilterLevels.warn ? "checked" : ""} data-console-filter="warn" /> Warnings</label>
+                    <label><input type="checkbox" ${consoleFilterLevels.error ? "checked" : ""} data-console-filter="error" /> Errors</label>
+                    <label><input type="checkbox" ${consoleFilterLevels.debug ? "checked" : ""} data-console-filter="debug" /> Debug</label>
+                    <label><input type="checkbox" ${consoleFilterLevels.info ? "checked" : ""} data-console-filter="info" /> Info</label>
+                    <label><input type="checkbox" ${consoleFilterLevels.log ? "checked" : ""} data-console-filter="log" /> Logs</label>
                   </div>
                 </div>
                 <button class="btn-icon btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
@@ -141,11 +141,11 @@ export default class BottomSheet {
 
   renderConsoleLogs() {
     const container = this.bottomSheet.querySelector(".tab-content-console-logs")
-    const consoleToggles = getConsoleToggles()
+    const consoleFilterLevels = getConsoleFilterLevels()
     const consoleSearch = this.state.consoleSearch
     container.innerHTML = this.state.consoleLogs.length
       ? this.state.consoleLogs
-          .filter((log) => consoleToggles[log.type])
+          .filter((log) => consoleFilterLevels[log.type])
           .filter((log) => {
             if (!consoleSearch) return true
             return log.message.toLowerCase().includes(consoleSearch.toLowerCase())
@@ -388,14 +388,14 @@ export default class BottomSheet {
     this.bottomSheet.addEventListener("touchend", this.dragStop.bind(this))
 
     // Filters
-    this.bottomSheet.querySelector(".console-filter-toggles").addEventListener("click", ({ target }) => {
+    this.bottomSheet.querySelector(".console-filter-levels").addEventListener("click", ({ target }) => {
       const checkbox = target.closest("input[type='checkbox']")
       if (!checkbox) return
 
       const filterType = checkbox.dataset.consoleFilter
       const isActive = checkbox.checked
 
-      saveConsoleToggle(filterType, isActive)
+      saveConsoleFilterLevels(filterType, isActive)
       this.renderConsoleLogs()
     })
 
