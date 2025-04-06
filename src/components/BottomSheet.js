@@ -383,9 +383,9 @@ export default class BottomSheet {
     })
 
     // Dragging
-    this.bottomSheet.querySelector(".top-part").addEventListener("touchstart", this.dragStart.bind(this))
-    this.bottomSheet.addEventListener("touchmove", this.dragging.bind(this))
-    this.bottomSheet.addEventListener("touchend", this.dragStop.bind(this))
+    this.bottomSheet.querySelector(".top-part").addEventListener("touchstart", this.dragStart.bind(this), { passive: true })
+    this.bottomSheet.addEventListener("touchmove", this.dragging.bind(this), { passive: true })
+    this.bottomSheet.addEventListener("touchend", this.dragStop.bind(this), { passive: true })
 
     // Filters
     this.bottomSheet.querySelector(".console-filter-levels").addEventListener("click", ({ target }) => {
