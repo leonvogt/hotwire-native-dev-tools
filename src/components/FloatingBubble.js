@@ -56,7 +56,7 @@ export default class FloatingBubble {
     }
   }
 
-  animateErrorBorder() {
+  animateErrorBorder = debounce(() => {
     if (!this.dragItem) return
 
     let errorBorder = this.dragItem.querySelector(".error-border")
@@ -95,7 +95,7 @@ export default class FloatingBubble {
         animationContainer.remove()
       }
     }, 1800) // Remove after fade-out completes
-  }
+  }, 100)
 
   onClick(callback) {
     this.clickCallback = callback

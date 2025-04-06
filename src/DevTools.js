@@ -30,8 +30,8 @@ export default class DevTools {
   setup() {
     if (!this.options.enabled) return
     this.setupShadowRoot()
-    this.bottomSheet.render()
     this.bubble.render()
+    this.bottomSheet.render()
 
     // Add Console Proxy
     if (!this.originalConsole) {
