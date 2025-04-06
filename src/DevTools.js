@@ -27,7 +27,7 @@ export default class DevTools {
   }
 
   // Setup gets called initially and on every turbo:load event, eg. when navigating to a new page
-  setup = debounce(() => {
+  setup() {
     if (!this.options.enabled) return
     this.setupShadowRoot()
     this.bottomSheet.render()
@@ -70,7 +70,7 @@ export default class DevTools {
       this.bottomSheet.showBottomSheet()
       this.nativeBridge.send("vibrate")
     })
-  }, 200)
+  }
 
   nativeBridgeGotConnected() {
     if (this.originalBridge) return
@@ -200,7 +200,7 @@ export default class DevTools {
   // Fetch the current stack from the native side
   // The debounce on this function is intentionally high,
   // to ensure the native side has enough time to set the ViewController / Fragment titles.
-  // Previously, with a lower debounce, the title would often be empty.
+  // With a lower debounce, the view controller / fragment title would often be empty.
   fetchNativeStack = debounce(() => {
     this.nativeBridge.send("currentStackInfo", {}, (message) => {
       this.state.setSupportsNativeStack(true)
