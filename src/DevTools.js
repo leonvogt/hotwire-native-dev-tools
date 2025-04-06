@@ -111,10 +111,16 @@ export default class DevTools {
       get: (target, prop, receiver) => {
         const originalValue = Reflect.get(target, prop, receiver)
 
-        // We are only interested in the `send` and `receive` functions
         if (typeof originalValue === "function" && (prop === "send" || prop === "receive")) {
           return (...args) => {
             this.interceptedBridgeMessage(prop, args)
+            return originalValue.apply(target, args)
+          }
+        }
+
+        if (typeof originalValue === "function" && prop === "adapterDidUpdateSupportedComponents") {
+          return (...args) => {
+            this.state.setSupportedBridgeComponents(this.nativeBridge.getSupportedComponents().sort())
             return originalValue.apply(target, args)
           }
         }
