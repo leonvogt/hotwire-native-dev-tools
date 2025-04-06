@@ -38,10 +38,6 @@ export default class NativeBridge {
     return this.bridge.supportsComponent(component)
   }
 
-  getPlatform() {
-    return document.documentElement.dataset.bridgePlatform
-  }
-
   getSupportedComponents() {
     return document.documentElement.dataset.bridgeComponents?.split(" ") || []
   }

@@ -8,8 +8,15 @@ export const debounce = (fn, delay) => {
   }
 }
 
+const { userAgent } = window.navigator
+export const isIosApp = /iOS/.test(userAgent)
+export const isAndroidApp = /Android/.test(userAgent)
+
 export const platform = () => {
-  const { bridgePlatform } = document.documentElement.dataset
-  const platform = bridgePlatform || "unknown"
-  return platform
+  if (isIosApp) {
+    return "ios"
+  } else if (isAndroidApp) {
+    return "android"
+  }
+  return "unknown"
 }
