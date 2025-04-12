@@ -28,6 +28,7 @@ export const cssContent = () => {
     }
 
     input {
+      display: block;
       padding: 3px;
       box-sizing: border-box;
       border: 1px solid #ccc;
@@ -327,6 +328,29 @@ export const cssContent = () => {
       flex-direction: column;
       align-items: center;
       padding: 1em;
+    }
+
+    .bottom-sheet .tablink-settings {
+      border: none;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5em;
+      width: 2rem;
+    }
+
+    .bottom-sheet .tablink-settings  svg {
+      width: 1rem;
+      height: 1rem;
+      fill: #121212;
+    }
+
+    .bottom-sheet .tablink-settings:active {
+      background-color: #31363f;
+    }
+    .bottom-sheet .tablink-settings:active svg {
+      fill: white;
     }
 
     /* Bottom Sheet Stack Visualization */
