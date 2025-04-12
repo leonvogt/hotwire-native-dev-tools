@@ -1,5 +1,5 @@
 import * as Icons from "../assets/icons"
-import { platform } from "../utils/utils"
+import { platform, formattedPlatform } from "../utils/utils"
 import { getConsoleFilterLevels, saveConsoleFilterLevels } from "../utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
@@ -91,7 +91,7 @@ export default class BottomSheet {
           <div id="tab-bridge-components" class="outer-tab-content ${activeTab === "tab-bridge-components" ? "active" : ""}">
             <div class="inner-tab-content">
               <button class="collapse bridge-components-collapse-btn" type="button" data-collapse-target="bridge-components-collapse">
-                Supported Bridge Components: <span class="bridge-components-amount">${this.state.supportedBridgeComponents.length}</span>
+                Registered Bridge Components: <span class="bridge-components-amount">${this.state.supportedBridgeComponents.length}</span>
               </button>
               <div id="bridge-components-collapse">
                 <div class="d-flex justify-content-between">
@@ -126,8 +126,9 @@ export default class BottomSheet {
                 <button class="btn-icon btn-close-single-mode">${Icons.arrowLeft}</button>
                 <h3 class="ms-1">Bridge Components</h3>
               </div>
-              <h3>Why is my bridge component not on the list?</h3>
-              <p>Bridge components are automatically detected when they are registered in the native code. If your component is not on the list, make sure it is registered correctly.</p>
+              <p>This list shows all the bridge components that the ${formattedPlatform()} app supports. Components that are active on this page are marked with a green dot.</p>
+              <h3 class="mt-4">Why is my bridge component not on the list?</h3>
+              <p class="mt-2">Bridge components are automatically detected when they are registered in the native code. If your component is not on the list, make sure it is registered correctly.</p>
               ${this.registerBridgeComponentExample()}
               <p class"mt-1">For more information, check out the documentation:</p>
               <a href="${this.registerBridgeComponentHelpURL()}">${this.registerBridgeComponentHelpURL()}</a>
@@ -159,9 +160,10 @@ export default class BottomSheet {
     const bridgeComponentsAmount = this.state.supportedBridgeComponents.length
     this.bottomSheet.querySelector(".bridge-components-amount").textContent = bridgeComponentsAmount
 
+    const bridgeComponentIdentifiers = this.bridgeComponentIdentifiers
     const container = this.bottomSheet.querySelector(".tab-content-bridge-components")
     container.innerHTML = bridgeComponentsAmount
-      ? this.state.supportedBridgeComponents.map((component) => `<div class="bridge-component">${component}</div>`).join("")
+      ? this.state.supportedBridgeComponents.map((component) => `<div class="bridge-component ${bridgeComponentIdentifiers.includes(component) ? "connected" : ""}">${component}</div>`).join("")
       : `<div class="tab-empty-content d-flex flex-column text-center"><span>${"No bridge components found"}</span></div>`
   }
 
@@ -307,7 +309,7 @@ export default class BottomSheet {
     switch (platform()) {
       case "android":
         return `
-<pre>
+<pre class="overflow-auto">
   Hotwire.registerBridgeComponents(
     BridgeComponentFactory("my-component", ::MyComponent)
   )
@@ -315,7 +317,7 @@ export default class BottomSheet {
 `
       case "ios":
         return `
-<pre>
+<pre class="overflow-auto">
   Hotwire.registerBridgeComponents([
       MyComponent.self
   ])
@@ -540,6 +542,11 @@ export default class BottomSheet {
   // (Messages with a `HotwireDevTools` prefix will not be logged in the bottom sheet)
   log(message) {
     console.log(`HotwireDevTools: ${message}`)
+  }
+
+  // Get all the `static component = "..."` from the bridge components
+  get bridgeComponentIdentifiers() {
+    return window.Stimulus?.controllers.map((controller) => controller.component).filter((component) => component !== undefined) || []
   }
 
   get currentUrl() {

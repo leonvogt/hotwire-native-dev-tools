@@ -435,11 +435,14 @@ export const cssContent = () => {
     .tab-content-bridge-components .bridge-component::before {
       content: "•";
       color: #eee;
-      font-size: 1.2em;
+      font-size: 1.5em;
       position: absolute;
       left: 0;
       top: 50%;
       transform: translateY(-50%);
+    }
+    .tab-content-bridge-components .bridge-component.connected::before {
+      color: #5cff00
     }
 
     /* Collapsibles */
@@ -513,6 +516,10 @@ export const cssContent = () => {
 
     .mt-2 {
       margin-top: 0.5rem;
+    }
+
+    .mt-4 {
+      margin-top: 1.5rem;
     }
 
     .ms-1 {

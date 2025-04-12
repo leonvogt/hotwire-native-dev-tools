@@ -20,3 +20,14 @@ export const platform = () => {
   }
   return "unknown"
 }
+
+export const formattedPlatform = () => {
+  switch (platform()) {
+    case "android":
+      return "Android"
+    case "ios":
+      return "iOS"
+    default:
+      return "<unknown>"
+  }
+}
