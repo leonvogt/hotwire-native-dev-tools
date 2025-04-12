@@ -1,6 +1,6 @@
 import * as Icons from "../assets/icons"
 import { platform, formattedPlatform } from "../utils/utils"
-import { getConsoleFilterLevels, saveConsoleFilterLevels } from "../utils/settings"
+import { saveSettings, getSettings, getConsoleFilterLevels, saveConsoleFilterLevels } from "../utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
 // When you need to debug, use the `log` helper function like this:
@@ -11,13 +11,13 @@ export default class BottomSheet {
   constructor(devTools) {
     this.devTools = devTools
     this.state = devTools.state.state
+    this.sheetHeight = getSettings("bottomSheetHeight") || 50
   }
 
   render() {
     this.createBottomSheet()
     this.sheetContent = this.bottomSheet.querySelector(".content")
     this.sheetOverlay = this.bottomSheet.querySelector(".sheet-overlay")
-    this.sheetHeight = 50
     this.addEventListeners()
   }
 
@@ -52,6 +52,7 @@ export default class BottomSheet {
             <button class="tablink ${activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
             <button class="tablink ${activeTab === "tab-event-logs" ? "active" : ""}" data-tab-id="tab-event-logs">Events</button>
             <button class="tablink ${activeTab === "tab-native-stack" ? "active" : ""} d-none" data-tab-id="tab-native-stack">Stack</button>
+            <button class="tablink-settings btn-switch-to-single-tab-sheet" data-tab-id="single-tab-settings">${Icons.threeDotsVertical}</button>
           </div>
 
           <div class="tab-action-bars">
@@ -96,7 +97,7 @@ export default class BottomSheet {
               <div id="bridge-components-collapse">
                 <div class="d-flex justify-content-between">
                   <div class="tab-content-bridge-components flex-grow-1"></div>
-                  <button class="btn-icon btn-help btn-bridge-component-help mt-1">${Icons.questionMark}</button>
+                  <button class="btn-icon btn-help btn-switch-to-single-tab-sheet mt-1" data-tab-id="single-tab-bridge-component-help">${Icons.questionMark}</button>
                 </div>
               </div>
 
@@ -132,6 +133,19 @@ export default class BottomSheet {
               ${this.registerBridgeComponentExample()}
               <p class"mt-1">For more information, check out the documentation:</p>
               <a href="${this.registerBridgeComponentHelpURL()}">${this.registerBridgeComponentHelpURL()}</a>
+            </div>
+          </div>
+
+          <div id="single-tab-settings" class="single-tab-content outer-tab-content">
+            <div class="inner-tab-content">
+              <div class="d-flex align-items-center mb-3">
+                <button class="btn-icon btn-close-single-mode">${Icons.arrowLeft}</button>
+                <h3 class="ms-1">Settings</h3>
+              </div>
+              <div class="mb-3">
+                <label for="bottom-sheet-height"> Bottom Sheet Height</label>
+                <input type="range" id="bottom-sheet-height" class="w-100" min="10" max="100" value="${this.sheetHeight}" step="1" />
+              </div>
             </div>
           </div>
         </div>
@@ -284,18 +298,18 @@ export default class BottomSheet {
     `
   }
 
-  switchToSingleTabSheet() {
+  switchToSingleTabSheet(singleTabId) {
     // Hide the top part and all tabs
     this.sheetContent.querySelector(".top-part").classList.add("d-none")
     this.devTools.shadowRoot.querySelectorAll(".outer-tab-content").forEach((tab) => tab.classList.remove("active"))
 
     // Show the single mode content
-    this.devTools.shadowRoot.getElementById("single-tab-bridge-component-help").classList.add("active")
+    this.devTools.shadowRoot.getElementById(singleTabId).classList.add("active")
   }
 
   switchToMultiTabSheet() {
     this.sheetContent.querySelector(".top-part").classList.remove("d-none")
-    this.devTools.shadowRoot.getElementById("single-tab-bridge-component-help").classList.remove("active")
+    this.devTools.shadowRoot.querySelectorAll(".outer-tab-content").forEach((tab) => tab.classList.remove("active"))
 
     // Show the previous active tab
     this.devTools.shadowRoot.querySelectorAll(".tablink, .outer-tab-content").forEach((tab) => {
@@ -374,14 +388,20 @@ export default class BottomSheet {
       this.devTools.refetchNativeStack()
     })
 
-    // Help Buttons
-    this.bottomSheet.querySelector(".btn-bridge-component-help").addEventListener("click", () => {
-      this.switchToSingleTabSheet()
+    // Switch to Single Tab Buttons
+    this.bottomSheet.querySelectorAll(".btn-switch-to-single-tab-sheet").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        const singleTabId = event.target.closest("[data-tab-id]").dataset.tabId
+        if (!singleTabId) return
+        this.switchToSingleTabSheet(singleTabId)
+      })
     })
 
     // Close Single Tab Buttons
-    this.bottomSheet.querySelector(".btn-close-single-mode").addEventListener("click", () => {
-      this.switchToMultiTabSheet()
+    this.bottomSheet.querySelectorAll(".btn-close-single-mode").forEach((button) => {
+      button.addEventListener("click", () => {
+        this.switchToMultiTabSheet()
+      })
     })
 
     // Dragging
@@ -412,6 +432,13 @@ export default class BottomSheet {
       this.renderConsoleLogs()
     })
 
+    // Settings
+    this.bottomSheet.querySelector("#bottom-sheet-height").addEventListener("change", (event) => {
+      const value = event.target.value
+      this.sheetHeight = value
+      saveSettings("bottomSheetHeight", value)
+      this.updateSheetHeight(value)
+    })
     // Collapsibles
     const collapsibles = this.bottomSheet.querySelectorAll(".collapse")
     collapsibles.forEach((collapsible) => {
