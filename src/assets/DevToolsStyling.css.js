@@ -201,7 +201,7 @@ export const cssContent = () => {
       z-index: 10000001;
     }
 
-    .bottom-sheet .sheet-overlay {
+    .bottom-sheet .sheet-overlay.active {
       position: fixed;
       top: 0;
       left: 0;

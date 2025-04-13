@@ -44,7 +44,7 @@ export default class BottomSheet {
     this.bottomSheet = document.createElement("div")
     this.bottomSheet.classList.add("bottom-sheet")
     this.bottomSheet.innerHTML = `
-      <div class="sheet-overlay"></div>
+      <div class="sheet-overlay ${getSettings("bottomSheetPinned") === true ? "" : "active"}"></div>
       <div class="content">
         <div class="top-part">
           <div class="tablist">
@@ -56,6 +56,7 @@ export default class BottomSheet {
               <button class="dropdown-trigger tablink-dropdown">${Icons.threeDotsVertical}</button>
               <div class="dropdown-content settings-dropdown">
                 <button class="btn-switch-to-single-tab-sheet" data-tab-id="single-tab-settings">Settings</button>
+                <button class="pin-bottom-sheet">Pin Bottom Sheet</button>
               </div>
             </div>
           </div>
@@ -475,6 +476,12 @@ export default class BottomSheet {
 
     this.bottomSheet.querySelector("#auto-open-setting").addEventListener("change", (event) => {
       saveSettings("autoOpen", event.target.checked)
+    })
+
+    this.bottomSheet.querySelector(".pin-bottom-sheet").addEventListener("click", () => {
+      const isPinned = getSettings("bottomSheetPinned") === true
+      saveSettings("bottomSheetPinned", !isPinned)
+      this.sheetOverlay.classList.toggle("active")
     })
 
     // Collapsibles
