@@ -71,6 +71,10 @@ export default class DevTools {
       this.bottomSheet.showBottomSheet()
       this.nativeBridge.send("vibrate")
     })
+
+    if (getSettings("autoOpen") === true) {
+      this.bottomSheet.showBottomSheet()
+    }
   }
 
   nativeBridgeGotConnected() {
