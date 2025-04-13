@@ -481,6 +481,55 @@ export const cssContent = () => {
       content: "\\25B2";
     }
 
+    /* Custom checkbox toggles */
+    .toggle {
+      display: inline-block;
+      user-select: none;
+    }
+
+    .toggle-switch {
+      display: inline-block;
+      background: #ccc;
+      border-radius: 16px;
+      width: 29px;
+      height: 16px;
+      position: relative;
+      vertical-align: middle;
+      transition: background 0.15s;
+    }
+    .toggle-switch:before,
+    .toggle-switch:after {
+      content: "";
+    }
+    .toggle-switch:before {
+      display: block;
+      background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: left 0.15s;
+    }
+    .toggle-checkbox:checked + .toggle-switch {
+      background: #56c080;
+    }
+    .toggle-checkbox:checked + .toggle-switch:before {
+      left: 15px;
+    }
+
+    .toggle-checkbox {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .toggle-label {
+      position: relative;
+      margin-left: 3px;
+      top: 2px;
+    }
+
     /* Utility classes */
     .d-none {
       display: none;

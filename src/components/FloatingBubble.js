@@ -58,6 +58,7 @@ export default class FloatingBubble {
 
   animateErrorBorder = debounce(() => {
     if (!this.dragItem) return
+    if (getSettings("errorAnimationEnabled") === false) return
 
     let errorBorder = this.dragItem.querySelector(".error-border")
     let circleElement = this.dragItem.querySelector(".error-border circle")
