@@ -146,6 +146,13 @@ export default class BottomSheet {
                 <label for="bottom-sheet-height"> Bottom Sheet Height</label>
                 <input type="range" id="bottom-sheet-height" class="w-100" min="10" max="100" value="${this.sheetHeight}" step="1" />
               </div>
+              <div class="mb-3">
+                <label class="toggle">
+                  <input class="toggle-checkbox" type="checkbox" id="console-error-animation-setting" ${getSettings("errorAnimationEnabled") !== false ? "checked" : ""} />
+                  <div class="toggle-switch"></div>
+                  <span class="toggle-label">Console Error Animation</span>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -438,6 +445,10 @@ export default class BottomSheet {
       this.sheetHeight = value
       saveSettings("bottomSheetHeight", value)
       this.updateSheetHeight(value)
+    })
+
+    this.bottomSheet.querySelector("#console-error-animation-setting").addEventListener("change", (event) => {
+      saveSettings("errorAnimationEnabled", event.target.checked)
     })
     // Collapsibles
     const collapsibles = this.bottomSheet.querySelectorAll(".collapse")
