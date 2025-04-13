@@ -63,10 +63,6 @@ export const cssContent = () => {
     }
 
     /* Dropdown */
-    .dropdown {
-      position: relative;
-    }
-
     .dropdown-content {
       display: none;
       position: absolute;
@@ -100,6 +96,11 @@ export const cssContent = () => {
       border: none;
       display: flex;
       align-items: center;
+    }
+
+    .settings-dropdown {
+      right: 0;
+      top: 2rem;
     }
 
     /* Floating bubble */
@@ -337,7 +338,7 @@ export const cssContent = () => {
       padding: 1em;
     }
 
-    .bottom-sheet .tablink-settings {
+    .bottom-sheet .tablink-dropdown {
       border: none;
       outline: none;
       display: flex;
@@ -347,16 +348,16 @@ export const cssContent = () => {
       width: 2rem;
     }
 
-    .bottom-sheet .tablink-settings  svg {
+    .bottom-sheet .tablink-dropdown  svg {
       width: 1rem;
       height: 1rem;
       fill: #121212;
     }
 
-    .bottom-sheet .tablink-settings:active {
+    .bottom-sheet .tablink-dropdown:active {
       background-color: #31363f;
     }
-    .bottom-sheet .tablink-settings:active svg {
+    .bottom-sheet .tablink-dropdown:active svg {
       fill: white;
     }
 
