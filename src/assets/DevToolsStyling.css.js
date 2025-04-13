@@ -98,6 +98,10 @@ export const cssContent = () => {
       align-items: center;
     }
 
+    .dropdown-content button:not(:first-child) {
+      border-top: 1px solid #cecdcd;
+    }
+
     .settings-dropdown {
       right: 0;
       top: 2rem;
