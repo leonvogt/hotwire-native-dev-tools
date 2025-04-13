@@ -6,12 +6,18 @@ export const cssContent = () => {
     :host {
       all: initial;
       font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
-      font-size: 16px !important;
+      --font-size: 16px;
+      font-size: var(--font-size) !important;
     }
 
     * {
       box-sizing: border-box;
     }
+
+    p, span, h1, h2, h3, h4, h5, h6, div, a, button, input, label {
+      font-size: inherit;
+    }
+
 
     a {
       color: white;
@@ -288,6 +294,7 @@ export const cssContent = () => {
       border: none;
       outline: none;
       padding: 14px 16px;
+      font-size: 0.8em;
     }
 
     .tablist .tablink.active {
@@ -439,7 +446,8 @@ export const cssContent = () => {
       width: 100%;
       text-align: left;
       border-bottom: 1px solid #eee;
-      padding: 0.75em;
+      padding: 0.5em 0em;
+      font-size: 0.9em;
     }
 
     .tab-content-bridge-components {
@@ -604,6 +612,10 @@ export const cssContent = () => {
 
     .mb-3 {
       margin-bottom: 1rem;
+    }
+
+    .mb-4 {
+      margin-bottom: 1.5rem;
     }
 
     .gap-1 {
