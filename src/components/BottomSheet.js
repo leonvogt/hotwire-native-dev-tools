@@ -157,6 +157,13 @@ export default class BottomSheet {
                   <span class="toggle-label">Console Error Animation</span>
                 </label>
               </div>
+              <div class="mb-3">
+                <label class="toggle">
+                  <input class="toggle-checkbox" type="checkbox" id="auto-open-setting" ${getSettings("autoOpen") === true ? "checked" : ""} />
+                  <div class="toggle-switch"></div>
+                  <span class="toggle-label">Auto Open</span>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -459,6 +466,10 @@ export default class BottomSheet {
       const value = event.target.value
       saveSettings("fontSize", value)
       this.devTools.setCSSProperty("--font-size", `${value}px`)
+    })
+
+    this.bottomSheet.querySelector("#auto-open-setting").addEventListener("change", (event) => {
+      saveSettings("autoOpen", event.target.checked)
     })
 
     // Collapsibles
