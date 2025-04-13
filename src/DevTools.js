@@ -6,6 +6,7 @@ import DevToolsState from "./lib/DevToolsState"
 import NativeBridge from "./lib/NativeBridge"
 import { resetSettings } from "./utils/settings"
 import { debounce } from "./utils/utils"
+import { getSettings } from "./utils/settings"
 
 export default class DevTools {
   constructor(options = {}) {
@@ -103,6 +104,7 @@ export default class DevTools {
       return
     }
     this.shadowRoot = this.shadowContainer.attachShadow({ mode: "open" })
+    this.setCSSProperty("--font-size", `${getSettings("fontSize") || 16}px`)
     this.injectCSSToShadowRoot()
   }
 
@@ -267,6 +269,15 @@ export default class DevTools {
     })
 
     this.eventsRegistered = true
+  }
+
+  getCSSProperty(propertyName) {
+    const rootStyles = getComputedStyle(this.shadowContainer)
+    return rootStyles.getPropertyValue(propertyName).trim()
+  }
+
+  setCSSProperty(propertyName, value) {
+    this.shadowContainer.style.setProperty(propertyName, value)
   }
 
   get shadowContainer() {

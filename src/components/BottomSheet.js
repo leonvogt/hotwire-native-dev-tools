@@ -146,6 +146,10 @@ export default class BottomSheet {
                 <label for="bottom-sheet-height"> Bottom Sheet Height</label>
                 <input type="range" id="bottom-sheet-height" class="w-100" min="10" max="100" value="${this.sheetHeight}" step="1" />
               </div>
+              <div class="mb-4">
+                <label for="font-size-input"> Font Size</label>
+                <input id="font-size-input" type="number" inputmode="numeric" class="w-100" value="${getSettings("fontSize") || 16}" />
+              </div>
               <div class="mb-3">
                 <label class="toggle">
                   <input class="toggle-checkbox" type="checkbox" id="console-error-animation-setting" ${getSettings("errorAnimationEnabled") !== false ? "checked" : ""} />
@@ -450,6 +454,13 @@ export default class BottomSheet {
     this.bottomSheet.querySelector("#console-error-animation-setting").addEventListener("change", (event) => {
       saveSettings("errorAnimationEnabled", event.target.checked)
     })
+
+    this.bottomSheet.querySelector("#font-size-input").addEventListener("change", (event) => {
+      const value = event.target.value
+      saveSettings("fontSize", value)
+      this.devTools.setCSSProperty("--font-size", `${value}px`)
+    })
+
     // Collapsibles
     const collapsibles = this.bottomSheet.querySelectorAll(".collapse")
     collapsibles.forEach((collapsible) => {
