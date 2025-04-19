@@ -18,9 +18,18 @@ export default class DiagnosticsChecker {
 
   #checkForTurboDrive = () => {
     if (!window.Turbo) {
-      this.printWarning("Turbo is not detected. Hotwire Native will not work correctly without Turbo")
+      // Since it's possible that the DevTools are loaded before Turbo, we need to wait a bit to check if Turbo is loaded
+      setTimeout(() => {
+        if (!window.Turbo) {
+          this.printWarning("Turbo is not detected. Hotwire Native will not work correctly without Turbo")
+        }
+      }, 1000)
     } else if (window.Turbo?.session.drive === false) {
-      this.printWarning("Turbo Drive is disabled. Hotwire Native will not work correctly without Turbo Drive")
+      setTimeout(() => {
+        if (window.Turbo?.session.drive === false) {
+          this.printWarning("Turbo Drive is disabled. Hotwire Native will not work correctly without Turbo Drive")
+        }
+      }, 1000)
     }
   }
 
