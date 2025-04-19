@@ -482,6 +482,7 @@ export default class BottomSheet {
       const isPinned = getSettings("bottomSheetPinned") === true
       saveSettings("bottomSheetPinned", !isPinned)
       this.sheetOverlay.classList.toggle("active")
+      this.bottomSheet.querySelector(".settings-dropdown").classList.remove("dropdown-open")
     })
 
     // Collapsibles
