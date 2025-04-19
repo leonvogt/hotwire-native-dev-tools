@@ -502,21 +502,21 @@ export default class BottomSheet {
     })
 
     // Close dropdown if click is outside
-    this.bottomSheet.addEventListener("click", (e) => {
+    this.bottomSheet.addEventListener("click", (event) => {
       const openDropdowns = this.bottomSheet.querySelectorAll(".dropdown-content.dropdown-open")
       openDropdowns.forEach((dropdown) => {
         const dropdownContainer = dropdown.closest(".dropdown")
-        if (!dropdownContainer.contains(e.target)) {
+        if (!dropdownContainer.contains(event.target)) {
           dropdown.classList.remove("dropdown-open")
         }
       })
     })
 
     // Open dropdown
-    this.bottomSheet.addEventListener("click", (e) => {
-      const trigger = e.target.closest(".dropdown-trigger")
+    this.bottomSheet.addEventListener("click", (event) => {
+      const trigger = event.target.closest(".dropdown-trigger")
       if (trigger) {
-        e.preventDefault()
+        event.preventDefault()
         this.toggleDropdown(trigger)
       }
     })
@@ -579,16 +579,16 @@ export default class BottomSheet {
     this.bottomSheet.classList.toggle("fullscreen", height === 100)
   }
 
-  dragStart(e) {
+  dragStart(event) {
     this.isDragging = true
-    this.startY = e.pageY || e.touches?.[0].pageY
+    this.startY = event.pageY || event.touches?.[0].pageY
     this.startHeight = parseInt(this.sheetContent.style.height)
     this.bottomSheet.classList.add("dragging")
   }
 
-  dragging(e) {
+  dragging(event) {
     if (!this.isDragging) return
-    const delta = this.startY - (e.pageY || e.touches?.[0].pageY)
+    const delta = this.startY - (event.pageY || event.touches?.[0].pageY)
     const newHeight = this.startHeight + (delta / window.innerHeight) * 100
     this.updateSheetHeight(newHeight)
   }
