@@ -101,7 +101,7 @@ export default class BottomSheet {
                 Registered Bridge Components: <span class="bridge-components-amount">${this.state.supportedBridgeComponents.length}</span>
               </button>
               <div id="bridge-components-collapse">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between border-bottom">
                   <div class="tab-content-bridge-components flex-grow-1"></div>
                   <button class="btn-icon btn-help btn-switch-to-single-tab-sheet mt-1" data-tab-id="single-tab-bridge-component-help">${Icons.questionMark}</button>
                 </div>

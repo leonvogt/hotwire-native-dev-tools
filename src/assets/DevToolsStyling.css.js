@@ -459,7 +459,6 @@ export const cssContent = () => {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      border-bottom: 1px solid #c5c1c1;
       padding: 0.5em 0em;
     }
 
@@ -580,6 +579,10 @@ export const cssContent = () => {
 
     .flex-grow-1 {
       flex-grow: 1;
+    }
+
+    .border-bottom {
+      border-bottom: 1px solid #c5c1c1;
     }
 
     .no-wrap {
