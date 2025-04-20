@@ -4,6 +4,8 @@ Cypress.Commands.add("setupDevTools", () => {
     onBeforeLoad(win) {
       cy.spy(win.console, "log").as("consoleLog")
       cy.spy(win.console, "info").as("consoleInfo")
+      cy.spy(win.console, "error").as("consoleError")
+      cy.spy(win.console, "warn").as("consoleWarn")
     },
   })
   cy.wait(100)
@@ -26,5 +28,17 @@ Cypress.Commands.add("shadowClick", { prevSubject: "element" }, (subject, select
 Cypress.Commands.add("shadowHasClass", { prevSubject: "element" }, (subject, selector, className) => {
   return cy.wrap(subject[0].shadowRoot.querySelector(selector)).then((element) => {
     expect(element.classList.contains(className)).to.be.true
+  })
+})
+
+// Get all elements in shadow DOM
+Cypress.Commands.add("shadowGetAll", { prevSubject: "element" }, (subject, selector) => {
+  return cy.wrap(Array.from(subject[0].shadowRoot.querySelectorAll(selector)))
+})
+
+// Assert text content in shadow DOM
+Cypress.Commands.add("shadowContains", { prevSubject: "element" }, (subject, selector, text) => {
+  return cy.wrap(subject[0].shadowRoot.querySelector(selector)).then((element) => {
+    expect(element.textContent).to.include(text)
   })
 })

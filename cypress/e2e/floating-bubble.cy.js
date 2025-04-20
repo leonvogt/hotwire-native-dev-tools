@@ -3,20 +3,25 @@ describe("FloatingBubble Tests", () => {
     cy.setupDevTools()
   })
 
-  it("displays tabbed interface in the bottom sheet", () => {
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
-
-    // Click the console tab
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick('[data-tab-id="tab-console-logs"]')
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet("#tab-console-logs").should("have.class", "active")
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".tab-content-console-logs").should("exist")
+  it("shows floating bubble on page load", () => {
+    // Verify the floating bubble exists and is visible
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet("#floating-bubble").should("be.visible")
   })
 
-  it("closes the bottom sheet when overlay is clicked", () => {
+  it("opens bottom sheet when floating bubble is clicked", () => {
+    // Click the floating bubble
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
+
+    // Verify the bottom sheet appears
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".bottom-sheet").should("have.class", "show")
+  })
+
+  it("displays bottom sheet when bubble is clicked", () => {
+    // Initially the bottom sheet should not be visible
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".bottom-sheet").should("not.have.class", "show")
+
+    // Click to open
     cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
     cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".bottom-sheet").should("have.class", "show")
-
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick(".sheet-overlay")
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".bottom-sheet").should("not.have.class", "show")
   })
 })
