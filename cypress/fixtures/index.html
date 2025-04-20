@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTools Test Page</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+        }
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>DevTools Test Page</h1>
+        <p>This page is used for testing the Hotwire Native DevTools.</p>
+    </div>
+    
+    <script type="module">
+        // Need to import the actual DevTools class for direct instance access in tests
+        import DevTools from '/src/DevTools.js';
+        
+        // Initialize the DevTools manually
+        window.devTools = new DevTools({ enabled: true });
+        window.devTools.setup();
+        
+        // Mock the Strada bridge for testing
+        if (!window.Strada) {
+            window.Strada = {
+                web: {
+                    send: function() {},
+                    receive: function() {},
+                    adapterDidUpdateSupportedComponents: function() {},
+                    getSupportedComponents: function() { return []; }
+                }
+            };
+            
+            // Trigger bridge connected event
+            const event = new CustomEvent('web-bridge:ready');
+            document.dispatchEvent(event);
+        }
+        
+        // Log some messages for testing
+        console.log('Test log message');
+        console.info('Test info message');
+    </script>
+</body>
+</html>
