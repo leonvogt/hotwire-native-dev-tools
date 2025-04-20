@@ -11,40 +11,59 @@ Cypress.Commands.add("setupDevTools", () => {
   cy.wait(100)
 })
 
+// Shadow DOM container reference
+const SHADOW_CONTAINER = "#hotwire-native-dev-tools-shadow-container"
+
+// Direct shadow DOM access commands
+Cypress.Commands.add("devTools", () => {
+  return cy.get(SHADOW_CONTAINER)
+})
+
+// Get element directly in shadow DOM
+Cypress.Commands.add("shadowGet", (selector) => {
+  return cy.devTools().then((el) => {
+    return cy.wrap(el[0].shadowRoot.querySelector(selector))
+  })
+})
+
+// Click element directly in shadow DOM
+Cypress.Commands.add("shadowClick", (selector) => {
+  return cy.devTools().then((el) => {
+    const element = el[0].shadowRoot.querySelector(selector)
+    if (element) {
+      element.click()
+    } else {
+      throw new Error(`Element "${selector}" not found in shadow DOM`)
+    }
+    return cy.wrap(el)
+  })
+})
+
+// Get all elements directly in shadow DOM
+Cypress.Commands.add("shadowGetAll", (selector) => {
+  return cy.devTools().then((el) => {
+    return cy.wrap(Array.from(el[0].shadowRoot.querySelectorAll(selector)))
+  })
+})
+
 // Open bottom sheet by clicking floating bubble
 Cypress.Commands.add("openBottomSheet", () => {
-  cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
-  cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".bottom-sheet").should("have.class", "show")
-})
-
-// Get element in shadow DOM
-Cypress.Commands.add("shadowGet", { prevSubject: "element" }, (subject, selector) => {
-  return cy.wrap(subject[0].shadowRoot.querySelector(selector))
-})
-
-// Click element in shadow DOM
-Cypress.Commands.add("shadowClick", { prevSubject: "element" }, (subject, selector) => {
-  cy.wrap(subject[0].shadowRoot.querySelector(selector)).then((element) => {
-    element.click()
-  })
-  return cy.wrap(subject)
+  cy.shadowClick("#floating-bubble")
+  cy.shadowGet(".bottom-sheet").should("have.class", "show")
 })
 
 // Assert class exists in shadow DOM element
-Cypress.Commands.add("shadowHasClass", { prevSubject: "element" }, (subject, selector, className) => {
-  return cy.wrap(subject[0].shadowRoot.querySelector(selector)).then((element) => {
+Cypress.Commands.add("shadowHasClass", (selector, className) => {
+  return cy.devTools().then((el) => {
+    const element = el[0].shadowRoot.querySelector(selector)
     expect(element.classList.contains(className)).to.be.true
   })
 })
 
-// Get all elements in shadow DOM
-Cypress.Commands.add("shadowGetAll", { prevSubject: "element" }, (subject, selector) => {
-  return cy.wrap(Array.from(subject[0].shadowRoot.querySelectorAll(selector)))
-})
-
 // Assert text content in shadow DOM
-Cypress.Commands.add("shadowContains", { prevSubject: "element" }, (subject, selector, text) => {
-  return cy.wrap(subject[0].shadowRoot.querySelector(selector)).then((element) => {
+Cypress.Commands.add("shadowContains", (selector, text) => {
+  return cy.devTools().then((el) => {
+    const element = el[0].shadowRoot.querySelector(selector)
     expect(element.textContent).to.include(text)
   })
 })
