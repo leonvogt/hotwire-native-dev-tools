@@ -305,8 +305,9 @@ export default class BottomSheet {
 
     const pathConfigurationPropertiesJson = (() => {
       try {
-        return JSON.stringify(JSON.parse(view.pathConfigurationProperties), null, 2)
-      } catch (error) {
+        const props = view.pathConfigurationProperties
+        return JSON.stringify(typeof props === "string" ? JSON.parse(props) : props, null, 2)
+      } catch {
         return view.pathConfigurationProperties
       }
     })()
