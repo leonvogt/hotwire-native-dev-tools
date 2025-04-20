@@ -11,7 +11,11 @@
   ],
   "scripts": {
     "build": "vite build && cp src/index.d.ts dist/",
-    "dev": "vite build --watch"
+    "dev": "vite build --watch",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "start:test": "vite --port 8080 --strictPort",
+    "test:e2e": "npm run build && (npm run start:test & sleep 3 && npm run cy:run; RETVAL=$?; kill $(lsof -t -i:8080) || true; exit $RETVAL)"
   },
   "repository": {
     "type": "git",
@@ -29,6 +33,7 @@
   "homepage": "https://github.com/leonvogt/hotwire-native-dev-tools#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.1",
+    "cypress": "^14.3.1",
     "vite": "^6.2.2"
   }
 }
