@@ -100,7 +100,7 @@ export default class BottomSheet {
               <button class="collapse bridge-components-collapse-btn" type="button" data-collapse-target="bridge-components-collapse">
                 Registered Bridge Components: <span class="bridge-components-amount">${this.state.supportedBridgeComponents.length}</span>
               </button>
-              <div id="bridge-components-collapse">
+              <div id="bridge-components-collapse" class="collapse-target">
                 <div class="d-flex justify-content-between border-bottom">
                   <div class="tab-content-bridge-components flex-grow-1"></div>
                   <button class="btn-icon btn-help btn-switch-to-single-tab-sheet mt-1" data-tab-id="single-tab-bridge-component-help">${Icons.questionMark}</button>
@@ -287,8 +287,9 @@ export default class BottomSheet {
     const isMainView = ["UINavigationController", "NavigatorHost"].includes(view.type)
     const isTabBar = view.type === "UITabBarController"
     const isHotwireView = ["VisitableViewController", "HotwireWebFragment", "BackStackEntry"].includes(view.type)
-    const activeClass = view.url === this.currentUrl ? "active" : ""
+    const activeClass = view.url === this.currentUrl ? "current-view" : ""
     const wrapperClass = `viewstack-card ${activeClass} ${isMainView ? "main-view" : isHotwireView ? "hotwire-view" : isTabBar ? "tab-container" : "non-identified-view"}`
+    const uniqueViewId = "viewstack-" + Math.random().toString(16).slice(2)
 
     const urlPath = view.url
       ? `<div class="view-url">
@@ -302,6 +303,15 @@ export default class BottomSheet {
          </div>`
       : ""
 
+    const pathConfigurationPropertiesJson = (() => {
+      try {
+        return JSON.stringify(JSON.parse(view.pathConfigurationProperties), null, 2)
+      } catch (error) {
+        return view.pathConfigurationProperties
+      }
+    })()
+    const pathConfigurationProperties = pathConfigurationPropertiesJson ? `<pre class="view-path-configuration">${pathConfigurationPropertiesJson}</pre>` : ""
+
     const childrenHTML = view.children?.length
       ? `<div class="child-container">
           ${view.children.map((child) => this.nativeViewStackHTML(child)).join("")}
@@ -310,12 +320,17 @@ export default class BottomSheet {
 
     return `
       <div>
-        <div class="${wrapperClass}">
-          <div class="view-title">
-            ${view.title == "null" ? "" : view.title}
-            <div class="view-title-details">${view.type}</div>
+        <div class="${wrapperClass} collapse no-chevron" data-collapse-target="path-configuration-properties-${uniqueViewId}">
+          <div>
+            <div class="view-title">
+              ${view.title == "null" ? "" : view.title}
+              <div class="view-title-details">${view.type}</div>
+            </div>
+            ${urlPath}
           </div>
-          ${urlPath}
+          <div id="path-configuration-properties-${uniqueViewId}" class="collapse-target">
+            ${pathConfigurationProperties}
+          </div>
         </div>
         ${childrenHTML}
       </div>
@@ -486,19 +501,16 @@ export default class BottomSheet {
     })
 
     // Collapsibles
-    const collapsibles = this.bottomSheet.querySelectorAll(".collapse")
-    collapsibles.forEach((collapsible) => {
-      const targetId = collapsible.getAttribute("data-collapse-target")
-      const targetElement = this.bottomSheet.querySelector(`#${targetId}`)
+    this.bottomSheet.addEventListener("click", function (event) {
+      const collapsible = event.target.closest(".collapse")
+      if (collapsible && this.contains(collapsible)) {
+        const targetId = collapsible.getAttribute("data-collapse-target")
+        const targetElement = this.querySelector(`#${targetId}`)
+        if (!targetElement) return
 
-      if (!targetElement) return
-
-      targetElement.style.display = "none"
-      collapsible.addEventListener("click", function (event) {
-        event.preventDefault()
-        this.classList.toggle("active")
-        targetElement.style.display = targetElement.style.display === "block" ? "none" : "block"
-      })
+        const isActive = collapsible.classList.toggle("active")
+        targetElement.classList.toggle("active", isActive)
+      }
     })
 
     // Close dropdown if click is outside
