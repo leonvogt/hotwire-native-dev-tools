@@ -4,9 +4,7 @@ describe("BottomSheet Tests", () => {
   })
 
   it("closes the bottom sheet when overlay is clicked", () => {
-    // Open the bottom sheet
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".bottom-sheet").should("have.class", "show")
+    cy.openBottomSheet()
 
     // Click the overlay to close
     cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick(".sheet-overlay")
@@ -14,8 +12,7 @@ describe("BottomSheet Tests", () => {
   })
 
   it("shows tabs navigation", () => {
-    // Open the bottom sheet
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
+    cy.openBottomSheet()
 
     // Verify tabs exist
     cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".tablink").should("exist")
@@ -23,8 +20,7 @@ describe("BottomSheet Tests", () => {
   })
 
   it("switches between tabs", () => {
-    // Open the bottom sheet
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
+    cy.openBottomSheet()
 
     // Verify a tab is active
     cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".tablink.active").should("exist")

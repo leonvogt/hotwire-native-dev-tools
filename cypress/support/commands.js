@@ -11,6 +11,12 @@ Cypress.Commands.add("setupDevTools", () => {
   cy.wait(100)
 })
 
+// Open bottom sheet by clicking floating bubble
+Cypress.Commands.add("openBottomSheet", () => {
+  cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
+  cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".bottom-sheet").should("have.class", "show")
+})
+
 // Get element in shadow DOM
 Cypress.Commands.add("shadowGet", { prevSubject: "element" }, (subject, selector) => {
   return cy.wrap(subject[0].shadowRoot.querySelector(selector))

@@ -8,15 +8,11 @@ describe("Console Logs Tests", () => {
     cy.window().then((win) => {
       win.console.log("Test log message")
     })
-    
-    // Open the dev tools
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
-    
+
+    cy.openBottomSheet()
+
     // Verify log is displayed in console tab
-    cy.get("#hotwire-native-dev-tools-shadow-container")
-      .shadowGet(".tab-content-console-logs")
-      .contains("Test log message")
-      .should("exist")
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".tab-content-console-logs").contains("Test log message").should("exist")
   })
 
   it("displays different console message types", () => {
@@ -27,30 +23,14 @@ describe("Console Logs Tests", () => {
       win.console.warn("Warning message")
       win.console.error("Error message")
     })
-    
-    // Open the dev tools
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
-    
+
+    cy.openBottomSheet()
+
     // Verify all message types are displayed
-    cy.get("#hotwire-native-dev-tools-shadow-container")
-      .shadowGet(".tab-content-console-logs")
-      .contains("Log message")
-      .should("exist")
-    
-    cy.get("#hotwire-native-dev-tools-shadow-container")
-      .shadowGet(".tab-content-console-logs")
-      .contains("Info message")
-      .should("exist")
-    
-    cy.get("#hotwire-native-dev-tools-shadow-container")
-      .shadowGet(".tab-content-console-logs")
-      .contains("Warning message")
-      .should("exist")
-    
-    cy.get("#hotwire-native-dev-tools-shadow-container")
-      .shadowGet(".tab-content-console-logs")
-      .contains("Error message")
-      .should("exist")
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".tab-content-console-logs").contains("Log message").should("exist")
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".tab-content-console-logs").contains("Info message").should("exist")
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".tab-content-console-logs").contains("Warning message").should("exist")
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".tab-content-console-logs").contains("Error message").should("exist")
   })
 
   it("displays console log entries", () => {
@@ -59,15 +39,11 @@ describe("Console Logs Tests", () => {
       win.console.log("Specific test message")
       win.console.error("Specific error message")
     })
-    
-    // Open the dev tools
-    cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick("#floating-bubble")
+
+    cy.openBottomSheet()
     cy.get("#hotwire-native-dev-tools-shadow-container").shadowClick('[data-tab-id="tab-console-logs"]')
-    
+
     // Verify messages appear in log
-    cy.get("#hotwire-native-dev-tools-shadow-container")
-      .shadowGet(".tab-content-console-logs")
-      .contains("Specific test message")
-      .should("exist")
+    cy.get("#hotwire-native-dev-tools-shadow-container").shadowGet(".tab-content-console-logs").contains("Specific test message").should("exist")
   })
 })
