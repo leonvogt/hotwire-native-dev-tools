@@ -377,7 +377,7 @@ export const cssContent = () => {
       overflow: auto;
     }
 
-    .bottom-sheet .viewstack-card.active {
+    .bottom-sheet .viewstack-card.current-view {
       border: 2px solid #f1f208;
     }
 
@@ -443,6 +443,10 @@ export const cssContent = () => {
       color: #6c6c6c;
     }
 
+    .bottom-sheet .viewstack-card pre {
+      font-size: 0.8em;
+    }
+
     /* Bottom Sheet Bridge Components */
     .bottom-sheet .bridge-components-collapse-btn {
       background: none;
@@ -481,7 +485,15 @@ export const cssContent = () => {
     }
 
     /* Collapsibles */
-    .collapse:after {
+    .collapse-target {
+      display: none;
+    }
+
+    .collapse-target.active {
+      display: block;
+    }
+
+    .collapse:not(.no-chevron):after {
       content: '\\25BC';
       font-size: 13px;
       color: #777;
@@ -489,7 +501,7 @@ export const cssContent = () => {
       margin-left: 5px;
     }
 
-    .collapse.active:after {
+    .collapse:not(.no-chevron).active:after {
       content: "\\25B2";
     }
 
