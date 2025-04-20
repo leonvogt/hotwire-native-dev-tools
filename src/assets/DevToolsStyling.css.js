@@ -75,7 +75,8 @@ export const cssContent = () => {
       opacity: 0;
       transform: scale(0.9);
       transition: opacity 0.2s, transform 0.2s;
-      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .dropdown-content.dropdown-open {
@@ -195,6 +196,7 @@ export const cssContent = () => {
       bottom: 0;
       left: 0;
       width: 100%;
+      max-height: 100%;
       display: flex;
       opacity: 0;
       pointer-events: none;
