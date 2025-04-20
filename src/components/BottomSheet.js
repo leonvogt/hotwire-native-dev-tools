@@ -11,7 +11,7 @@ export default class BottomSheet {
   constructor(devTools) {
     this.devTools = devTools
     this.state = devTools.state.state
-    this.sheetHeight = getSettings("bottomSheetHeight") || 50
+    this.sheetHeight = parseInt(getSettings("bottomSheetHeight")) || 50
   }
 
   render() {
@@ -475,7 +475,7 @@ export default class BottomSheet {
     // Settings
     this.bottomSheet.querySelector("#bottom-sheet-height").addEventListener("change", (event) => {
       const value = event.target.value
-      this.sheetHeight = value
+      this.sheetHeight = parseInt(value)
       saveSettings("bottomSheetHeight", value)
       this.updateSheetHeight(value)
     })
