@@ -84,7 +84,8 @@ export default class DevTools {
     this.addBridgeProxy()
     this.state.setBridgeIsConnected(true)
     this.callNativeBridgeComponent()
-    this.state.setSupportedBridgeComponents(this.nativeBridge.getSupportedComponents().sort())
+    this.updateSupportedBridgeComponents()
+    this.startBridgeComponentObserver()
   }
 
   callNativeBridgeComponent() {
@@ -117,16 +118,10 @@ export default class DevTools {
       get: (target, prop, receiver) => {
         const originalValue = Reflect.get(target, prop, receiver)
 
+        // We are only interested in the send and receive methods
         if (typeof originalValue === "function" && (prop === "send" || prop === "receive")) {
           return (...args) => {
             this.interceptedBridgeMessage(prop, args)
-            return originalValue.apply(target, args)
-          }
-        }
-
-        if (typeof originalValue === "function" && prop === "adapterDidUpdateSupportedComponents") {
-          return (...args) => {
-            this.state.setSupportedBridgeComponents(this.nativeBridge.getSupportedComponents().sort())
             return originalValue.apply(target, args)
           }
         }
@@ -273,6 +268,27 @@ export default class DevTools {
     })
 
     this.eventsRegistered = true
+  }
+
+  startBridgeComponentObserver() {
+    if (this.bridgeComponentObserver) return
+
+    this.bridgeComponentObserver = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "attributes" && mutation.attributeName === "data-bridge-components") {
+          this.updateSupportedBridgeComponents()
+        }
+      }
+    })
+
+    this.bridgeComponentObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-bridge-components"],
+    })
+  }
+
+  updateSupportedBridgeComponents() {
+    this.state.setSupportedBridgeComponents(this.nativeBridge.getSupportedComponents().sort())
   }
 
   getCSSProperty(propertyName) {
