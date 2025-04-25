@@ -501,21 +501,28 @@ export default class BottomSheet {
       this.bottomSheet.querySelector(".settings-dropdown").classList.remove("dropdown-open")
     })
 
-    // Collapsibles
-    this.bottomSheet.addEventListener("click", function (event) {
-      const collapsible = event.target.closest(".collapse")
-      if (collapsible && this.contains(collapsible)) {
-        const targetId = collapsible.getAttribute("data-collapse-target")
-        const targetElement = this.querySelector(`#${targetId}`)
-        if (!targetElement) return
-
-        const isActive = collapsible.classList.toggle("active")
-        targetElement.classList.toggle("active", isActive)
-      }
-    })
-
-    // Close dropdown if click is outside
     this.bottomSheet.addEventListener("click", (event) => {
+      // Handle collapsible elements
+      const collapsible = event.target.closest(".collapse")
+      if (collapsible && this.bottomSheet.contains(collapsible)) {
+        const targetId = collapsible.getAttribute("data-collapse-target")
+        const targetElement = this.bottomSheet.querySelector(`#${targetId}`)
+        if (targetElement) {
+          const isActive = collapsible.classList.toggle("active")
+          targetElement.classList.toggle("active", isActive)
+        }
+        return
+      }
+
+      // Handle dropdown triggers
+      const trigger = event.target.closest(".dropdown-trigger")
+      if (trigger) {
+        event.preventDefault()
+        this.toggleDropdown(trigger)
+        return
+      }
+
+      // Close dropdowns when clicking outside
       const openDropdowns = this.bottomSheet.querySelectorAll(".dropdown-content.dropdown-open")
       openDropdowns.forEach((dropdown) => {
         const dropdownContainer = dropdown.closest(".dropdown")
@@ -523,15 +530,6 @@ export default class BottomSheet {
           dropdown.classList.remove("dropdown-open")
         }
       })
-    })
-
-    // Open dropdown
-    this.bottomSheet.addEventListener("click", (event) => {
-      const trigger = event.target.closest(".dropdown-trigger")
-      if (trigger) {
-        event.preventDefault()
-        this.toggleDropdown(trigger)
-      }
     })
 
     this.bottomSheet.hasEventListeners = true

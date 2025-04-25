@@ -38,7 +38,6 @@ export default class DevTools {
     if (!this.originalConsole) {
       this.originalConsole = window.console
       this.addConsoleProxy()
-      this.captureUncaughtErrors()
     }
 
     // Add Bridge Proxy and call the native DevTools bridge component
@@ -55,14 +54,8 @@ export default class DevTools {
       })
     }
 
-    // Observe screen size or orientation changes to reposition the bubble
-    window.addEventListener(
-      "resize",
-      () => {
-        this.bubble.render()
-      },
-      { passive: true }
-    )
+    // Add event listeners to the window
+    this.addEventListeners()
 
     // Check for warnings
     this.diagnosticsChecker.checkForWarnings()
@@ -146,20 +139,6 @@ export default class DevTools {
     })
   }
 
-  captureUncaughtErrors() {
-    window.addEventListener("error", (event) => {
-      const { message, filename, lineno, colno } = event
-      const formattedMessage = `${message} at ${filename}:${lineno}:${colno}`
-      this.interceptedConsoleMessage("error", [formattedMessage])
-      return false
-    })
-
-    window.addEventListener("unhandledrejection", (event) => {
-      this.interceptedConsoleMessage("warn", [event.reason])
-      return false
-    })
-  }
-
   interceptedBridgeMessage(direction, args) {
     args.forEach((arg) => {
       const componentName = arg.component
@@ -227,6 +206,31 @@ export default class DevTools {
     const style = document.createElement("style")
     style.textContent = cssContent()
     this.shadowRoot.appendChild(style)
+  }
+
+  addEventListeners() {
+    if (this.hasEventListeners) return
+
+    // Capture uncaught errors and unhandled promise rejections
+    window.addEventListener("error", (event) => {
+      const { message, filename, lineno, colno } = event
+      const formattedMessage = `${message} at ${filename}:${lineno}:${colno}`
+      this.interceptedConsoleMessage("error", [formattedMessage])
+    })
+    window.addEventListener("unhandledrejection", (event) => {
+      this.interceptedConsoleMessage("error", [event.reason?.message])
+    })
+
+    // Observe screen size or orientation changes to reposition the bubble
+    window.addEventListener(
+      "resize",
+      () => {
+        this.bubble.render()
+      },
+      { passive: true }
+    )
+
+    this.hasEventListeners = true
   }
 
   listenForTurboEvents() {
