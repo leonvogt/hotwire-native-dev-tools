@@ -169,7 +169,9 @@ export default class DevTools {
             return `<pre>${arg}</pre>`
           }
         }
-        return arg.toString()
+        // Escape HTML in string values
+        const stringValue = arg.toString()
+        return stringValue.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
       })
       .join(" ")
 
