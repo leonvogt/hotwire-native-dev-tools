@@ -2,7 +2,15 @@
   "name": "hotwire-native-dev-tools",
   "version": "0.1.0-rc.0",
   "description": "Dev Tools for Hotwire Native",
-  "module": "dist/hotwire-native-dev-tools.es.js",
+  "main": "./dist/hotwire-native-dev-tools.es.js",
+  "module": "./dist/hotwire-native-dev-tools.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/hotwire-native-dev-tools.es.js",
+      "require": "./dist/hotwire-native-dev-tools.es.js"
+    }
+  },
   "type": "module",
   "files": [
     "dist",
