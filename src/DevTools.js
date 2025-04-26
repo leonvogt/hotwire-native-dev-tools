@@ -44,7 +44,7 @@ export default class DevTools {
     if (this.originalBridge) {
       // Bridge Proxy is already added
       this.callNativeBridgeComponent()
-    } else if (window.Strada) {
+    } else if (window.HotwireNative || window.Strada) {
       // Bridge exists -> Add Bridge Proxy
       this.nativeBridgeGotConnected()
     } else {
@@ -73,7 +73,7 @@ export default class DevTools {
   nativeBridgeGotConnected() {
     if (this.originalBridge) return
 
-    this.originalBridge = window.Strada.web
+    this.originalBridge = window.HotwireNative?.web || window.Strada?.web
     this.addBridgeProxy()
     this.state.setBridgeIsConnected(true)
     this.callNativeBridgeComponent()
@@ -107,7 +107,7 @@ export default class DevTools {
   }
 
   addBridgeProxy() {
-    window.Strada.web = new Proxy(this.originalBridge, {
+    const createProxyHandler = () => ({
       get: (target, prop, receiver) => {
         const originalValue = Reflect.get(target, prop, receiver)
 
@@ -120,11 +120,16 @@ export default class DevTools {
         }
 
         // Forward all the other calls to the original bridge
-        return (...args) => {
-          return originalValue.apply(target, args)
-        }
+        return typeof originalValue === "function" ? (...args) => originalValue.apply(target, args) : originalValue
       },
     })
+
+    if (window.Strada) {
+      window.Strada.web = new Proxy(this.originalBridge, createProxyHandler())
+    }
+    if (window.HotwireNative) {
+      window.HotwireNative.web = new Proxy(this.originalBridge, createProxyHandler())
+    }
   }
 
   addConsoleProxy() {

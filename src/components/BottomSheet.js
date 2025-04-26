@@ -210,7 +210,7 @@ export default class BottomSheet {
     container.innerHTML = this.state.bridgeLogs.length
       ? this.state.bridgeLogs.map((log) => this.bridgeLogHTML(log.direction, log.componentName, log.eventName, log.eventArgs, log.time)).join("")
       : `<div class="tab-empty-content d-flex flex-column text-center"><span>${
-          this.state.bridgeIsConnected ? "No bridge communication yet" : "Bridge is not connected <br><small>(window.Strada.web is undefined)</small>"
+          this.state.bridgeIsConnected ? "No bridge communication yet" : "Bridge is not connected <br><small>(Neither window.HotwireNative nor window.Strada is defined)</small>"
         }</span></div>`
   }
 

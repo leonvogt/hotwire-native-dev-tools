@@ -7,7 +7,7 @@ https://github.com/hotwired/hotwire-native-bridge
 */
 export default class NativeBridge {
   bridgeIsConnected() {
-    return !!window.Strada?.web
+    return !!(window.HotwireNative?.web || window.Strada?.web)
   }
 
   // Send a message to the native side
@@ -43,6 +43,6 @@ export default class NativeBridge {
   }
 
   get bridge() {
-    return window.Strada?.web
+    return window.HotwireNative?.web || window.Strada?.web
   }
 }
