@@ -1,0 +1,38 @@
+name: Publish to NPM
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          registry-url: "https://registry.npmjs.org"
+          always-auth: true
+      - run: npm ci
+      - run: npm run build
+
+      # Create .tgz package
+      - name: Pack npm tarball
+        run: npm pack
+        id: pack
+
+      # Publish to npm
+      # TODO: Enable provenance signing once the repository is public.
+      # Uncomment the line below to publish with provenance:
+      # - run: npm publish --provenance --access public
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Upload the tarball to the GitHub Release
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.tgz"
