@@ -26,7 +26,7 @@ import { setupDevTools } from 'hotwire-native-dev-tools';
 setupDevTools();
 ```
 
-However, since you probably want to use the dev tools only in mobile app development, **the recommend approach is to create a custom entrypoint** which you can load only when needed.    
+However, since you probably want to use the dev tools only during mobile app development, **the recommended approach is to create a custom entrypoint** that you load only when needed.
 
 **Example Rails + Vite:**
 
@@ -45,6 +45,9 @@ import { setupDevTools } from 'hotwire-native-dev-tools';
 setupDevTools();
 ```
 
+Please note, for best results, you should place the `vite_javascript_tag` before the `vite_javascript_tag` for your main app entrypoint.   
+This way, you'll minimize the chances of missing console logs or bridge messages that are sent before the dev tools are initialized.
+
 --- 
 
 Alternatively, you could use a JS condition to check if the dev tools should be loaded:    
@@ -56,13 +59,13 @@ setupDevTools({
 });
 ```
 
-Plase note that your JS condition may vary depending on your setup and needs.     
-The downside of this approach is, that you ship the JS code of the dev tools to the client, even if the client is not in development mode.    
+Please note that your JS condition may vary depending on your setup and needs.     
+The downside of this approach is that you ship the JS code of the dev tools to the client, even if the client is not in development mode.    
 This dev tools package is quite small (~15kb), but if you want to avoid shipping unnecessary code to the client, you should use the custom entrypoint approach.    
 
 ## How to use (Native)
 
-Some features like the **Native Stack** and **PathConfiguration properties** are only available, if you add the dev tool bridge components to your app:
+Some features, such as the Native Stack and PathConfiguration properties, are only available if you add the dev tool bridge components to your app:
 
 ### iOS
 
