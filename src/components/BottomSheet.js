@@ -572,6 +572,7 @@ export default class BottomSheet {
 
   showBottomSheet() {
     this.bottomSheet.classList.add("show")
+    this.originalOverflow = document.body.style.overflow
     document.body.style.overflow = "hidden"
     this.updateSheetHeight(this.sheetHeight)
   }
@@ -582,7 +583,7 @@ export default class BottomSheet {
 
   hideBottomSheet() {
     this.bottomSheet.classList.remove("show")
-    document.body.style.overflow = "auto"
+    document.body.style.overflow = this.originalOverflow
   }
 
   updateSheetHeight(height) {
