@@ -28,6 +28,8 @@ class DevToolsComponent(
         when (message.event) {
             "connect" -> handleConnect(message)
             "currentStackInfo" -> handleCurrentStackInfo(message)
+            "propertiesForUrl" -> handlePropertiesForUrl(message)
+            "vibrate" -> null
             else -> Log.w("DevToolsComponent", "Unknown event for message: $message")
         }
     }
@@ -39,6 +41,12 @@ class DevToolsComponent(
     private fun handleCurrentStackInfo(message: Message) {
         val stack = getNavigationStack()
         replyTo("currentStackInfo", Stack(stack))
+    }
+
+    private fun handlePropertiesForUrl(message: Message) {
+        val data = message.data<PropertiesForUrlData>() ?: return
+        val properties = Hotwire.config.pathConfiguration.properties(data.url)
+        replyTo("propertiesForUrl", PropertiesForUrlResultData(convertProperties(properties)))
     }
 
     private fun getNavigationStack(): List<FragmentInfo> {
@@ -113,6 +121,16 @@ class DevToolsComponent(
             }
         }
     }
+
+    @Serializable
+    data class PropertiesForUrlData(
+        @SerialName("url") val url: String
+    )
+
+    @Serializable
+    data class PropertiesForUrlResultData(
+        @SerialName("properties") val properties: Map<String, String> = emptyMap()
+    )
 
     @Serializable
     data class ConnectResultData(

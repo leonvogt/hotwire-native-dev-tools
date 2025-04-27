@@ -20,6 +20,8 @@ public class DevToolsComponent: BridgeComponent {
             handleConnect()
         case .currentStackInfo:
             handleCurrentStackInfo()
+        case .propertiesForUrl:
+            handlePropertiesForUrl(message: message)
         case .vibrate:
             handleVibrate(message: message)
         }
@@ -36,6 +38,14 @@ public class DevToolsComponent: BridgeComponent {
 
         reply(to: Event.currentStackInfo.rawValue, with: container)
     }
+
+    private func handlePropertiesForUrl(message: Message) {
+        guard let data: PropertiesForUrlData = message.data() else { return }
+
+        let properties = Hotwire.config.pathConfiguration.properties(for: data.url)
+        reply(to: Event.propertiesForUrl.rawValue, with: PropertiesForUrlResponseData(properties: convertPropertiesToJSON(properties)))
+    }
+
 
     private func handleVibrate(message: Message) {
         guard let data: VibrateMessageData = message.data() else { return }
@@ -162,12 +172,17 @@ private extension DevToolsComponent {
         case connect
         case currentStackInfo
         case vibrate
+        case propertiesForUrl
     }
 }
 
 // MARK: Message data
 
 private extension DevToolsComponent {
+
+    struct PropertiesForUrlData: Decodable {
+        let url: String
+    }
 
     struct VibrateMessageData: Decodable {
         let style: String?
@@ -176,6 +191,10 @@ private extension DevToolsComponent {
     // MARK: Response Structs
     struct connectResponseData: Encodable {
         let callbackReason: String
+    }
+
+    struct PropertiesForUrlResponseData: Encodable {
+        let properties: String
     }
 
     struct StackContainer: Encodable {
