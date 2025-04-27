@@ -86,7 +86,7 @@ class DevToolsComponent(
                         type = "HotwireWebFragment",
                         title = fragment.toolbarForNavigation()?.title.toString(),
                         url = fragment.location,
-                        pathConfigurationProperties = properties,
+                        pathConfigurationProperties = convertProperties(properties),
                         children = children
                     )
                 }
@@ -103,6 +103,15 @@ class DevToolsComponent(
         }
 
         return fragments
+    }
+
+    private fun convertProperties(properties: Map<String, Any>): Map<String, String> {
+        return properties.mapValues { (_, value) ->
+            when (value) {
+                is String -> value
+                else -> value.toString()
+            }
+        }
     }
 
     @Serializable
