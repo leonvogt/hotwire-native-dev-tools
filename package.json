@@ -1,6 +1,6 @@
 {
   "name": "hotwire-native-dev-tools",
-  "version": "0.1.0-rc.2",
+  "version": "0.1.0-rc.5",
   "description": "Dev Tools for Hotwire Native",
   "main": "./dist/hotwire-native-dev-tools.es.js",
   "module": "./dist/hotwire-native-dev-tools.es.js",
