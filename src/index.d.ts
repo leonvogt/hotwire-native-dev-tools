@@ -1,8 +1,6 @@
-interface DevToolsOptions {
+export interface DevToolsOptions {
   enabled?: boolean
   reset?: boolean
 }
 
-declare function setupDevTools(options?: DevToolsOptions): void
-
-export { setupDevTools }
+export function setupDevTools(options?: DevToolsOptions): void

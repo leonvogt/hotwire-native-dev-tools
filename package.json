@@ -4,9 +4,10 @@
   "description": "Dev Tools for Hotwire Native",
   "main": "./dist/hotwire-native-dev-tools.es.js",
   "module": "./dist/hotwire-native-dev-tools.es.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/hotwire-native-dev-tools.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/hotwire-native-dev-tools.d.ts",
       "import": "./dist/hotwire-native-dev-tools.es.js",
       "require": "./dist/hotwire-native-dev-tools.es.js"
     }
@@ -18,7 +19,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "vite build && cp src/index.d.ts dist/",
+    "build": "vite build && cp src/index.d.ts dist/hotwire-native-dev-tools.d.ts",
     "dev": "vite build --watch",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
