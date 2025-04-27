@@ -442,7 +442,8 @@ export const cssContent = () => {
     .bottom-sheet .non-identified-view {
       background: #EEEEEE;
     }
-    .bottom-sheet .non-identified-view .view-title-details {
+    .bottom-sheet .non-identified-view .view-title-details,
+    .bottom-sheet .non-identified-view .view-title {
       color: #6c6c6c;
     }
 
