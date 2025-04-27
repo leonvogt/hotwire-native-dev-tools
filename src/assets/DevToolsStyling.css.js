@@ -345,6 +345,7 @@ export const cssContent = () => {
     }
 
     .bottom-sheet .tablink-dropdown {
+      background: inherit;
       border: none;
       outline: none;
       display: flex;
