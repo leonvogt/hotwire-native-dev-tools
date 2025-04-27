@@ -84,10 +84,11 @@ public class DevToolsComponent: BridgeComponent {
             let url: URL? = visitableVC.currentVisitableURL
 
             let properties = url.map { Hotwire.config.pathConfiguration.properties(for: $0) } ?? [:]
+            let title = visitableVC.title ?? visitableVC.visitableView.webView?.title ?? ""
 
             info = ScreenInfo(
                 type: "VisitableViewController",
-                title: visitableVC.title ?? "",
+                title: title,
                 url: url?.absoluteString,
                 pathConfigurationProperties: convertPropertiesToJSON(properties),
                 children: []
