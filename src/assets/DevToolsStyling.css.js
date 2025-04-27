@@ -573,6 +573,10 @@ export const cssContent = () => {
       overflow: hidden;
     }
 
+    .break-word {
+      word-break: break-word;
+    }
+
     .d-flex {
       display: flex;
     }

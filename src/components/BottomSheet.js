@@ -237,10 +237,10 @@ export default class BottomSheet {
         </div>
         <div class="w-100 overflow-auto">
           <div class="d-flex justify-content-between">
-            <strong class="w-80 text-ellipsis">${componentName}#${eventName}</strong>
+            <strong class="w-80 break-word">${componentName}#${eventName}</strong>
             <small>${time}</small>
           </div>
-          <div>
+          <div class="overflow-auto">
             ${Object.entries(eventArgs)
               .map(([key, value]) => {
                 const formattedValue = typeof value === "object" && value !== null ? JSON.stringify(value) : value
