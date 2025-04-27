@@ -18,7 +18,7 @@ or
 yarn add hotwire-native-dev-tools
 ```
 
-## How to use (JS)
+## Usage (JS)
 
 **Basic usage:**
 ```js
@@ -26,9 +26,16 @@ import { setupDevTools } from 'hotwire-native-dev-tools';
 setupDevTools();
 ```
 
-However, since you probably want to use the dev tools only during mobile app development, **the recommended approach is to create a custom entrypoint** that you load only when needed.
+However, since you probably want to use the dev tools only during mobile app development, **the recommended approach is to create a custom entrypoint** that you load only when needed:
 
 **Example Rails + Vite:**
+
+```js
+// app/javascript/entrypoints/hotwire_native_dev_tools.js
+
+import { setupDevTools } from 'hotwire-native-dev-tools';
+setupDevTools();
+```
 
 ```erb
 // layout/application.html.erb
@@ -38,19 +45,37 @@ However, since you probably want to use the dev tools only during mobile app dev
 </head>
 ```
 
+**Tip**: Place the `vite_javascript_tag` early to capture all console logs and messages.
+This way, you'll minimize the chances of missing console logs or bridge messages that are sent before the dev tools are initialized.
+
+--- 
+
+**Example Rails + Importmap:**
+
+```rb
+pin "hotwire-native-dev-tools"
+pin "dev-tools", preload: false
+```
+
 ```js
-// app/javascript/entrypoints/hotwire_native_dev_tools.js
+// app/javascript/dev-tools.js
 
 import { setupDevTools } from 'hotwire-native-dev-tools';
 setupDevTools();
 ```
 
-Please note, for best results, you should place the `vite_javascript_tag` before the `vite_javascript_tag` for your main app entrypoint.   
-This way, you'll minimize the chances of missing console logs or bridge messages that are sent before the dev tools are initialized.
+```erb
+// layout/application.html.erb
 
---- 
+<head>
+  <%= javascript_importmap_tags %>
+  <%= javascript_import_module_tag "dev-tools" if Rails.env.development? && hotwire_native_app? %>
+</head>
+```
 
-Alternatively, you could use a JS condition to check if the dev tools should be loaded:    
+---
+
+Alternatively, if you prefer not to create a custom entrypoint, you can use a JavaScript condition to determine whether the dev tools should be loaded:
 ```js
 import { setupDevTools } from 'hotwire-native-dev-tools';
 const isDev = process.env.NODE_ENV === 'development';
@@ -63,13 +88,13 @@ Please note that your JS condition may vary depending on your setup and needs.
 The downside of this approach is that you ship the JS code of the dev tools to the client, even if the client is not in development mode.    
 This dev tools package is quite small (~15kb), but if you want to avoid shipping unnecessary code to the client, you should use the custom entrypoint approach.    
 
-## How to use (Native)
+## Usage (Native)
 
 Some features, such as the Native Stack and PathConfiguration properties, are only available if you add the dev tool bridge components to your app:
 
 ### iOS
 
-1. Copy the Swift file [DevToolsComponent.swift](./ios/DevToolsComponent.swift) into your Xcode project
+1. Copy the Swift file [DevToolsComponent.swift](https://github.com/leonvogt/hotwire-native-dev-tools/blob/main/ios/DevToolsComponent.swift) into your Xcode project
 2. Register the component
 
 ```diff
@@ -85,7 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 ### Android
 
-1. Copy the Kotlin file [DevToolsComponent.kt](./android/DevToolsComponent.kt) into your Android Studio project
+1. Copy the Kotlin file [DevToolsComponent.kt](https://github.com/leonvogt/hotwire-native-dev-tools/blob/main/android/DevToolsComponent.kt) into your Android Studio project
 2. Update the package names where the comments say `// Replace with your package name`
 3. Register the component
 
