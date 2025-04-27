@@ -571,6 +571,7 @@ export default class BottomSheet {
   }
 
   showBottomSheet() {
+    if (this.bottomSheet.classList.contains("show")) return
     this.bottomSheet.classList.add("show")
     this.originalOverflow = document.body.style.overflow
     document.body.style.overflow = "hidden"
