@@ -1,4 +1,7 @@
-# Hotwire Native Dev Tools
+<h1 align="center">Hotwire Native Dev Tools</h1>
+
+![hotwire_native_dev_tools_preview](https://github.com/user-attachments/assets/d34dad9b-a750-4b6f-8f3b-1126d7fc58a2)
+
 
 Hotwire Native Dev Tools aims to support the development process of Hotwire Native apps by providing a set of tools to inspect and debug the app. 
 
