@@ -154,7 +154,10 @@ export default class BottomSheet {
               </div>
               <div class="mb-4">
                 <label for="font-size-input"> Font Size</label>
-                <input id="font-size-input" type="number" inputmode="numeric" class="w-100" value="${getSettings("fontSize") || 16}" />
+                <input type="range" id="font-size-input" class="w-100" min="8" max="24" value="${getSettings("fontSize") || 16}" step="1" list="font-size-input-markers" />
+                <datalist id="font-size-input-markers">
+                  <option value="16"></option>
+                </datalist>
               </div>
               <div class="mb-3">
                 <label class="toggle">
@@ -485,7 +488,8 @@ export default class BottomSheet {
     })
 
     this.bottomSheet.querySelector("#font-size-input").addEventListener("change", (event) => {
-      const value = event.target.value
+      let value = event.target.value
+      value = Math.max(8, Math.min(24, value))
       saveSettings("fontSize", value)
       this.devTools.setCSSProperty("--font-size", `${value}px`)
     })
