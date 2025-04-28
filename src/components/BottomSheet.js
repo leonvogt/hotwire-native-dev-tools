@@ -11,7 +11,7 @@ export default class BottomSheet {
   constructor(devTools) {
     this.devTools = devTools
     this.state = devTools.state.state
-    this.sheetHeight = parseInt(getSettings("bottomSheetHeight")) || 50
+    this.sheetHeight = parseInt(getSettings("bottomSheetHeight")) || 55
   }
 
   render() {
@@ -149,13 +149,16 @@ export default class BottomSheet {
                 <h3 class="ms-1">Settings</h3>
               </div>
               <div class="mb-3">
-                <label for="bottom-sheet-height"> Bottom Sheet Height</label>
-                <input type="range" id="bottom-sheet-height" class="w-100" min="10" max="100" value="${this.sheetHeight}" step="1" />
+                <label for="bottom-sheet-height-setting"> Bottom Sheet Height</label>
+                <input type="range" id="bottom-sheet-height-setting" class="w-100" min="10" max="100" value="${this.sheetHeight}" step="1" list="bottom-sheet-height-setting-markers" />
+                <datalist id="bottom-sheet-height-setting-markers">
+                  <option value="55"></option>
+                </datalist>
               </div>
               <div class="mb-4">
-                <label for="font-size-input"> Font Size</label>
-                <input type="range" id="font-size-input" class="w-100" min="8" max="24" value="${getSettings("fontSize") || 16}" step="1" list="font-size-input-markers" />
-                <datalist id="font-size-input-markers">
+                <label for="font-size-setting"> Font Size</label>
+                <input type="range" id="font-size-setting" class="w-100" min="8" max="24" value="${getSettings("fontSize") || 16}" step="1" list="font-size-setting-markers" />
+                <datalist id="font-size-setting-markers">
                   <option value="16"></option>
                 </datalist>
               </div>
@@ -476,7 +479,7 @@ export default class BottomSheet {
     })
 
     // Settings
-    this.bottomSheet.querySelector("#bottom-sheet-height").addEventListener("change", (event) => {
+    this.bottomSheet.querySelector("#bottom-sheet-height-setting").addEventListener("change", (event) => {
       const value = event.target.value
       this.sheetHeight = parseInt(value)
       saveSettings("bottomSheetHeight", value)
@@ -487,7 +490,7 @@ export default class BottomSheet {
       saveSettings("errorAnimationEnabled", event.target.checked)
     })
 
-    this.bottomSheet.querySelector("#font-size-input").addEventListener("change", (event) => {
+    this.bottomSheet.querySelector("#font-size-setting").addEventListener("change", (event) => {
       let value = event.target.value
       value = Math.max(8, Math.min(24, value))
       saveSettings("fontSize", value)
