@@ -27,7 +27,7 @@ export const cssContent = () => {
       margin: 0;
     }
 
-    button {
+    button, label, .toggle-label {
       user-select: none;
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
@@ -94,6 +94,7 @@ export const cssContent = () => {
     .dropdown-content label {
       color: black;
       width: 100%;
+      margin: 0;
       border: none;
       display: flex;
       align-items: center;
@@ -265,6 +266,11 @@ export const cssContent = () => {
       color: #ED4E4C;
     }
 
+    .bottom-sheet .tab-action-bars {
+      /* Fixes a 1px gap that can appear between .tab-action-bar and .tablist on Android devices */
+      margin-top: -1px;
+    }
+
     .bottom-sheet .tab-action-bar {
       display: none;
       justify-content: space-between;
@@ -301,6 +307,7 @@ export const cssContent = () => {
       border: none;
       outline: none;
       padding: 14px 16px;
+      margin: 0;
       font-size: 0.8em;
     }
 
@@ -309,9 +316,15 @@ export const cssContent = () => {
       color: white;
     }
 
+    .tablist .tablink-settings {
+      background-color: inherit;
+    }
+
     .tab-contents {
       height: 100%;
       overflow: scroll;
+      /* Fixes a 1px gap that can appear between .tab-action-bar and .tab-contents on Android devices */
+      margin-top: -1px;
     }
 
     .outer-tab-content {

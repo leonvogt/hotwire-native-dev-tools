@@ -52,7 +52,7 @@ export default class BottomSheet {
             <button class="tablink ${activeTab === "tab-console-logs" ? "active" : ""}" data-tab-id="tab-console-logs">Console</button>
             <button class="tablink ${activeTab === "tab-event-logs" ? "active" : ""}" data-tab-id="tab-event-logs">Events</button>
             <button class="tablink ${activeTab === "tab-native-stack" ? "active" : ""} d-none" data-tab-id="tab-native-stack">Stack</button>
-            <div class="dropdown d-flex">
+            <div class="tablink-settings dropdown d-flex">
               <button class="dropdown-trigger tablink-dropdown">${Icons.threeDotsVertical}</button>
               <div class="dropdown-content settings-dropdown">
                 <button class="btn-switch-to-single-tab-sheet" data-tab-id="single-tab-settings">Settings</button>
