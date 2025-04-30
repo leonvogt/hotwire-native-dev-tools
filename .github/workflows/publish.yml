@@ -17,22 +17,6 @@ jobs:
           always-auth: true
       - run: npm ci
       - run: npm run build
-
-      # Create .tgz package
-      - name: Pack npm tarball
-        run: npm pack
-        id: pack
-
-      # Publish to npm
-      # TODO: Enable provenance signing once the repository is public.
-      # Uncomment the line below to publish with provenance:
-      # - run: npm publish --provenance --access public
-      - run: npm publish --access public
+      - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # Upload the tarball to the GitHub Release
-      - name: Upload release asset
-        uses: softprops/action-gh-release@v2
-        with:
-          files: "*.tgz"
