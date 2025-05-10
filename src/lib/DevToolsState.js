@@ -11,7 +11,7 @@ export default class DevToolsState {
       bridgeIsConnected: false,
       supportsNativeStackView: false,
       consoleSearch: "",
-      activeTab: getSettings("activeTab") || "tab-bridge-components",
+      activeTab: this.storedActiveTab,
     }
     this.listeners = []
   }
@@ -86,7 +86,15 @@ export default class DevToolsState {
     this.state.consoleSearch = value
   }
 
+  updateLocalStorageSettings() {
+    this.state.activeTab = this.storedActiveTab
+  }
+
   get currentTime() {
     return new Date().toLocaleTimeString()
+  }
+
+  get storedActiveTab() {
+    return getSettings("activeTab") || "tab-bridge-components"
   }
 }

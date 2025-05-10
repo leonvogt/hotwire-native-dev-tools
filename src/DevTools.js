@@ -237,6 +237,17 @@ export default class DevTools {
       { passive: true }
     )
 
+    // Listen for localStorage changes triggered by devtools in another (native) tab.
+    // This keeps the devtools UI in sync across tabs.
+    window.addEventListener("storage", (event) => {
+      if (event.key === "hotwire-native-dev-tools") {
+        this.state.updateLocalStorageSettings()
+        this.bubble.render()
+        this.bottomSheet.update(this.state.state)
+        this.bottomSheet.applySettingsFromStorage()
+      }
+    })
+
     this.hasEventListeners = true
   }
 
