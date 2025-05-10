@@ -324,10 +324,13 @@ export default class BottomSheet {
   }
 
   nativeViewStackHTML(view) {
+    const removeTrailingSlash = (url) => {
+      return url?.replace(/\/+$/, "")
+    }
     const isMainView = ["UINavigationController", "NavigatorHost"].includes(view.type)
     const isTabBar = view.type === "UITabBarController"
     const isHotwireView = ["VisitableViewController", "HotwireWebFragment", "BackStackEntry"].includes(view.type)
-    const activeClass = view.url === this.currentUrl ? "current-view" : ""
+    const activeClass = removeTrailingSlash(view.url) === removeTrailingSlash(this.currentUrl) ? "current-view" : ""
     const wrapperClass = `viewstack-card ${activeClass} ${isMainView ? "main-view" : isHotwireView ? "hotwire-view" : isTabBar ? "tab-container" : "non-identified-view"}`
     const uniqueViewId = "viewstack-" + Math.random().toString(16).slice(2)
 
