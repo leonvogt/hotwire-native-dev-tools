@@ -21,6 +21,8 @@ export default class BottomSheet {
     this.addEventListeners()
   }
 
+  // Called when the in-memory state changes,
+  // such as when a new console or bridge log is captured.
   update(newState) {
     this.state = newState
     this.checkNativeFeatures()
@@ -29,6 +31,38 @@ export default class BottomSheet {
     this.renderBridgeLogs()
     this.renderEvents()
     this.renderNativeStack()
+  }
+
+  // Called when another native tab of the mobile app
+  // updates devtools-related local storage.
+  applySettingsFromStorage() {
+    const storedHeight = getSettings("bottomSheetHeight")
+    if (storedHeight) {
+      this.sheetHeight = parseInt(storedHeight)
+      this.updateSheetHeight(this.sheetHeight)
+    }
+    const storedActiveTab = getSettings("activeTab")
+    if (storedActiveTab) {
+      this.state.activeTab = storedActiveTab
+      this.updateTabView(storedActiveTab)
+    }
+    const storedConsoleFilterLevels = getConsoleFilterLevels()
+    if (storedConsoleFilterLevels) {
+      this.updateConsoleFilter(storedConsoleFilterLevels)
+    }
+    const storedFontSize = getSettings("fontSize")
+    if (storedFontSize) {
+      this.devTools.setCSSProperty("--font-size", `${storedFontSize}px`)
+      this.bottomSheet.querySelector("#font-size-setting").value = storedFontSize
+    }
+    const storedErrorAnimationEnabled = getSettings("errorAnimationEnabled")
+    if (storedErrorAnimationEnabled !== undefined) {
+      this.bottomSheet.querySelector("#console-error-animation-setting").checked = storedErrorAnimationEnabled
+    }
+    const storedAutoOpen = getSettings("autoOpen")
+    if (storedAutoOpen !== undefined) {
+      this.bottomSheet.querySelector("#auto-open-setting").checked = storedAutoOpen
+    }
   }
 
   createBottomSheet() {
@@ -542,6 +576,14 @@ export default class BottomSheet {
     this.bottomSheet.hasEventListeners = true
   }
 
+  updateConsoleFilter(consoleFilterLevels) {
+    this.bottomSheet.querySelectorAll(".console-filter-levels input[type='checkbox']").forEach((checkbox) => {
+      const filterType = checkbox.dataset.consoleFilter
+      const isActive = consoleFilterLevels[filterType]
+      checkbox.checked = isActive
+    })
+  }
+
   toggleDropdown(triggerElement) {
     const dropdownContent = triggerElement.nextElementSibling || triggerElement.closest(".dropdown").querySelector(".dropdown-content")
     // Close other dropdowns first
@@ -583,10 +625,6 @@ export default class BottomSheet {
     this.originalOverflow = document.body.style.overflow
     document.body.style.overflow = "hidden"
     this.updateSheetHeight(this.sheetHeight)
-  }
-
-  updateSheetHeight(height) {
-    this.sheetContent.style.height = `${height}vh`
   }
 
   hideBottomSheet() {
