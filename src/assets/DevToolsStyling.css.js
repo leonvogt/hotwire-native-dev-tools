@@ -349,6 +349,25 @@ export const cssContent = () => {
       white-space: normal;
     }
 
+    .info-card {
+      border-radius: 5px;
+      background: hsl(0deg 0% 0% / 20%);
+      padding: 1em;
+      margin-bottom: 1em;
+    }
+
+    .info-card-title {
+      font-size: 1em;
+      font-weight: 700;
+      margin-bottom: 1em;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .info-card-hint {
+      font-size: 0.8em;
+    }
+
     .tab-empty-content {
       display: flex;
       justify-content: center;
@@ -629,6 +648,10 @@ export const cssContent = () => {
 
     .overflow-auto {
       overflow: auto;
+    }
+
+    .m-0 {
+      margin: 0;
     }
 
     .mt-1 {
