@@ -36,32 +36,21 @@ export default class BottomSheet {
   // Called when another native tab of the mobile app
   // updates devtools-related local storage.
   applySettingsFromStorage() {
-    const storedHeight = getSettings("bottomSheetHeight")
-    if (storedHeight) {
-      this.sheetHeight = parseInt(storedHeight)
-      this.updateSheetHeight(this.sheetHeight)
-    }
-    const storedActiveTab = getSettings("activeTab")
-    if (storedActiveTab) {
-      this.state.activeTab = storedActiveTab
-      this.updateTabView(storedActiveTab)
-    }
+    const settings = [
+      { key: "bottomSheetHeight", setter: (value) => this.updateSheetHeight(value) },
+      { key: "activeTab", setter: (value) => this.updateTabView(value) },
+      { key: "fontSize", setter: (value) => this.updateFontSize(value) },
+      { key: "errorAnimationEnabled", setter: (value) => this.updateErrorAnimation(value) },
+      { key: "autoOpen", setter: (value) => this.updateAutoOpen(value) },
+    ]
+    settings.forEach(({ key, setter }) => {
+      const storedValue = getSettings(key)
+      if (storedValue !== undefined) setter(storedValue)
+    })
+
     const storedConsoleFilterLevels = getConsoleFilterLevels()
     if (storedConsoleFilterLevels) {
       this.updateConsoleFilter(storedConsoleFilterLevels)
-    }
-    const storedFontSize = getSettings("fontSize")
-    if (storedFontSize) {
-      this.devTools.setCSSProperty("--font-size", `${storedFontSize}px`)
-      this.bottomSheet.querySelector("#font-size-setting").value = storedFontSize
-    }
-    const storedErrorAnimationEnabled = getSettings("errorAnimationEnabled")
-    if (storedErrorAnimationEnabled !== undefined) {
-      this.bottomSheet.querySelector("#console-error-animation-setting").checked = storedErrorAnimationEnabled
-    }
-    const storedAutoOpen = getSettings("autoOpen")
-    if (storedAutoOpen !== undefined) {
-      this.bottomSheet.querySelector("#auto-open-setting").checked = storedAutoOpen
     }
   }
 
@@ -704,6 +693,19 @@ export default class BottomSheet {
     } else {
       this.updateSheetHeight(this.sheetHeight)
     }
+  }
+
+  updateFontSize(value) {
+    this.devTools.setCSSProperty("--font-size", `${value}px`)
+    this.bottomSheet.querySelector("#font-size-setting").value = value
+  }
+
+  updateErrorAnimation(value) {
+    this.bottomSheet.querySelector("#console-error-animation-setting").checked = value
+  }
+
+  updateAutoOpen(value) {
+    this.bottomSheet.querySelector("#auto-open-setting").checked = value
   }
 
   // Helper function to log messages, without causing a rerender of the bottom sheet
