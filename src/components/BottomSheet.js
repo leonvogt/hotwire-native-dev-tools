@@ -1,5 +1,5 @@
 import * as Icons from "../assets/icons"
-import { platform, formattedPlatform } from "../utils/utils"
+import { platform, formattedPlatform, getMetaContent } from "../utils/utils"
 import { saveSettings, getSettings, getConsoleFilterLevels, saveConsoleFilterLevels } from "../utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
@@ -90,6 +90,7 @@ export default class BottomSheet {
               <button class="dropdown-trigger tablink-dropdown">${Icons.threeDotsVertical}</button>
               <div class="dropdown-content settings-dropdown">
                 <button class="btn-switch-to-single-tab-sheet" data-tab-id="single-tab-settings">Settings</button>
+                <button class="btn-switch-to-single-tab-sheet" data-tab-id="single-tab-info">Info</button>
                 <button class="pin-bottom-sheet">Pin Bottom Sheet</button>
               </div>
             </div>
@@ -209,6 +210,39 @@ export default class BottomSheet {
                   <div class="toggle-switch"></div>
                   <span class="toggle-label">Auto Open</span>
                 </label>
+              </div>
+            </div>
+          </div>
+
+          <div id="single-tab-info" class="single-tab-content outer-tab-content">
+            <div class="inner-tab-content">
+              <div class="d-flex align-items-center mb-3">
+                <button class="btn-icon btn-close-single-mode">${Icons.arrowLeft}</button>
+                <h3 class="ms-1">Info</h3>
+              </div>
+              <div class="info-card">
+                <div class="info-card-title">Current URL</div>
+                <div class="current-url">${this.currentUrl}</div>
+              </div>
+              <div class="info-card">
+                <div class="info-card-title">User Agent</div>
+                <div class="user-agent">${navigator.userAgent}</div>
+              </div>
+              <div class="info-card">
+                <div class="info-card-title"><pre class="m-0">turbo-cache-control:</pre> <span>${getMetaContent("turbo-cache-control") || "-"}</span></div>
+                <div class="info-card-hint"><strong>no-cache:</strong> always fetched from the network, even on restore</div>
+                <div class="info-card-hint"><strong>no-preview:</strong> skipped in preview, used only on restore</div>
+                <div class="info-card-hint"><strong>unset:</strong> shows cached preview if the cache is valid</div>
+              </div>
+              <div class="info-card">
+                <div class="info-card-title"><pre class="m-0">turbo-refresh-method:</pre> <span>${getMetaContent("turbo-refresh-method") || "-"}</span></div>
+                <div class="info-card-hint"><strong>replace (default):</strong> replaces the entire &lt;body&gt; on revisit</div>
+                <div class="info-card-hint"><strong>morph:</strong> updates only changed DOM elements, preserving state</div>
+              </div>
+              <div class="info-card">
+                <div class="info-card-title"><pre class="m-0">turbo-visit-control:</pre> <span>${getMetaContent("turbo-visit-control") || "-"}</span></div>
+                <div class="info-card-hint"><strong>reload:</strong> forces a full page reload</div>
+                <div class="info-card-hint"><strong>unset:</strong> allows Turbo to handle the visit normally</div>
               </div>
             </div>
           </div>
