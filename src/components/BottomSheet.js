@@ -202,6 +202,13 @@ export default class BottomSheet {
                   <span class="toggle-label">Auto Open</span>
                 </label>
               </div>
+              <div class="mb-3">
+                <label class="toggle">
+                  <input class="toggle-checkbox" type="checkbox" id="scroll-to-latest-log-setting" ${getSettings("scrollToLatestLog") === true ? "checked" : ""} />
+                  <div class="toggle-switch"></div>
+                  <span class="toggle-label">Automatically Scroll to New Logs</span>
+                </label>
+              </div>
             </div>
           </div>
 
@@ -563,6 +570,10 @@ export default class BottomSheet {
       saveSettings("autoOpen", event.target.checked)
     })
 
+    this.bottomSheet.querySelector("#scroll-to-latest-log-setting").addEventListener("change", (event) => {
+      saveSettings("scrollToLatestLog", event.target.checked)
+    })
+
     this.bottomSheet.querySelector(".pin-bottom-sheet").addEventListener("click", () => {
       const isPinned = getSettings("bottomSheetPinned") === true
       saveSettings("bottomSheetPinned", !isPinned)
@@ -656,6 +667,8 @@ export default class BottomSheet {
   }
 
   scrollToLatestLog(tabId) {
+    if (getSettings("scrollToLatestLog") != true) return
+
     requestAnimationFrame(() => {
       const tabContainer = this.devTools.shadowRoot.getElementById(tabId)
       const latestLog = tabContainer?.querySelector(".log-entry:last-child")
