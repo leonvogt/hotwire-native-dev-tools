@@ -31,6 +31,8 @@ export default class BottomSheet {
     this.renderBridgeLogs()
     this.renderEvents()
     this.renderNativeStack()
+    this.scrollToLatestLog(this.state.activeTab)
+    this.state.shouldScrollToLatestLog = true
   }
 
   // Called when another native tab of the mobile app
@@ -198,6 +200,13 @@ export default class BottomSheet {
                   <input class="toggle-checkbox" type="checkbox" id="auto-open-setting" ${getSettings("autoOpen") === true ? "checked" : ""} />
                   <div class="toggle-switch"></div>
                   <span class="toggle-label">Auto Open</span>
+                </label>
+              </div>
+              <div class="mb-3">
+                <label class="toggle">
+                  <input class="toggle-checkbox" type="checkbox" id="scroll-to-latest-log-setting" ${getSettings("scrollToLatestLog") === true ? "checked" : ""} />
+                  <div class="toggle-switch"></div>
+                  <span class="toggle-label">Automatically Scroll to New Logs</span>
                 </label>
               </div>
             </div>
@@ -561,6 +570,10 @@ export default class BottomSheet {
       saveSettings("autoOpen", event.target.checked)
     })
 
+    this.bottomSheet.querySelector("#scroll-to-latest-log-setting").addEventListener("change", (event) => {
+      saveSettings("scrollToLatestLog", event.target.checked)
+    })
+
     this.bottomSheet.querySelector(".pin-bottom-sheet").addEventListener("click", () => {
       const isPinned = getSettings("bottomSheetPinned") === true
       saveSettings("bottomSheetPinned", !isPinned)
@@ -643,6 +656,24 @@ export default class BottomSheet {
 
     // Show the action bar for the clicked tab
     this.devTools.shadowRoot.querySelector(`.tab-action-bar.${tabId}`).classList.add("active")
+
+    // Scroll to the latest log in the clicked tab
+    if (this.state.shouldScrollToLatestLog) {
+      this.scrollToLatestLog(tabId)
+
+      // Reset the flag to avoid scrolling on every tab switch without new logs
+      this.state.shouldScrollToLatestLog = false
+    }
+  }
+
+  scrollToLatestLog(tabId) {
+    if (getSettings("scrollToLatestLog") != true) return
+
+    requestAnimationFrame(() => {
+      const tabContainer = this.devTools.shadowRoot.getElementById(tabId)
+      const latestLog = tabContainer?.querySelector(".log-entry:last-child")
+      latestLog?.scrollIntoView({ behavior: "instant", block: "center" })
+    })
   }
 
   showBottomSheet() {
