@@ -220,6 +220,8 @@ export const cssContent = () => {
     }
 
     .bottom-sheet .content {
+      display: flex;
+      flex-direction: column;
       width: 100%;
       height: 40vh;
       position: relative;

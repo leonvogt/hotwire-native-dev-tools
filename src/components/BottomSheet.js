@@ -31,6 +31,8 @@ export default class BottomSheet {
     this.renderBridgeLogs()
     this.renderEvents()
     this.renderNativeStack()
+    this.scrollToLatestLog(this.state.activeTab)
+    this.state.shouldScrollToLatestLog = true
   }
 
   // Called when another native tab of the mobile app
@@ -643,6 +645,22 @@ export default class BottomSheet {
 
     // Show the action bar for the clicked tab
     this.devTools.shadowRoot.querySelector(`.tab-action-bar.${tabId}`).classList.add("active")
+
+    // Scroll to the latest log in the clicked tab
+    if (this.state.shouldScrollToLatestLog) {
+      this.scrollToLatestLog(tabId)
+
+      // Reset the flag to avoid scrolling on every tab switch without new logs
+      this.state.shouldScrollToLatestLog = false
+    }
+  }
+
+  scrollToLatestLog(tabId) {
+    requestAnimationFrame(() => {
+      const tabContainer = this.devTools.shadowRoot.getElementById(tabId)
+      const latestLog = tabContainer?.querySelector(".log-entry:last-child")
+      latestLog?.scrollIntoView({ behavior: "instant", block: "center" })
+    })
   }
 
   showBottomSheet() {
