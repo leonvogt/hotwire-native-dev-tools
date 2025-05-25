@@ -333,8 +333,8 @@ export const cssContent = () => {
       height: 100%;
       overflow: scroll;
       background-color: hsl(0deg 0% 0% / 80%);
-      backdrop-filter: blur(3px) saturate(100%);
-      -webkit-backdrop-filter: blur(3px) saturate(100%);
+      backdrop-filter: blur(30px) saturate(250%);
+      -webkit-backdrop-filter: blur(30px) saturate(250%);
       padding-bottom: 7em;
     }
     .outer-tab-content.active {
