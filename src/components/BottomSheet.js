@@ -332,8 +332,17 @@ export default class BottomSheet {
           <div class="d-flex justify-content-end">
             <small>${time}</small>
           </div>
-          <div class="log-entry-message ${type}">
-            ${message}
+          <div class="d-flex">
+            <div class="log-entry-message ${type}">
+              ${message}
+            </div>
+            <div class="dropdown dropdown--right">
+              <button class="dropdown-trigger btn-icon">${Icons.threeDotsVertical}</button>
+              <div class="dropdown-content">
+                <button class="dropdown-content-action console-log-action-hide-console-log">Hide this log</button>
+                <button class="dropdown-content-action console-log-action-copy-console-log">Copy log message</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -602,17 +611,28 @@ export default class BottomSheet {
         return
       }
 
+      // Handle dropdown actions
+      const dropdownAction = event.target.closest(".dropdown-content-action")
+      if (dropdownAction) {
+        this.handleDropdownActionClick(event)
+        return
+      }
+
       // Close dropdowns when clicking outside
-      const openDropdowns = this.bottomSheet.querySelectorAll(".dropdown-content.dropdown-open")
-      openDropdowns.forEach((dropdown) => {
-        const dropdownContainer = dropdown.closest(".dropdown")
-        if (!dropdownContainer.contains(event.target)) {
-          dropdown.classList.remove("dropdown-open")
-        }
-      })
+      this.closeAllDropdowns(event)
     })
 
     this.bottomSheet.hasEventListeners = true
+  }
+
+  closeAllDropdowns(event) {
+    const openDropdowns = this.bottomSheet.querySelectorAll(".dropdown-content.dropdown-open")
+    openDropdowns.forEach((dropdown) => {
+      const dropdownContainer = dropdown.closest(".dropdown")
+      if (!dropdownContainer.contains(event.target)) {
+        dropdown.classList.remove("dropdown-open")
+      }
+    })
   }
 
   updateConsoleFilter(consoleFilterLevels) {
@@ -641,6 +661,21 @@ export default class BottomSheet {
     const tabId = clickedTab.dataset.tabId
     this.devTools.state.setActiveTab(tabId)
     this.updateTabView(tabId)
+  }
+
+  handleDropdownActionClick = (event) => {
+    const action = event.target.closest(".dropdown-content-action")
+    if (!action) return
+    if (action.classList.contains("console-log-action-hide-console-log")) {
+      const logEntry = action.closest(".log-entry")
+      logEntry.remove()
+    } else if (action.classList.contains("console-log-action-copy-console-log")) {
+      const logEntry = action.closest(".log-entry")
+      const message = logEntry.querySelector(".log-entry-message").textContent
+      navigator.clipboard.writeText(message).then(() => {
+        this.closeAllDropdowns(event)
+      })
+    }
   }
 
   updateTabView(tabId) {

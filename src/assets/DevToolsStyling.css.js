@@ -104,6 +104,10 @@ export const cssContent = () => {
       border-top: 1px solid #cecdcd;
     }
 
+    .dropdown--right .dropdown-content {
+      right: 1em;
+    }
+
     .settings-dropdown {
       right: 0;
       top: 2rem;
