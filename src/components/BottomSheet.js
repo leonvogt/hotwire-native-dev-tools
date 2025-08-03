@@ -1,6 +1,6 @@
 import * as Icons from "../assets/icons"
 import { platform, formattedPlatform, getMetaContent } from "../utils/utils"
-import { saveSettings, getSettings, getConsoleFilterLevels, saveConsoleFilterLevels } from "../utils/settings"
+import { saveSettings, getSettings, getConsoleFilterLevels, saveConsoleFilterLevels, getConsoleLogBlacklist, addConsoleLogBlacklistEntry, removeConsoleLogBlacklistEntry } from "../utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
 // When you need to debug, use the `log` helper function like this:
@@ -80,9 +80,9 @@ export default class BottomSheet {
             <div class="tablink-settings dropdown d-flex">
               <button class="dropdown-trigger tablink-dropdown">${Icons.threeDotsVertical}</button>
               <div class="dropdown-content settings-dropdown">
-                <button class="btn-switch-to-single-tab-sheet" data-tab-id="single-tab-settings">Settings</button>
-                <button class="btn-switch-to-single-tab-sheet" data-tab-id="single-tab-info">Info</button>
-                <button class="pin-bottom-sheet">Pin Bottom Sheet</button>
+                <button class="dropdown-btn-full-width btn-switch-to-single-tab-sheet" data-tab-id="single-tab-settings">Settings</button>
+                <button class="dropdown-btn-full-width btn-switch-to-single-tab-sheet" data-tab-id="single-tab-info">Info</button>
+                <button class="dropdown-btn-full-width pin-bottom-sheet">Pin Bottom Sheet</button>
               </div>
             </div>
           </div>
@@ -102,6 +102,11 @@ export default class BottomSheet {
                     <label><input type="checkbox" ${consoleFilterLevels.debug ? "checked" : ""} data-console-filter="debug" /> Debug</label>
                     <label><input type="checkbox" ${consoleFilterLevels.info ? "checked" : ""} data-console-filter="info" /> Info</label>
                     <label><input type="checkbox" ${consoleFilterLevels.log ? "checked" : ""} data-console-filter="log" /> Logs</label>
+                  </div>
+                </div>
+                <div class="dropdown dropdown--scrollable">
+                  <button class="dropdown-trigger btn-icon">${Icons.ban}</button>
+                  <div class="dropdown-content console-log-blacklist">
                   </div>
                 </div>
                 <button class="btn-icon btn-clear-tab btn-clear-console-logs">${Icons.trash}</button>
@@ -253,6 +258,7 @@ export default class BottomSheet {
   renderConsoleLogs() {
     const container = this.bottomSheet.querySelector(".tab-content-console-logs")
     const consoleFilterLevels = getConsoleFilterLevels()
+    const consoleLogBlacklist = getConsoleLogBlacklist()
     const consoleSearch = this.state.consoleSearch
     container.innerHTML = this.state.consoleLogs.length
       ? this.state.consoleLogs
@@ -261,9 +267,27 @@ export default class BottomSheet {
             if (!consoleSearch) return true
             return log.message.toLowerCase().includes(consoleSearch.toLowerCase())
           })
+          .filter((log) => !consoleLogBlacklist.includes(log.message.trim()))
           .map((log) => this.consoleLogHTML(log.type, log.message, log.time))
           .join("")
       : `<div class="tab-empty-content"><span>No console logs yet</span></div>`
+    this.renderConsoleBlacklist()
+  }
+
+  renderConsoleBlacklist() {
+    this.bottomSheet.querySelector(".console-log-blacklist").innerHTML = getConsoleLogBlacklist().length
+      ? `
+      ${getConsoleLogBlacklist()
+        .map(
+          (entry) => `
+            <div class="d-flex justify-content-between align-items-center dropdown-entry">
+              <label class="console-log-blacklist-entry-text">${entry}</label>
+              <button class="btn-icon btn-remove-console-log-blacklist-entry icon--muted dropdown-content-action w-auto" data-entry="${entry}">${Icons.trash}</button>
+            </div>
+          `
+        )
+        .join("")}`
+      : `<div class="text-center text-muted">No blacklisted logs</div>`
   }
 
   renderBridgeComponents() {
@@ -332,8 +356,17 @@ export default class BottomSheet {
           <div class="d-flex justify-content-end">
             <small>${time}</small>
           </div>
-          <div class="log-entry-message ${type}">
-            ${message}
+          <div class="d-flex justify-content-between">
+            <div class="log-entry-message ${type}">
+              ${message}
+            </div>
+            <div class="dropdown dropdown--right">
+              <button class="dropdown-trigger btn-icon">${Icons.threeDotsVertical}</button>
+              <div class="dropdown-content">
+                <button class="dropdown-btn-full-width dropdown-content-action console-log-action-hide-console-log">Ignore this log</button>
+                <button class="dropdown-btn-full-width dropdown-content-action console-log-action-copy-console-log">Copy log message</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -602,17 +635,28 @@ export default class BottomSheet {
         return
       }
 
+      // Handle dropdown actions
+      const dropdownAction = event.target.closest(".dropdown-content-action")
+      if (dropdownAction) {
+        this.handleDropdownActionClick(event)
+        return
+      }
+
       // Close dropdowns when clicking outside
-      const openDropdowns = this.bottomSheet.querySelectorAll(".dropdown-content.dropdown-open")
-      openDropdowns.forEach((dropdown) => {
-        const dropdownContainer = dropdown.closest(".dropdown")
-        if (!dropdownContainer.contains(event.target)) {
-          dropdown.classList.remove("dropdown-open")
-        }
-      })
+      this.closeAllDropdowns(event)
     })
 
     this.bottomSheet.hasEventListeners = true
+  }
+
+  closeAllDropdowns(event) {
+    const openDropdowns = this.bottomSheet.querySelectorAll(".dropdown-content.dropdown-open")
+    openDropdowns.forEach((dropdown) => {
+      const dropdownContainer = dropdown.closest(".dropdown")
+      if (!dropdownContainer.contains(event.target)) {
+        dropdown.classList.remove("dropdown-open")
+      }
+    })
   }
 
   updateConsoleFilter(consoleFilterLevels) {
@@ -641,6 +685,24 @@ export default class BottomSheet {
     const tabId = clickedTab.dataset.tabId
     this.devTools.state.setActiveTab(tabId)
     this.updateTabView(tabId)
+  }
+
+  handleDropdownActionClick = (event) => {
+    const action = event.target.closest(".dropdown-content-action")
+    if (!action) return
+    if (action.classList.contains("console-log-action-hide-console-log")) {
+      addConsoleLogBlacklistEntry(action.closest(".log-entry").querySelector(".log-entry-message").textContent)
+      this.renderConsoleLogs()
+    } else if (action.classList.contains("console-log-action-copy-console-log")) {
+      const logEntry = action.closest(".log-entry")
+      const message = logEntry.querySelector(".log-entry-message").textContent
+      navigator.clipboard.writeText(message).then(() => {
+        this.closeAllDropdowns(event)
+      })
+    } else if (action.classList.contains("btn-remove-console-log-blacklist-entry")) {
+      removeConsoleLogBlacklistEntry(action.dataset.entry.trim())
+      this.renderConsoleLogs()
+    }
   }
 
   updateTabView(tabId) {

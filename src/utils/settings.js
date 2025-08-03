@@ -32,3 +32,24 @@ export const saveConsoleFilterLevels = (key, value) => {
   saveSettings("consoleFilterLevels", consoleFilterLevels)
   return consoleFilterLevels
 }
+
+export const getConsoleLogBlacklist = () => {
+  return getSettings("consoleLogBlacklist") || []
+}
+
+export const addConsoleLogBlacklistEntry = (entry) => {
+  entry = entry.trim()
+  const consoleLogBlacklist = getSettings("consoleLogBlacklist") || []
+  if (!consoleLogBlacklist.includes(entry)) {
+    consoleLogBlacklist.push(entry)
+    saveSettings("consoleLogBlacklist", consoleLogBlacklist)
+  }
+  return consoleLogBlacklist
+}
+
+export const removeConsoleLogBlacklistEntry = (entry) => {
+  let consoleLogBlacklist = getSettings("consoleLogBlacklist") || []
+  consoleLogBlacklist = consoleLogBlacklist.filter((item) => item !== entry)
+  saveSettings("consoleLogBlacklist", consoleLogBlacklist)
+  return consoleLogBlacklist
+}

@@ -4,7 +4,7 @@ import FloatingBubble from "./components/FloatingBubble"
 import BottomSheet from "./components/BottomSheet"
 import DevToolsState from "./lib/DevToolsState"
 import NativeBridge from "./lib/NativeBridge"
-import { resetSettings } from "./utils/settings"
+import { resetSettings, getConsoleLogBlacklist } from "./utils/settings"
 import { debounce } from "./utils/utils"
 import { getSettings } from "./utils/settings"
 
@@ -186,7 +186,10 @@ export default class DevTools {
 
     this.state.addConsoleLog(type, message)
     if (type === "error") {
-      this.bubble.animateErrorBorder()
+      const messageIsBlacklisted = getConsoleLogBlacklist().includes(message)
+      if (!messageIsBlacklisted) {
+        this.bubble.animateErrorBorder()
+      }
     }
   }
 

@@ -62,6 +62,13 @@ export const cssContent = () => {
       fill: white;
     }
 
+    .icon--black svg {
+      fill: black;
+    }
+    .icon--muted svg {
+      fill: #6c6c6c;
+    }
+
     /* Dropdown */
     .dropdown-content {
       display: none;
@@ -100,8 +107,18 @@ export const cssContent = () => {
       align-items: center;
     }
 
-    .dropdown-content button:not(:first-child) {
+    .dropdown-content .dropdown-btn-full-width:not(:first-child),
+    .dropdown-content .dropdown-entry:not(:first-child) {
       border-top: 1px solid #cecdcd;
+    }
+
+    .dropdown--right .dropdown-content {
+      right: 1em;
+    }
+
+    .dropdown--scrollable .dropdown-content {
+      overflow-y: auto;
+      max-height: 100%;
     }
 
     .settings-dropdown {
@@ -601,6 +618,10 @@ export const cssContent = () => {
       text-align: center;
     }
 
+    .text-muted {
+      color: #6c6c6c;
+    }
+
     .text-ellipsis {
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -702,6 +723,10 @@ export const cssContent = () => {
 
     .w-100 {
       width: 100%;
+    }
+
+    .w-auto {
+      width: auto !important;
     }
 
     .w-80 {
