@@ -1,5 +1,5 @@
 import * as Icons from "../assets/icons"
-import { platform, formattedPlatform, getMetaContent } from "../utils/utils"
+import { platform, formattedPlatform, getMetaContent, debounce } from "../utils/utils"
 import { saveSettings, getSettings, getConsoleFilterLevels, saveConsoleFilterLevels, getConsoleLogBlacklist, addConsoleLogBlacklistEntry, removeConsoleLogBlacklistEntry } from "../utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
@@ -82,6 +82,7 @@ export default class BottomSheet {
               <div class="dropdown-content settings-dropdown">
                 <button class="dropdown-btn-full-width btn-switch-to-single-tab-sheet" data-tab-id="single-tab-settings">Settings</button>
                 <button class="dropdown-btn-full-width btn-switch-to-single-tab-sheet" data-tab-id="single-tab-info">Info</button>
+                <button class="dropdown-btn-full-width btn-switch-to-single-tab-sheet d-none" data-tab-id="single-tab-path-configuration-check">PathConfiguration Check</button>
                 <button class="dropdown-btn-full-width pin-bottom-sheet">Pin Bottom Sheet</button>
               </div>
             </div>
@@ -217,6 +218,21 @@ export default class BottomSheet {
             </div>
           </div>
 
+          <div id="single-tab-path-configuration-check" class="single-tab-content outer-tab-content">
+            <div class="inner-tab-content">
+              <div class="d-flex align-items-center mb-3">
+                <button class="btn-icon btn-close-single-mode">${Icons.arrowLeft}</button>
+                <h3 class="ms-1">PathConfiguration Check</h3>
+              </div>
+              <div class="mb-3">
+                <label for="path-configuration-check-url">URL</label>
+                <input id="path-configuration-check-url" class="w-100" value="/" />
+              </div>
+              <div id="path-configuration-check-properties-output" class="overflow-auto">
+              </div>
+            </div>
+          </div>
+
           <div id="single-tab-info" class="single-tab-content outer-tab-content">
             <div class="inner-tab-content">
               <div class="d-flex align-items-center mb-3">
@@ -324,6 +340,24 @@ export default class BottomSheet {
       (this.state.nativeStack.length ? this.state.nativeStack.map((view) => this.nativeViewStackHTML(view)).join("") : `<div class="tab-empty-content"><span>No native stack captured yet</span></div>`) +
       `</div>`
   }
+
+  renderPathConfigurationCheck = debounce((path) => {
+    const url = window.location.origin + path
+    this.devTools.nativeBridge.send("propertiesForUrl", { url }, (message) => {
+      this.bottomSheet.querySelector("#path-configuration-check-properties-output").style.opacity = 1
+      const pathConfigurationPropertiesJson = (() => {
+        try {
+          const props = message.data.properties
+          return JSON.stringify(typeof props === "string" ? JSON.parse(props) : props, null, 2)
+        } catch {
+          return message.data.properties
+        }
+      })()
+      const pathConfigurationProperties = pathConfigurationPropertiesJson ? `<pre class="view-path-configuration">${pathConfigurationPropertiesJson}</pre>` : ""
+      const outputContainer = this.bottomSheet.querySelector("#path-configuration-check-properties-output")
+      outputContainer.innerHTML = pathConfigurationProperties
+    })
+  }, 500)
 
   bridgeLogHTML(direction, componentName, eventName, eventArgs, time) {
     return `
@@ -503,6 +537,7 @@ export default class BottomSheet {
   checkNativeFeatures() {
     if (this.state.supportsNativeStackView) {
       this.bottomSheet.querySelector(".tablink[data-tab-id='tab-native-stack']").classList.remove("d-none")
+      this.bottomSheet.querySelector(".btn-switch-to-single-tab-sheet[data-tab-id='single-tab-path-configuration-check']").classList.remove("d-none")
     }
   }
 
@@ -541,6 +576,9 @@ export default class BottomSheet {
       button.addEventListener("click", (event) => {
         const singleTabId = event.target.closest("[data-tab-id]").dataset.tabId
         if (!singleTabId) return
+        if (singleTabId === "single-tab-path-configuration-check" && this.bottomSheet.querySelector("#path-configuration-check-url").value === "/") {
+          this.renderPathConfigurationCheck("/")
+        }
         this.switchToSingleTabSheet(singleTabId)
       })
     })
@@ -612,6 +650,11 @@ export default class BottomSheet {
       saveSettings("bottomSheetPinned", !isPinned)
       this.sheetOverlay.classList.toggle("active")
       this.bottomSheet.querySelector(".settings-dropdown").classList.remove("dropdown-open")
+    })
+
+    this.bottomSheet.querySelector("#path-configuration-check-url").addEventListener("input", (event) => {
+      this.bottomSheet.querySelector("#path-configuration-check-properties-output").style.opacity = 0.5
+      this.renderPathConfigurationCheck(event.target.value)
     })
 
     this.bottomSheet.addEventListener("click", (event) => {
