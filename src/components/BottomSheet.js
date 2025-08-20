@@ -1,5 +1,5 @@
 import * as Icons from "../assets/icons"
-import { platform, formattedPlatform, getMetaContent, debounce } from "../utils/utils"
+import { platform, formattedPlatform, isIosApp, getMetaContent, debounce } from "../utils/utils"
 import { saveSettings, getSettings, getConsoleFilterLevels, saveConsoleFilterLevels, getConsoleLogBlacklist, addConsoleLogBlacklistEntry, removeConsoleLogBlacklistEntry } from "../utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
@@ -342,7 +342,8 @@ export default class BottomSheet {
   }
 
   renderPathConfigurationCheck = debounce((path) => {
-    const url = window.location.origin + path
+    const url = isIosApp ? path : `${window.location.origin}${path}`
+
     this.devTools.nativeBridge.send("propertiesForUrl", { url }, (message) => {
       this.bottomSheet.querySelector("#path-configuration-check-properties-output").style.opacity = 1
       const pathConfigurationPropertiesJson = (() => {
