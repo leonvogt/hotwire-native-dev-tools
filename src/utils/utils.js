@@ -40,3 +40,10 @@ export const getMetaContent = (name) => {
   const element = getMetaElement(name)
   return element && element.content
 }
+
+export const elementToEscapedString = (element) => {
+  const attrs = Array.from(element.attributes)
+    .map((attr) => `${attr.name}="${attr.value}"`)
+    .join(" ")
+  return `&lt;${element.tagName.toLowerCase()}${attrs ? " " + attrs : ""}&gt;&lt;/${element.tagName.toLowerCase()}&gt;`
+}

@@ -5,7 +5,7 @@ import BottomSheet from "./components/BottomSheet"
 import DevToolsState from "./lib/DevToolsState"
 import NativeBridge from "./lib/NativeBridge"
 import { resetSettings, getConsoleLogBlacklist } from "./utils/settings"
-import { debounce } from "./utils/utils"
+import { debounce, elementToEscapedString } from "./utils/utils"
 import { getSettings } from "./utils/settings"
 
 export default class DevTools {
@@ -161,11 +161,7 @@ export default class DevTools {
     const message = args
       .map((arg) => {
         if (arg instanceof Element) {
-          const attrs = Array.from(arg.attributes)
-            .map((attr) => `${attr.name}="${attr.value}"`)
-            .join(" ")
-
-          return `&lt;${arg.tagName.toLowerCase()}${attrs ? " " + attrs : ""}&gt;&lt;/${arg.tagName.toLowerCase()}&gt;`
+          return elementToEscapedString(arg)
         }
         if (arg instanceof Error) {
           let errorText = `${arg.name}: ${arg.message}\n`
@@ -180,7 +176,7 @@ export default class DevTools {
               arg,
               (key, value) => {
                 if (value === window) return "[Window Object]"
-                if (value instanceof HTMLElement) return `[HTMLElement <${value.tagName.toLowerCase()}>]`
+                if (value instanceof HTMLElement) return elementToEscapedString(value)
                 return value
               },
               2
