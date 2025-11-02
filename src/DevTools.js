@@ -167,11 +167,26 @@ export default class DevTools {
 
           return `&lt;${arg.tagName.toLowerCase()}${attrs ? " " + attrs : ""}&gt;&lt;/${arg.tagName.toLowerCase()}&gt;`
         }
-        if (typeof arg === "object") {
+        if (arg instanceof Error) {
+          let errorText = `${arg.name}: ${arg.message}\n`
+          if (arg.stack) {
+            errorText += `\n${arg.stack}`
+          }
+          return `<pre>${errorText}</pre>`
+        }
+        if (typeof arg === "object" && arg !== null) {
           try {
-            return `<pre>${JSON.stringify(arg, null, 2)}</pre>`
-          } catch {
-            return `<pre>${arg}</pre>`
+            return `<pre>${JSON.stringify(
+              arg,
+              (key, value) => {
+                if (value === window) return "[Window Object]"
+                if (value instanceof HTMLElement) return `[HTMLElement <${value.tagName.toLowerCase()}>]`
+                return value
+              },
+              2
+            )}</pre>`
+          } catch (e) {
+            return `<pre>${arg.toString()}</pre>`
           }
         }
         // Escape HTML in string values
