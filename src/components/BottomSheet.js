@@ -31,6 +31,7 @@ export default class BottomSheet {
     this.renderBridgeLogs()
     this.renderEvents()
     this.renderNativeStack()
+    this.renderInfos()
     this.scrollToLatestLog(this.state.activeTab)
     this.state.shouldScrollToLatestLog = true
   }
@@ -234,36 +235,6 @@ export default class BottomSheet {
           </div>
 
           <div id="single-tab-info" class="single-tab-content outer-tab-content">
-            <div class="inner-tab-content">
-              <div class="d-flex align-items-center mb-3">
-                <button class="btn-icon btn-close-single-mode">${Icons.arrowLeft}</button>
-                <h3 class="ms-1">Info</h3>
-              </div>
-              <div class="info-card">
-                <div class="info-card-title">Current URL</div>
-                <div class="current-url">${this.currentUrl}</div>
-              </div>
-              <div class="info-card">
-                <div class="info-card-title">User Agent</div>
-                <div class="user-agent">${navigator.userAgent}</div>
-              </div>
-              <div class="info-card">
-                <div class="info-card-title"><pre class="m-0">turbo-cache-control:</pre> <span>${getMetaContent("turbo-cache-control") || "-"}</span></div>
-                <div class="info-card-hint"><strong>no-cache:</strong> always fetched from the network, even on restore</div>
-                <div class="info-card-hint"><strong>no-preview:</strong> skipped in preview, used only on restore</div>
-                <div class="info-card-hint"><strong>unset:</strong> shows cached preview if the cache is valid</div>
-              </div>
-              <div class="info-card">
-                <div class="info-card-title"><pre class="m-0">turbo-refresh-method:</pre> <span>${getMetaContent("turbo-refresh-method") || "-"}</span></div>
-                <div class="info-card-hint"><strong>replace (default):</strong> replaces the entire &lt;body&gt; on revisit</div>
-                <div class="info-card-hint"><strong>morph:</strong> updates only changed DOM elements, preserving state</div>
-              </div>
-              <div class="info-card">
-                <div class="info-card-title"><pre class="m-0">turbo-visit-control:</pre> <span>${getMetaContent("turbo-visit-control") || "-"}</span></div>
-                <div class="info-card-hint"><strong>reload:</strong> forces a full page reload</div>
-                <div class="info-card-hint"><strong>unset:</strong> allows Turbo to handle the visit normally</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -339,6 +310,42 @@ export default class BottomSheet {
       `<div class="native-stack-wrapper">` +
       (this.state.nativeStack.length ? this.state.nativeStack.map((view) => this.nativeViewStackHTML(view)).join("") : `<div class="tab-empty-content"><span>No native stack captured yet</span></div>`) +
       `</div>`
+  }
+
+  renderInfos() {
+    const html = `
+      <div class="inner-tab-content">
+        <div class="d-flex align-items-center mb-3">
+          <button class="btn-icon btn-close-single-mode">${Icons.arrowLeft}</button>
+          <h3 class="ms-1">Info</h3>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Current URL</div>
+          <div class="current-url">${this.currentUrl}</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">User Agent</div>
+          <div class="user-agent">${navigator.userAgent}</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title"><pre class="m-0">turbo-cache-control:</pre> <span>${getMetaContent("turbo-cache-control") || "-"}</span></div>
+          <div class="info-card-hint"><strong>no-cache:</strong> always fetched from the network, even on restore</div>
+          <div class="info-card-hint"><strong>no-preview:</strong> skipped in preview, used only on restore</div>
+          <div class="info-card-hint"><strong>unset:</strong> shows cached preview if the cache is valid</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title"><pre class="m-0">turbo-refresh-method:</pre> <span>${getMetaContent("turbo-refresh-method") || "-"}</span></div>
+          <div class="info-card-hint"><strong>replace (default):</strong> replaces the entire &lt;body&gt; on revisit</div>
+          <div class="info-card-hint"><strong>morph:</strong> updates only changed DOM elements, preserving state</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title"><pre class="m-0">turbo-visit-control:</pre> <span>${getMetaContent("turbo-visit-control") || "-"}</span></div>
+          <div class="info-card-hint"><strong>reload:</strong> forces a full page reload</div>
+          <div class="info-card-hint"><strong>unset:</strong> allows Turbo to handle the visit normally</div>
+        </div>
+      </div>
+    `
+    this.bottomSheet.querySelector("#single-tab-info").innerHTML = html
   }
 
   renderPathConfigurationCheck = debounce((path) => {
@@ -580,14 +587,10 @@ export default class BottomSheet {
         if (singleTabId === "single-tab-path-configuration-check" && this.bottomSheet.querySelector("#path-configuration-check-url").value === "/") {
           this.renderPathConfigurationCheck("/")
         }
+        if (singleTabId === "single-tab-info") {
+          this.renderInfos()
+        }
         this.switchToSingleTabSheet(singleTabId)
-      })
-    })
-
-    // Close Single Tab Buttons
-    this.bottomSheet.querySelectorAll(".btn-close-single-mode").forEach((button) => {
-      button.addEventListener("click", () => {
-        this.switchToMultiTabSheet()
       })
     })
 
@@ -683,6 +686,13 @@ export default class BottomSheet {
       const dropdownAction = event.target.closest(".dropdown-content-action")
       if (dropdownAction) {
         this.handleDropdownActionClick(event)
+        return
+      }
+
+      // Handle single to multi tab switch
+      const closeSingleModeBtn = event.target.closest(".btn-close-single-mode")
+      if (closeSingleModeBtn) {
+        this.switchToMultiTabSheet()
         return
       }
 
