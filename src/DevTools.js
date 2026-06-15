@@ -186,7 +186,7 @@ export default class DevTools {
           }
         }
         // Escape HTML in string values
-        const stringValue = arg.toString()
+        const stringValue = String(arg)
         return stringValue.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
       })
       .join(" ")
@@ -239,7 +239,7 @@ export default class DevTools {
       this.interceptedConsoleMessage("error", [formattedMessage])
     })
     window.addEventListener("unhandledrejection", (event) => {
-      this.interceptedConsoleMessage("error", [event.reason?.message])
+      this.interceptedConsoleMessage("error", [event.reason])
     })
 
     // Observe screen size or orientation changes to reposition the bubble
