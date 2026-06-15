@@ -20,12 +20,29 @@ export default class FloatingBubble {
   setPosition() {
     this.settingKey = window.innerWidth < window.innerHeight ? "bubblePosPortrait" : "bubblePosLandscape"
 
-    // Get stored position or use default (bottom right corner)
-    const defaultPos = { x: window.innerWidth - 100, y: window.innerHeight - 100 }
-    const { x: startX, y: startY } = getSettings(this.settingKey) || defaultPos
+    // Get stored position or use the configured corner
+    const initialPos = this.cornerPosition(this.devTools.options.initialBubblePosition)
+    const { x: startX, y: startY } = getSettings(this.settingKey) || initialPos
 
     this.currentX = this.initialX = this.xOffset = startX
     this.currentY = this.initialY = this.yOffset = startY
+  }
+
+  cornerPosition(corner) {
+    const margin = 100 - this.bubbleSize
+    const left = margin
+    const right = window.innerWidth - 100
+    const top = margin
+    const bottom = window.innerHeight - 100
+
+    const corners = {
+      "top-left": { x: left, y: top },
+      "top-right": { x: right, y: top },
+      "bottom-left": { x: left, y: bottom },
+      "bottom-right": { x: right, y: bottom },
+    }
+
+    return corners[corner] || corners["bottom-right"]
   }
 
   createDragItem() {

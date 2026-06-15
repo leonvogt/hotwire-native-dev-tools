@@ -91,6 +91,14 @@ Please note that your JS condition may vary depending on your setup and needs.
 The downside of this approach is that you ship the JS code of the dev tools to the client, even if the client is not in development mode.    
 This dev tools package is quite small (~15kb), but if you want to avoid shipping unnecessary code to the client, you should use the custom entrypoint approach.    
 
+### Bubble position
+
+The floating bubble lives by default in the bottom right corner. You can change the initial position by setting the `initialBubblePosition` option (`"bottom-right"`, `"bottom-left"`, `"top-right"` or `"top-left"`):
+```js
+setupDevTools({ initialBubblePosition: "top-left" });
+```
+Once you drag the bubble, its position is remembered and takes precedence over this setting.
+
 ## Usage (Native)
 
 Some features, such as the Native Stack and PathConfiguration properties, are only available if you add the dev tool bridge components to your app:

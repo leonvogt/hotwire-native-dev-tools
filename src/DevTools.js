@@ -179,7 +179,7 @@ export default class DevTools {
                 if (value instanceof HTMLElement) return elementToEscapedString(value)
                 return value
               },
-              2
+              2,
             )}</pre>`
           } catch (e) {
             return `<pre>${arg.toString()}</pre>`
@@ -248,7 +248,7 @@ export default class DevTools {
       () => {
         this.bubble.render()
       },
-      { passive: true }
+      { passive: true },
     )
 
     // Listen for localStorage changes triggered by devtools in another (native) tab.
@@ -299,7 +299,7 @@ export default class DevTools {
         (event) => {
           this.state.addEventLog(eventName)
         },
-        { passive: true }
+        { passive: true },
       )
     })
 
