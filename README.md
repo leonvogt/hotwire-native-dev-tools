@@ -5,10 +5,11 @@
 
 Hotwire Native Dev Tools aims to support the development process of Hotwire Native apps by providing a set of tools to inspect and debug the app. 
 
-- 🔍 Inspect the bridge communication and native stack
-- 🪵 View console logs right in the mobile app
-- ⚠️ Detect common Turbo issues
-- 📦 No dependencies
+- Inspect the bridge communication and native stack
+- View console logs right in the mobile app
+- Detect common Turbo issues
+- Inspect cookies
+- No dependencies
 
 ## Installation
 
@@ -101,7 +102,8 @@ Once you drag the bubble, its position is remembered and takes precedence over t
 
 ## Usage (Native)
 
-Some features, such as the Native Stack and PathConfiguration properties, are only available if you add the dev tool bridge components to your app:
+Some features, such as the Native Stack, PathConfiguration properties and the full cookie inspector, are only available if you add the dev tool bridge components to your app.
+Without them, the cookie inspector falls back to `document.cookie`, which can't see HttpOnly cookies (like the Rails session cookie). If you copied the components before the cookie inspector existed, update them to the latest version:
 
 ### iOS
 

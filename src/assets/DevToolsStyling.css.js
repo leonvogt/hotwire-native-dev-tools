@@ -609,6 +609,18 @@ export const cssContent = () => {
       top: 2px;
     }
 
+    .cookie-expiry {
+      font-weight: 400;
+      font-size: 0.85em;
+      margin-left: 1em;
+      white-space: nowrap;
+    }
+
+    .cookie-value {
+      font-size: 0.9em;
+      word-break: break-all;
+    }
+
     /* Utility classes */
     .d-none {
       display: none;

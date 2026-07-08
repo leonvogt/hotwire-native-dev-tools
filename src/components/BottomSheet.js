@@ -1,5 +1,5 @@
 import * as Icons from "../assets/icons"
-import { platform, formattedPlatform, isIosApp, getMetaContent, debounce } from "../utils/utils"
+import { platform, formattedPlatform, isIosApp, getMetaContent, debounce, escapeHtml, cookieDomainMatchesHost } from "../utils/utils"
 import { saveSettings, getSettings, getConsoleFilterLevels, saveConsoleFilterLevels, getConsoleLogBlacklist, addConsoleLogBlacklistEntry, removeConsoleLogBlacklistEntry } from "../utils/settings"
 
 // WARNING: Be careful when console logging in this file, as it can cause an infinite loop
@@ -32,6 +32,7 @@ export default class BottomSheet {
     this.renderEvents()
     this.renderNativeStack()
     this.renderInfos()
+    this.renderCookies()
     this.scrollToLatestLog(this.state.activeTab)
     this.state.shouldScrollToLatestLog = true
   }
@@ -84,6 +85,7 @@ export default class BottomSheet {
                 <button class="dropdown-btn-full-width btn-switch-to-single-tab-sheet" data-tab-id="single-tab-settings">Settings</button>
                 <button class="dropdown-btn-full-width btn-switch-to-single-tab-sheet" data-tab-id="single-tab-info">Info</button>
                 <button class="dropdown-btn-full-width btn-switch-to-single-tab-sheet d-none" data-tab-id="single-tab-path-configuration-check">PathConfiguration Check</button>
+                <button class="dropdown-btn-full-width btn-switch-to-single-tab-sheet" data-tab-id="single-tab-cookies">Cookies</button>
                 <button class="dropdown-btn-full-width pin-bottom-sheet">Pin Bottom Sheet</button>
               </div>
             </div>
@@ -236,6 +238,9 @@ export default class BottomSheet {
 
           <div id="single-tab-info" class="single-tab-content outer-tab-content">
           </div>
+
+          <div id="single-tab-cookies" class="single-tab-content outer-tab-content">
+          </div>
         </div>
       </div>
     `
@@ -271,7 +276,7 @@ export default class BottomSheet {
               <label class="console-log-blacklist-entry-text">${entry}</label>
               <button class="btn-icon btn-remove-console-log-blacklist-entry icon--muted dropdown-content-action w-auto" data-entry="${entry}">${Icons.trash}</button>
             </div>
-          `
+          `,
         )
         .join("")}`
       : `<div class="text-center text-muted">No blacklisted logs</div>`
@@ -346,6 +351,42 @@ export default class BottomSheet {
       </div>
     `
     this.bottomSheet.querySelector("#single-tab-info").innerHTML = html
+  }
+
+  renderCookies() {
+    const cookies = this.state.cookies
+    const currentSiteCookies = (cookies || []).filter((cookie) => cookieDomainMatchesHost(cookie.domain, window.location.hostname)).sort((a, b) => a.name.localeCompare(b.name))
+
+    const content =
+      cookies === null
+        ? `<div class="tab-empty-content"><span>Loading cookies...</span></div>`
+        : currentSiteCookies.length
+          ? currentSiteCookies.map((cookie) => this.cookieHTML(cookie)).join("")
+          : `<div class="tab-empty-content"><span>No cookies found for this site</span></div>`
+
+    this.bottomSheet.querySelector("#single-tab-cookies").innerHTML = `
+      <div class="inner-tab-content">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div class="d-flex align-items-center">
+            <button class="btn-icon btn-close-single-mode">${Icons.arrowLeft}</button>
+            <h3 class="ms-1">Cookies</h3>
+          </div>
+          <button class="btn-icon btn-refresh-cookies">${Icons.rotate}</button>
+        </div>
+        <div class="cookie-list">${content}</div>
+      </div>
+    `
+  }
+
+  cookieHTML(cookie) {
+    const expires = cookie.expiresAt ? `Expires: ${new Date(cookie.expiresAt).toLocaleString()}` : cookie.sessionOnly ? "Session" : ""
+
+    return `
+      <div class="info-card cookie-card">
+        <div class="info-card-title"><span class="break-word">${escapeHtml(cookie.name)}</span>${expires ? `<span class="cookie-expiry">${expires}</span>` : ""}</div>
+        <div class="cookie-value">${escapeHtml(cookie.value)}</div>
+      </div>
+    `
   }
 
   renderPathConfigurationCheck = debounce((path) => {
@@ -590,6 +631,10 @@ export default class BottomSheet {
         if (singleTabId === "single-tab-info") {
           this.renderInfos()
         }
+        if (singleTabId === "single-tab-cookies") {
+          this.devTools.fetchCookies()
+          this.renderCookies()
+        }
         this.switchToSingleTabSheet(singleTabId)
       })
     })
@@ -693,6 +738,16 @@ export default class BottomSheet {
       const closeSingleModeBtn = event.target.closest(".btn-close-single-mode")
       if (closeSingleModeBtn) {
         this.switchToMultiTabSheet()
+        return
+      }
+
+      // Buttons inside re-rendered panes need delegation,
+      // since their DOM elements get replaced on every update
+      const refreshCookiesButton = event.target.closest(".btn-refresh-cookies")
+      if (refreshCookiesButton) {
+        const cookieList = this.bottomSheet.querySelector(".cookie-list")
+        if (cookieList) cookieList.style.opacity = 0.5
+        this.devTools.fetchCookies()
         return
       }
 

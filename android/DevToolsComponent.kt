@@ -1,6 +1,7 @@
 package replace.with.your.name // Replace with your package name
 
 import android.util.Log
+import android.webkit.CookieManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import replace.with.your.name.MainActivity // Replace with your package name
@@ -29,6 +30,7 @@ class DevToolsComponent(
             "connect" -> handleConnect(message)
             "currentStackInfo" -> handleCurrentStackInfo(message)
             "propertiesForUrl" -> handlePropertiesForUrl(message)
+            "allCookies" -> handleAllCookies(message)
             "vibrate" -> null
             else -> Log.w("DevToolsComponent", "Unknown event for message: $message")
         }
@@ -47,6 +49,23 @@ class DevToolsComponent(
         val data = message.data<PropertiesForUrlData>() ?: return
         val properties = Hotwire.config.pathConfiguration.properties(data.url)
         replyTo("propertiesForUrl", PropertiesForUrlResultData(convertProperties(properties)))
+    }
+
+    // Returns the cookies for the given URL.
+    private fun handleAllCookies(message: Message) {
+        val data = message.data<AllCookiesData>() ?: return
+        val cookies = CookieManager.getInstance().getCookie(data.url).orEmpty().split(";").mapNotNull { entry ->
+            val trimmed = entry.trim()
+            if (trimmed.isEmpty()) return@mapNotNull null
+
+            val separatorIndex = trimmed.indexOf('=')
+            if (separatorIndex == -1) {
+                CookieInfo(name = "", value = trimmed)
+            } else {
+                CookieInfo(name = trimmed.substring(0, separatorIndex), value = trimmed.substring(separatorIndex + 1))
+            }
+        }
+        replyTo("allCookies", AllCookiesResultData(cookies))
     }
 
     private fun getNavigationStack(): List<FragmentInfo> {
@@ -135,6 +154,22 @@ class DevToolsComponent(
     @Serializable
     data class ConnectResultData(
         @SerialName("callbackReason") val callbackReason: String
+    )
+
+    @Serializable
+    data class AllCookiesData(
+        @SerialName("url") val url: String
+    )
+
+    @Serializable
+    data class CookieInfo(
+        val name: String,
+        val value: String
+    )
+
+    @Serializable
+    data class AllCookiesResultData(
+        val cookies: List<CookieInfo>
     )
 
     @Serializable
