@@ -8,6 +8,7 @@ export default class DevToolsState {
       eventLogs: [],
       nativeStack: [],
       supportedBridgeComponents: [],
+      cookies: null,
       bridgeIsConnected: false,
       supportsNativeStackView: false,
       consoleSearch: "",
@@ -59,6 +60,11 @@ export default class DevToolsState {
 
   setSupportedBridgeComponents(components) {
     this.state.supportedBridgeComponents = components
+    this.notify()
+  }
+
+  setCookies(cookies) {
+    this.state.cookies = cookies
     this.notify()
   }
 

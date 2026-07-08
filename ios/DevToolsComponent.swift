@@ -1,5 +1,6 @@
 import HotwireNative
 import UIKit
+import WebKit
 
 public class DevToolsComponent: BridgeComponent {
     public override class var name: String { "dev-tools" }
@@ -22,6 +23,8 @@ public class DevToolsComponent: BridgeComponent {
             handleCurrentStackInfo()
         case .propertiesForUrl:
             handlePropertiesForUrl(message: message)
+        case .allCookies:
+            handleAllCookies()
         case .vibrate:
             handleVibrate(message: message)
         }
@@ -46,6 +49,14 @@ public class DevToolsComponent: BridgeComponent {
         reply(to: Event.propertiesForUrl.rawValue, with: PropertiesForUrlResponseData(properties: convertPropertiesToJSON(properties)))
     }
 
+
+    private func handleAllCookies() {
+        let cookieStore = delegate?.webView?.configuration.websiteDataStore.httpCookieStore ?? WKWebsiteDataStore.default().httpCookieStore
+        cookieStore.getAllCookies { [weak self] cookies in
+            let cookieInfos = cookies.map { CookieInfo(cookie: $0) }
+            self?.reply(to: Event.allCookies.rawValue, with: AllCookiesResponseData(cookies: cookieInfos))
+        }
+    }
 
     private func handleVibrate(message: Message) {
         guard let data: VibrateMessageData = message.data() else { return }
@@ -173,6 +184,7 @@ private extension DevToolsComponent {
         case currentStackInfo
         case vibrate
         case propertiesForUrl
+        case allCookies
     }
 }
 
@@ -195,6 +207,26 @@ private extension DevToolsComponent {
 
     struct PropertiesForUrlResponseData: Encodable {
         let properties: String
+    }
+
+    struct AllCookiesResponseData: Encodable {
+        let cookies: [CookieInfo]
+    }
+
+    struct CookieInfo: Encodable {
+        let name: String
+        let value: String
+        let domain: String
+        let expiresAt: Double?
+        let sessionOnly: Bool
+
+        init(cookie: HTTPCookie) {
+            name = cookie.name
+            value = cookie.value
+            domain = cookie.domain
+            expiresAt = cookie.expiresDate.map { $0.timeIntervalSince1970 * 1000 } // epoch milliseconds
+            sessionOnly = cookie.isSessionOnly
+        }
     }
 
     struct StackContainer: Encodable {

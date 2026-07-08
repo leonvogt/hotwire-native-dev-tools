@@ -5,7 +5,7 @@ import BottomSheet from "./components/BottomSheet"
 import DevToolsState from "./lib/DevToolsState"
 import NativeBridge from "./lib/NativeBridge"
 import { resetSettings, getConsoleLogBlacklist } from "./utils/settings"
-import { debounce, elementToEscapedString } from "./utils/utils"
+import { debounce, elementToEscapedString, escapeHtml, parseDocumentCookies } from "./utils/utils"
 import { getSettings } from "./utils/settings"
 
 export default class DevTools {
@@ -185,9 +185,7 @@ export default class DevTools {
             return `<pre>${arg.toString()}</pre>`
           }
         }
-        // Escape HTML in string values
-        const stringValue = String(arg)
-        return stringValue.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
+        return escapeHtml(arg)
       })
       .join(" ")
 
@@ -218,6 +216,20 @@ export default class DevTools {
   refetchNativeStack() {
     this.nativeBridge.send("currentStackInfo", {}, (message) => {
       this.state.setNativeStack(message.data.stack)
+    })
+  }
+
+  // Fetch cookies from the native cookie store, which includes HttpOnly cookies.
+  // Falls back to document.cookie when the native dev tools component
+  // is not installed or doesn't support the `allCookies` event yet.
+  fetchCookies() {
+    const fallbackToDocumentCookies = () => this.state.setCookies(parseDocumentCookies())
+    if (!this.nativeBridge.bridgeIsConnected()) return fallbackToDocumentCookies()
+
+    const timeoutId = setTimeout(fallbackToDocumentCookies, 500)
+    this.nativeBridge.send("allCookies", { url: window.location.href }, (message) => {
+      clearTimeout(timeoutId)
+      this.state.setCookies(message.data.cookies || [])
     })
   }
 
